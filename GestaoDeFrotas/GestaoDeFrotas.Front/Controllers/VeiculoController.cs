@@ -192,10 +192,13 @@ namespace CadastroDeCaminhoneiro.Controllers
                 vm.DataInclusao = vm.VeiculoDBE.DataInclusao.ToString("dd/MM/yyyy HH:mm");
                 vm.DataAlteracao = vm.VeiculoDBE.DataAlteracao.ToString("dd/MM/yyyy HH:mm");
                 vm.VeiculoDBE.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(id, true);
-  
-                ViewData["MarcaID"] = new SelectList(new MarcaVeiculoDAL().ListarMarcas(), "ID", "Nome", vm.VeiculoDBE.Marca.ID.ToString());
-                ViewData["ModeloID"] = new SelectList(new ModeloVeiculoDAL().ListarModelos(), "ID", "Nome", vm.VeiculoDBE.Modelo.ID.ToString());
-                ViewData["TipoID"] = new SelectList(new TipoVeiculoDAL().ListarTipos(), "ID", "Descricao", vm.VeiculoDBE.Tipo.ID.ToString());
+                vm.MarcaID = vm.VeiculoDBE.Marca.ID;
+                vm.ModeloID = vm.VeiculoDBE.Modelo.ID;
+                vm.TipoID = vm.VeiculoDBE.Modelo.ID;
+
+                ViewData["MarcaID"] = new SelectList(new MarcaVeiculoDAL().ListarMarcas(), "ID", "Nome");
+                ViewData["ModeloID"] = new SelectList(new ModeloVeiculoDAL().ListarModelos(), "ID", "Nome");
+                ViewData["TipoID"] = new SelectList(new TipoVeiculoDAL().ListarTipos(), "ID", "Descricao");
             }
             catch (Exception e)
             {
@@ -220,9 +223,9 @@ namespace CadastroDeCaminhoneiro.Controllers
             ViewData["TipoID"] = new SelectList(Enumerable.Empty<TipoVeiculo>(), "ID", "Descricao");
             try 
             {
-                ViewData["MarcaID"] = new SelectList(new MarcaVeiculoDAL().ListarMarcas(), "ID", "Nome", vm.VeiculoDBE.Marca.ID);
-                ViewData["ModeloID"] = new SelectList(new ModeloVeiculoDAL().ListarModelos(), "ID", "Nome", vm.VeiculoDBE.Modelo.ID);
-                ViewData["TipoID"] = new SelectList(new TipoVeiculoDAL().ListarTipos(), "ID", "Descricao", vm.VeiculoDBE.Tipo.ID);
+                ViewData["MarcaID"] = new SelectList(new MarcaVeiculoDAL().ListarMarcas(), "ID", "Nome");
+                ViewData["ModeloID"] = new SelectList(new ModeloVeiculoDAL().ListarModelos(), "ID", "Nome");
+                ViewData["TipoID"] = new SelectList(new TipoVeiculoDAL().ListarTipos(), "ID", "Descricao");
             }
             catch (Exception e)
             {
