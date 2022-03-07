@@ -1,0 +1,72 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.CadastroVeiculoVM
+@{
+    ViewBag.Title = "IncluirMotorista";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Incluir Veículo</h2>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Dados do veículo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Placa, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Placa, new { htmlAttributes = new { @class = "form-control", @id = "placa" } })
+                @Html.ValidationMessageFor(model => model.Placa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MarcaID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.MarcaID, null, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MarcaID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModeloID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ModeloID, null, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ModeloID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoID, null, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TipoID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="botao-inferior">
+            <button type="submit" title="Salvar" id="btnSalvar" class="btn btn-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                <strong>Salvar</strong>
+            </button>
+            <a title="Cancelar" id="btnCancelar" class="btn btn-danger" href="@Url.Action("PainelDeVeiculos", "Veiculo")">
+                <span class="glyphicon glyphicon-remove"></span>
+                <strong>Cancelar</strong>
+            </a>
+        </div>
+        <br />
+        <br />
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#placa").inputmask({ regex: "[A-Z]{3}-[0-9]{1}[A-Z0-9]{1}[0-9]{2}", casing: "upper" });
+        });
+    </script>
+}

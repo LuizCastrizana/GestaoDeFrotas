@@ -1,0 +1,223 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.PainelViagensVM
+
+@{
+    ViewBag.Title = "PainelDeViagens";
+    Layout = "~/Views/Shared/_LayoutFluid.cshtml";
+}
+
+@using X.PagedList;
+@using X.PagedList.Mvc;
+@using CadastroDeCaminhoneiro.DBEnums;
+
+<h2 class="titulo-pag">Painel De Viagens</h2>
+
+<!-- #region Menu -->
+@using (Html.BeginForm("BuscarViagensPainel", "Viagem", FormMethod.Get))
+{
+    <div class="container-fluid container-menu">
+        <div class="row row-menu">
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Buscar por:</l>
+                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control", onchange = "OpcaoBuscaViagem(this.value)" })
+            </div>
+            <div class="campos-painel campos-painel-lg">
+                <l class="legenda-campo" id="BuscaCodigo">Buscar por codigo:</l>
+                <l class="legenda-campo" id="BuscaData">Buscar por data de inclusao:</l>
+                <l class="legenda-campo" id="BuscaVeiculo">Buscar por placa:</l>
+                <l class="legenda-campo" id="BuscaMotorista">Buscar por nome ou CPF:</l>
+                @Html.EditorFor(model => model.BuscaViagem, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Ordenar por:</l>
+                @Html.DropDownListFor(model => model.OpcaoCampoOrdenacao, null, new { @class = "form-control" })
+            </div>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Ordem:</l>
+                @Html.DropDownListFor(model => model.OpcaoOrdenacao, null, new { @class = "form-control" })
+            </div>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo" id="">Status:</l>
+                @Html.DropDownListFor(model => model.StatusViagem, null, new { @class = "form-control" })
+            </div>
+            <div class="botao-buscar campos-painel">
+                &nbsp;
+                <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+            <div class="botao-nova-viagem alinhar-direita">
+                <a title="Novo" id="btnNovo" class="btn btn-info" href="@Url.Action("IncluirViagem", "Viagem")">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <strong>Nova Viagem</strong>
+                </a>
+            </div>
+        </div>
+        <br />
+    </div>
+}
+<br />
+<!-- #endregion -->
+<!-- #region Tabela -->
+<table class="table">
+    <tr class="head-tabela">
+        <th>
+            @Html.DisplayName("Código")
+        </th>
+        <th>
+            @Html.DisplayName("Motorista")
+        </th>
+        <th>
+            @Html.DisplayName("Veiculo")
+        </th>
+        <th>
+            @Html.DisplayName("Motivo")
+        </th>
+        <th>
+            @Html.DisplayName("Inicio")
+        </th>
+        <th>
+            @Html.DisplayName("Fim")
+        </th>
+        <th>
+            @Html.DisplayName("Inclusão")
+        </th>
+        <th class="campo-centro">
+            @Html.DisplayName("Status")
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Viagens)
+    {
+        <tr title="Administrar Viagem" class="linha-painel" onclick="location.href='@Url.Action("AdministrarViagem", "Viagem", new { id = item.ID })'" ;">
+            <td>
+                @Html.DisplayFor(modelItem => item.Codigo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MotoristaViagem.PrimeiroNome)
+                @Html.DisplayFor(modelItem => item.MotoristaViagem.Sobrenome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VeiculoViagem.Placa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Motivo.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataInclusao)
+            </td>
+            <td class="campo-centro">
+                @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.EMANDAMENTO)
+                {
+                    <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+                }
+                @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.CANCELADA)
+                {
+                    <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+                }
+                @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.PROGRAMADA)
+                {
+                    <img src="~/Content/Img/status-azul-claro.png" height="24" width="24" />
+                }
+                @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.ENCERRADA)
+                {
+                    <img src="~/Content/Img/status-roxo.png" height="24" width="24" />
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+<!-- #endregion -->
+<!-- #region Pager e legenda -->
+<div>
+    <div class="paginas display-inline-block">
+        @Html.PagedListPager((IPagedList)Model.Viagens, pagina => Url.Action("BuscarViagensPainel", new { Model.BuscaViagem, Model.OpcoesFiltragem, Model.OpcaoOrdenacao, Model.OpcaoCampoOrdenacao, Model.StatusViagem, pagina }))
+    </div>
+    <div class="alinhar-direita">
+        <div class="legenda-painel">
+            Programada <img src="~/Content/Img/status-azul-claro.png" height="24" width="24" /> &nbsp; &nbsp;
+            Em Andamento <img src="~/Content/Img/status-verde.png" height="24" width="24" /> &nbsp; &nbsp;
+            Encerrada <img src="~/Content/Img/status-roxo.png" height="24" width="24" /> &nbsp; &nbsp;
+            Cancelada <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+<!-- #region Scripts -->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $(".upper").inputmask({ casing: "upper" });
+            $("#BuscaViagem").inputmask({ casing: "upper" });
+            $(".data").inputmask("mask", { "mask": "99/99/9999" });
+
+            OpcaoBuscaViagem(document.getElementById("OpcoesFiltragem").value)
+        });
+    </script>
+    <script>
+        function OpcaoBuscaViagem(opcaoBusca) {
+            if (opcaoBusca == "1") {
+                $("#BuscaCodigo").show();
+                $("#BuscaData").hide();
+                $("#BuscaStatus").hide();
+                $("#BuscaVeiculo").hide();
+                $("#BuscaMotorista").hide();
+
+                $("#BuscaViagem").inputmask({ mask: "", casing: "upper" });
+
+                $("#BuscaViagem").show();
+            }
+            if (opcaoBusca == "2") {
+                $("#BuscaCodigo").hide();
+                $("#BuscaData").show();
+                $("#BuscaStatus").hide();
+                $("#BuscaVeiculo").hide();
+                $("#BuscaMotorista").hide();
+
+                $("#BuscaViagem").inputmask({ mask: "99/99/9999" });
+
+                $("#BuscaViagem").show();
+            }
+            if (opcaoBusca == "3") {
+                $("#BuscaCodigo").hide();
+                $("#BuscaData").hide();
+                $("#BuscaStatus").show();
+                $("#BuscaVeiculo").hide();
+                $("#BuscaMotorista").hide();
+
+                $("#StatusViagem").show();
+                $("#BuscaViagem").hide();
+            }
+            if (opcaoBusca == "4") {
+                $("#BuscaCodigo").hide();
+                $("#BuscaData").hide();
+                $("#BuscaStatus").hide();
+                $("#BuscaVeiculo").show();
+                $("#BuscaMotorista").hide();
+
+                $("#BuscaViagem").inputmask({ mask: "", casing: "upper" });
+
+                $("#BuscaViagem").show();
+            }
+            if (opcaoBusca == "5") {
+                $("#BuscaCodigo").hide();
+                $("#BuscaData").hide();
+                $("#BuscaStatus").hide();
+                $("#BuscaVeiculo").hide();
+                $("#BuscaMotorista").show();
+
+                $("#BuscaViagem").inputmask({ mask: "", casing: "upper" });
+
+                $("#BuscaViagem").show();
+            }
+        }
+    </script>
+}
+<!-- #endregion -->

@@ -1,0 +1,101 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.CadastroVeiculoVM
+
+@{
+    ViewBag.Title = "VisualizarVeiculo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="display-inline-block">Visualizar Veículo</h2>
+<div class="display-inline-block botao-superior">
+    <a title="Editar" class="btn btn-info" href="@Url.Action("EditarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID} )">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <strong>Editar</strong>
+    </a>
+    <a title="Voltar" class="btn btn-danger" href="@Url.Action("PainelDeVeiculos", "Veiculo")">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        <strong>Voltar</strong>
+    </a>
+</div>
+<hr />
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.VeiculoDBE.Placa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VeiculoDBE.Placa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VeiculoDBE.Marca.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VeiculoDBE.Marca.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VeiculoDBE.Modelo.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VeiculoDBE.Modelo.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VeiculoDBE.Tipo.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VeiculoDBE.Tipo.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VeiculoDBE.Status)
+        </dt>
+
+        <dd>
+            @if (Model.VeiculoDBE.Status == true)
+            {
+                <span class="glyphicon glyphicon-ok"></span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+        </dd>
+
+    </dl>
+</div>
+<h4>Motoristas</h4>
+<div>
+    <table class="table">
+        <tr class="head-tabela">
+            <th>
+                @Html.DisplayName("Nome")
+            </th>
+            <th>
+                @Html.DisplayName("CPF")
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.VeiculoDBE.ListaMotoristas)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimeiroNome) @Html.DisplayFor(modelItem => item.Sobrenome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CPF)
+                </td>
+                <td>
+                    <a title="Visualizar" class="btn btn-default btn-xs" href="/Motorista/VisualizarMotorista/@item.ID"><span class="glyphicon glyphicon-eye-open"></span></a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

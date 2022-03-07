@@ -1,0 +1,151 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.PainelMotoristasVM
+
+@{
+    ViewBag.Title = "PainelDeMotoristas";
+    Layout = "~/Views/Shared/_LayoutFluid.cshtml";
+}
+
+@using X.PagedList;
+@using X.PagedList.Mvc;
+
+<h2 class="titulo-pag">Painel De Motoristas</h2>
+
+@using (Html.BeginForm("BuscarMotoristasPainel", "Motorista", FormMethod.Get))
+{
+    <div class="container-fluid container-menu">
+        <div class="row row-menu">
+            <div class="campos-painel campos-painel-sm">
+                <l class="legenda-campo">Ordenar por:</l>
+                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control" })
+            </div>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Ordem:</l>
+                @Html.DropDownListFor(model => model.OpcaoOrdenacao, null, new { @class = "form-control" })
+            </div>
+            @*<div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Data inicial:</l>
+                @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+            </div>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Data final:</l>
+                @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+            </div>*@
+            <div class="campos-painel campos-painel-lg">
+                <l class="legenda-campo">Buscar por:</l>
+                @Html.EditorFor(model => model.BuscaMotorista, new { htmlAttributes = new { @class = "form-control upper", @placeholder = "Nome/CPF" } })
+            </div>
+            <div class="botao-buscar campos-painel">
+                &nbsp;
+                <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+            <div class="botao-novo alinhar-direita">
+                <a title="Novo" id="btnNovo" class="btn btn-info" href="@Url.Action("IncluirMotorista", "Motorista")">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <strong>Novo</strong>
+                </a>
+            </div>
+        </div>
+        <div class="row row-menu row-inativos">
+            <span class="inativos-legenda">
+                Exibir inativos
+            </span>
+            <span class="campos-painel">
+                @Html.EditorFor(model => model.Todos, new { htmlAttributes = new { } })
+            </span>
+        </div>
+    </div>
+}
+<br />
+<table class="table">
+    <tr class="head-tabela">
+        <th></th>
+        <th>
+            @Html.DisplayName("Nome")
+        </th>
+        <th>
+            @Html.DisplayName("CPF")
+        </th>
+        <th>
+            @Html.DisplayName("CNH")
+        </th>
+        <th>
+            @Html.DisplayName("Município")
+        </th>
+        <th>
+            @Html.DisplayName("Data de inclusão")
+        </th>
+        <th>
+            @Html.DisplayName("Data de alteração")
+        </th>
+        <th class="campo-centro">
+            @Html.DisplayName("Status")
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Motoristas)
+    {
+        <tr title="Visualizar" class="linha-painel" onclick="location.href='@Url.Action("VisualizarMotorista", "Motorista", new { id = item.ID })'" ;">
+            <td class="campo-centro">
+                <a title="Editar" class="btn-editar" href='@Url.Action("EditarMotorista", "Motorista", new { id = item.ID })'>
+                    <img src="~/Content/Img/editar.png" />
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrimeiroNome)
+                @Html.DisplayFor(modelItem => item.Sobrenome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CPF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CNH.Numero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco.Municipio.NomeMunicipio) -
+                @Html.DisplayFor(modelItem => item.Endereco.Municipio.Estado.UF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataInclusao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataAlteracao)
+            </td>
+            <td class="campo-centro">
+                @if (Html.ValueFor(modelItem => item.Status).ToString() == "True")
+                {
+                    <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+                }
+                else
+                {
+                    <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    <div class="paginas display-inline-block">
+        @Html.PagedListPager((IPagedList)Model.Motoristas, pagina => Url.Action("BuscarMotoristasPainel", new { Model.BuscaMotorista, Model.OpcoesFiltragem, Model.OpcaoOrdenacao, Model.Todos, pagina }))
+    </div>
+    <div class="alinhar-direita">
+        <div class="legenda-painel">
+            Ativo <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+            &nbsp; &nbsp;
+            Inativo <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#cpf").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true })
+            $("#cep").inputmask("mask", { "mask": "99999-999", });
+            $(".upper").inputmask({ casing: "upper" });
+        });
+    </script>
+}

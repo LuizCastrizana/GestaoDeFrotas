@@ -1,0 +1,90 @@
+﻿@model CadastroDeCaminhoneiro.DetalhesVeiculoVM
+
+@{
+    ViewBag.Title = "DetalhesVeiculo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><span class="glyphicon glyphicon-cog"></span> Configurar detalhes do veículo</h2>
+<br />
+
+@using (Html.BeginForm("IncluirDetalhe", "Configuracao", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-inline" name="Marca">
+        <h4>Inserir item</h4>
+        <hr />
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.TipoDetalhe, null, "Selecione", new { @class = "form-control dropdown-configuracoes" })
+        </div>
+        <div class="form-group">
+            @Html.EditorFor(model => model.Detalhe.Descricao, new { htmlAttributes = new { @class = "form-control campo-configuracoes upper"} })
+            @Html.ValidationMessageFor(model => model.Detalhe.Descricao, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <button type="submit" value="Inserir" id="btnInserir" title="Inserir" class="btn btn-default" >
+                <span class="glyphicon glyphicon-plus"></span>    
+            </button>
+        </div>
+    </div>
+}
+
+<br />
+
+@using (Html.BeginForm("ExcluirDetalhe", "Configuracao", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-inline" name="Marca">
+        <h4>Excluir item</h4>
+        <hr />
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.TipoDetalhe, null, "Selecione", new { @class = "form-control dropdown-configuracoes", onchange = "BuscaDetalhe(this.value)" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.DetalheSelecionado, null, new { @class = "form-control campo-configuracoes" })
+        </div>
+        <div class="form-group">
+            <button type="submit" value="Excluir" id="btnExcluir" title="Excluir" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+    </div>
+}
+
+<div class="botao-inferior">
+    <a title="Voltar" class="btn btn-danger" href="@Url.Action("Index", "Home")">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        <strong>Voltar</strong>
+    </a>
+</div>
+<br />
+<br />
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $(".upper").inputmask({ casing: "upper" });
+        });
+    </script>
+    <script>
+        function BuscaDetalhe(TipoDetalhe) {
+            $("#DetalheSelecionado").empty();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BuscaDetalhe")',
+                dataType: "json",
+                data: "{TipoDetalhe: '" + TipoDetalhe + "'}",
+                contentType: "application/json; charset=utf-8",
+                success: function (sist) {
+                    $.each(sist, function (i, detalhe) {
+                        $("#DetalheSelecionado").append('<option value="' + detalhe.Value + '">' + detalhe.Text + '</option>');
+                    });
+                },
+                error: function () {
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "PopularBD";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Inserir estados e municípios no banco de dados</h2>
+<hr />
+<div class="row row-popularbd">
+    <div class="text-justify info-popularbd">
+        <p>
+            Este projeto foi desenvolvido utilizando o banco de dados <strong>Oracle 21c Express</strong>.
+        </p>
+        <p>
+            Após instalar o Oracle, configure a string de conexão no arquivo web.config
+            e execute o script de criação das tabelas, que se encontra no mesmo repositório deste projeto.
+        </p>
+        <p>
+            Os arquivos CSV para popular as tabelas de estado e município também se encontram no repositório.
+        </p>
+    </div>
+</div>
+<br />
+
+@using (Html.BeginForm("PopularBDEstados", "Configuracao", null, FormMethod.Post))
+{
+    <div class="form-inline">
+        <h4>1 - Estados</h4>
+        <p>Insira o caminho da pasta que contem o arquivo estados.csv (Deixar em branco caso esteja em C:)</p>
+        <hr />
+        <div class="form-group">
+            <input type="text" id="caminho" name="caminho" class="form-control campo-caminho" />
+        </div>
+        <div class="form-group">
+            <button type="submit" value="Importar" id="enviarEstado" name="enviar" class="form-control">
+                <span class="glyphicon glyphicon-open-file"></span> Importar
+            </button>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("PopularBDMunicipios", "Configuracao", null, FormMethod.Post))
+{
+    <div class="form-inline">
+        <h4>2 - Municípios</h4>
+        <p>Insira o caminho da pasta que contem o arquivo municipios.csv (Deixar em branco caso esteja em C:)</p>
+        <hr />
+        <div class="form-group">
+            <input type="text" id="caminho" name="caminho" class="form-control campo-caminho" />
+        </div>
+        <button type="submit" value="Importar" id="enviarMunicipio" name="enviar" class="form-control">
+            <span class="glyphicon glyphicon-open-file"></span> Importar
+        </button>
+    </div>
+}

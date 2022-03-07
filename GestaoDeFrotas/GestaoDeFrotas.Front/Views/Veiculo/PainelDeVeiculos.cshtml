@@ -1,0 +1,140 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.PainelVeiculosVM
+
+@{
+    ViewBag.Title = "PainelDeVeiculos";
+    Layout = "~/Views/Shared/_LayoutFluid.cshtml";
+}
+
+@using X.PagedList;
+@using X.PagedList.Mvc;
+
+<h2 class="titulo-pag">Painel De Veículos</h2>
+
+@using (Html.BeginForm("BuscarVeiculosPainel", "Veiculo", FormMethod.Get))
+{
+    <div class="container-fluid container-menu">
+        <div class="row row-menu">
+            <div class="campos-painel campos-painel-sm">
+                <l class="legenda-campo">Ordenar por:</l>
+                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control" })
+            </div>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Ordem:</l>
+                @Html.DropDownListFor(model => model.OpcaoOrdenacao, null, new { @class = "form-control" })
+            </div>
+            <div class="campos-painel campos-painel-lg">
+                <l class="legenda-campo">Buscar por:</l>
+                @Html.EditorFor(model => model.BuscaPlaca, new { htmlAttributes = new { @class = "form-control", @placeholder = "Placa", @id = "placa" } })
+            </div>
+            <div class="botao-buscar campos-painel">
+                &nbsp;
+                <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+            <div class="botao-novo alinhar-direita">
+                <a title="Novo" id="btnNovo" class="btn btn-info" href="@Url.Action("IncluirVeiculo", "Veiculo")">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <strong>Novo</strong>
+                </a>
+            </div>
+        </div>
+        <div class="row row-menu row-inativos">
+            <span class="inativos-legenda">
+                Exibir inativos
+            </span>
+            <span class="campos-painel">
+                @Html.EditorFor(model => model.Todos, new { htmlAttributes = new { } })
+            </span>
+        </div>
+    </div>
+}
+<br />
+<table class="table">
+    <tr class="container-menu">
+        <th></th>
+        <th>
+            @Html.DisplayName("Placa")
+        </th>
+        <th>
+            @Html.DisplayName("Marca")
+        </th>
+        <th>
+            @Html.DisplayName("Modelo")
+        </th>
+        <th>
+            @Html.DisplayName("Tipo")
+        </th>
+        <th>
+            @Html.DisplayName("Data de inclusão")
+        </th>
+        <th>
+            @Html.DisplayName("Data de alteração")
+        </th>
+        <th class="campo-centro">
+            @Html.DisplayName("Status")
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Veiculos)
+    {
+        <tr title="Visualizar" class="linha-painel" onclick="location.href='@Url.Action("VisualizarVeiculo", "Veiculo", new { id = item.ID })'" ;">
+            <td class="campo-centro">
+                <a title="Editar" class="btn-editar" href='@Url.Action("EditarVeiculo", "Veiculo", new { id = item.ID })'>
+                    <img src="~/Content/Img/editar.png" />
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Placa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Marca.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Modelo.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataInclusao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataAlteracao)
+            </td>
+            <td class="campo-centro">
+                @if (Html.ValueFor(modelItem => item.Status).ToString() == "True")
+                {
+                    <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+                }
+                else
+                {
+                    <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div>
+    <div class="paginas display-inline-block">
+        @Html.PagedListPager((IPagedList)Model.Veiculos, pagina => Url.Action("BuscarVeiculosPainel", new { Model.BuscaPlaca, Model.OpcoesFiltragem, Model.OpcaoOrdenacao, Model.Todos, pagina }))
+    </div>
+    <div class="alinhar-direita">
+        <div class="legenda-painel">
+            Ativo <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+            &nbsp; &nbsp;
+            Inativo <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#placa").inputmask({ regex: "[A-Za-z0-9-]+", casing: "upper", placeholder: " " });
+        });
+    </script>
+}

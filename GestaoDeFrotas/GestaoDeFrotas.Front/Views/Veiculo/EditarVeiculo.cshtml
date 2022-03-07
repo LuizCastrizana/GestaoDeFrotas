@@ -1,0 +1,186 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.CadastroVeiculoVM
+
+@{
+    ViewBag.Title = "EditarVeiculo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="display-inline-block">Editar Veiculo</h2>
+
+@*Desativar/Reativar*@
+@if (Model.VeiculoDBE.Status == true)
+{
+    <div class="display-inline-block botao-superior">
+        <a title="Desativar" id="btnDesativar" class="btn btn-warning" onclick="return confirm('Deseja desativar o veículo ?');"
+           href="@Url.Action("DesativarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID } )">
+            <span class="glyphicon glyphicon-eye-close"></span>
+            <strong>Desativar</strong>
+        </a>
+    </div>
+}
+else
+{
+    <div class="display-inline-block botao-superior">
+        <a title="Reativar" id="btnReativar" class="btn btn-info" onclick="return confirm('Deseja reativar o veículo ?');"
+           href="@Url.Action("ReativarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID } )">
+            <span class="glyphicon glyphicon-eye-open"></span>
+            <strong>Reativar</strong>
+        </a>
+    </div>
+}
+<hr />
+
+@*Form Veiculos*@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Dados do veículo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.VeiculoDBE.ID)
+        @Html.HiddenFor(model => model.VeiculoDBE.Status)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VeiculoDBE.Placa, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.VeiculoDBE.Placa, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.VeiculoDBE.Placa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MarcaID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.MarcaID, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MarcaID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModeloID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ModeloID, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ModeloID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoID, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TipoID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataInclusao, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DataInclusao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DataInclusao, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataAlteracao, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DataAlteracao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DataAlteracao, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VeiculoDBE.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="checkbox col-md-10">
+                @if (Model.VeiculoDBE.Status == true)
+                {
+                    <span class="glyphicon glyphicon-ok"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-remove"></span>
+                }
+            </div>
+        </div>
+        <div class="botao-inferior">
+            @if (Model.VeiculoDBE.Status == true)
+            {
+                <button type="submit" title="Salvar" id="btnSalvar" class="btn btn-success">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    <strong>Salvar</strong>
+                </button>
+            }
+            <a title="Cancelar" id="btnCancelar" class="btn btn-danger" href="@Url.Action("PainelDeVeiculos", "Veiculo")">
+                <span class="glyphicon glyphicon-remove"></span>
+                <strong>Cancelar</strong>
+            </a>
+        </div>
+        <br />
+    </div>
+}
+
+@*Form Motorista*@
+<br />
+<hr />
+<h4>Motoristas</h4>
+<hr />
+@using (Html.BeginForm("VincularMotorista", "VeiculoDBE", FormMethod.Post, htmlAttributes: new { id = "form-vincular" }))
+{
+    if (Model.VeiculoDBE.Status == true)
+    {
+        <div class="navbar-form">
+            @Html.HiddenFor(model => model.VeiculoDBE.ID)
+            @Html.EditorFor(model => model.BuscaMotorista, null, new { htmlAttributes = new { @class = "form-control col-md-2", @id = "cpf", @placeholder = "CPF" } })
+            &nbsp
+            <button type="submit" class="btn btn-default" onclick="return confirm('Deseja vincular o motorista ?');">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    }
+    <br />
+    <div>
+        <table class="table">
+            <tr class="head-tabela">
+                <th>
+                    @Html.DisplayName("Nome")
+                </th>
+                <th>
+                    @Html.DisplayName("CPF")
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.VeiculoDBE.ListaMotoristas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrimeiroNome)
+                        @Html.DisplayFor(modelItem => item.Sobrenome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CPF)
+                    </td>
+                    <td>
+                        <a title="Visualizar" class="btn btn-default btn-xs" href="@Url.Action("VisualizarMotorista", "Motorista", new { id = item.ID} )">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                        <a title="Desvincular" class="btn btn-default btn-xs" onclick="return confirm('Deseja desvincular o motorista ?');"
+                           href="@Url.Action("DesvincularMotoristaVeiculo", "Veiculo", new { veiculoid = Model.VeiculoDBE.ID, motoristaid = item.ID })">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#cpf").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true })
+        });
+    </script>
+}

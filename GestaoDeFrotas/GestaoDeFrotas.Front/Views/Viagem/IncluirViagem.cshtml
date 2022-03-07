@@ -1,0 +1,229 @@
+﻿@model CadastroDeCaminhoneiro.ViewModels.CadastroViagemVM
+
+@{
+    ViewBag.Title = "IncluirViagem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Incluir Viagem</h2>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <!-- #region Dados de motorista e veículo -->
+    <div class="row" id="divMotoristaVeiculo">
+        @Html.HiddenFor(model => model.MotoristaID, htmlAttributes: new { })
+        <div class="col-md-6" id="divMotorista">
+            <div class="div-item-viagem">
+                <h4>@Html.Label("Motorista", htmlAttributes: new { @class = "" })</h4>
+                <div class="row" id="divBuscaMotorista">
+                    <div class="col-md-6">
+                        @Html.EditorFor(m => m.BuscaMotorista, new { htmlAttributes = new { @class = "form-control", placeholder = "Nome/CPF" } })
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-default" onclick="BuscaMotorista()" id="btnBuscaMotorista" title="Adicionar">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <div class="row" id="divDadosMotorista1">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.PrimeiroNome, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.PrimeiroNome, null, new { htmlAttributes = new { @id = "PrimeiroNome", @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(m => m.MotoristaID)
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Sobrenome, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.Sobrenome, null, new { htmlAttributes = new { @id = "Sobrenome", @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+                <br />
+                <div class="row" id="divDadosMotorista2">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.CPF, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.CPF, null, new { htmlAttributes = new { @id = "CPF", @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.CNH, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.CNH, null, new { htmlAttributes = new { @id = "CNH", @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="col-md-6" id="divVeiculo">
+            <div class="div-item-viagem">
+                <h4>@Html.Label("Veículo", htmlAttributes: new { @class = "control-label" })</h4> 
+                <div class="row" id="divBuscaVeiculo">
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(m => m.VeiculoID, null, "Busque um motorista...", new { @class = "form-control", onchange = "SelecionaVeiculo(this.value)" })
+                    </div>
+                </div>
+                <br />
+                <div class="row" id="divDadosVeiculo1">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Placa, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.Placa, null, new { htmlAttributes = new { @id = "Placa", @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(m => m.MotoristaID)
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Tipo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.Tipo, null, new { htmlAttributes = new { @id = "Tipo", @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+                <br />
+                <div class="row" id="divDadosVeiculo2">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Marca, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.Marca, null, new { htmlAttributes = new { @id = "Marca", @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Modelo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(m => m.Modelo, null, new { htmlAttributes = new { @id = "Modelo", @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <br />
+    <!-- #endregion -->
+
+    <!-- #region Dados de viagem -->
+    <div class="row" id="divDadosViagem">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.Inicio, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Inicio, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+            @Html.ValidationMessageFor(model => model.Inicio, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.MotivoID, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.DropDownListFor(model => model.MotivoID, null, new { @class = "form-control" })
+        </div>
+    </div>
+    <br />
+    <br />
+    <!-- #endregion -->
+
+    <!-- #region Botoes -->
+    <div id="divBotoes">
+        <button type="submit" value="Salvar" class="btn btn-success">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            <strong>Salvar</strong>
+        </button>
+
+        <a title="Voltar" id="btnVoltar" class="btn btn-default" href="@Url.Action("PainelDeViagens", "Viagem")">
+            <span class="glyphicon glyphicon-backward"></span>
+            <strong>Voltar</strong>
+        </a>
+    </div>
+    <!-- #endregion -->
+}
+
+<!-- #region Scripts -->
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#BuscaMotorista").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Viagem/AutoCompleteMotorista",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Busca: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.Nome, value: item.CPF };
+                            }))
+
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                },
+                minLength: 1,
+                dataType: "json",
+                cache: false
+            });
+            var inputMotorista = document.getElementById("BuscaMotorista");
+
+            inputMotorista.addEventListener("change", function (event) {
+                BuscaMotorista();
+            });
+
+            $(window).keydown(function (event) {
+                if ((event.keyCode == 13) && document.activeElement.id == "BuscaMotorista") {
+                    event.preventDefault();
+                    BuscaMotorista();
+                    return false;
+                }
+            });
+
+        });
+
+        function BuscaMotorista() {
+            $("#BuscaMotorista").empty();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BuscaMotorista")',
+                dataType: "json",
+                data: "{busca: '" + document.getElementById("BuscaMotorista").value + "'}",
+                contentType: "application/json; charset=utf-8",
+                success: function (motorista) {
+                    document.getElementById("PrimeiroNome").value = motorista.PrimeiroNome;
+                    document.getElementById("Sobrenome").value = motorista.Sobrenome;
+                    document.getElementById("CPF").value = motorista.CPF;
+                    document.getElementById("CNH").value = motorista.CNH.Numero;
+                    document.getElementById("MotoristaID").value = motorista.ID;
+                    BuscaVeiculo(motorista.ID);
+                },
+                error: function () {
+                }
+            });
+        }
+        function BuscaVeiculo(idMotorista) {
+            $("#VeiculoID").empty();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BuscaVeiculosPorMotoristaID")',
+                dataType: "json",
+                data: "{motoristaID: '" + idMotorista + "'}",
+                contentType: "application/json; charset=utf-8",
+                success: function (sist) {
+                    $("#VeiculoID").append('<option value="' + 0 + '">' + "Selecione..." + '</option>');
+                    $.each(sist, function (i, veiculo) {
+                        $("#VeiculoID").append('<option value="' + veiculo.Value + '">' + veiculo.Text + '</option>');
+                    });
+                },
+                error: function () {
+                }
+            });
+        }
+        function SelecionaVeiculo(idVeiculo) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SelecionaVeiculo")',
+                dataType: "json",
+                data: "{veiculoID: '" + idVeiculo + "'}",
+                contentType: "application/json; charset=utf-8",
+                success: function (veiculo) {
+                    document.getElementById("Placa").value = veiculo.Placa;
+                    document.getElementById("Marca").value = veiculo.Marca.Nome;
+                    document.getElementById("Modelo").value = veiculo.Modelo.Nome;
+                    document.getElementById("Tipo").value = veiculo.Tipo.Descricao;
+                    document.getElementById("VeiculoID").value = veiculo.ID;
+                },
+                error: function () {
+                }
+            });
+        }
+    </script>
+}
+<!-- #endregion -->

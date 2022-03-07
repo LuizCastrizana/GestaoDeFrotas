@@ -1,0 +1,185 @@
+﻿@model CadastroDeCaminhoneiro.Models.Motorista
+
+@{
+    ViewBag.Title = "VisualizarMotorista";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="display-inline-block">Visualizar Motorista</h2>
+<div class="display-inline-block botao-superior">
+    <a title="Editar" class="btn btn-info" href="@Url.Action("EditarMotorista", "Motorista", new { id = Model.ID} )">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <strong>Editar</strong>
+    </a>
+    <a title="Voltar" class="btn btn-danger" href="@Url.Action("PainelDeMotoristas", "Motorista")">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        <strong>Voltar</strong>
+    </a>
+</div>
+<hr />
+
+<div class="form-horizontal" id="divDadosMotorista">
+    <div class="row" id="divDdadosRegistro">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.DataInclusao, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.DataInclusao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.DataAlteracao, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.DataAlteracao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label legenda-campo" })
+            <div class="checkbox">
+                @if (Model.Status == true)
+                {
+                    <span class="glyphicon glyphicon-ok"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-remove"></span>
+                }
+            </div>
+        </div>
+    </div>
+    <hr />
+    <h4>Dados pessoais</h4>
+    <hr />
+    <div class="row" id="divDadosPessoais1">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.PrimeiroNome, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.PrimeiroNome, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.Sobrenome, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Sobrenome, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.DataNascimento, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.DataNascimento, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    <div class="row" id="divDadosPessoais2">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CPF, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CPF, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.RG, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.RG, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    <br />
+    <div class="row" id="divEndereco1">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.Endereco.Logradouro, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Logradouro, new { htmlAttributes = new { @class = "form-control campo-form", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-1">
+            @Html.LabelFor(model => model.Endereco.Numero, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Numero, new { htmlAttributes = new { @class = "form-control", @type = "text", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.Endereco.Complemento, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Complemento, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.Endereco.Cep, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Cep, new { htmlAttributes = new { @class = "form-control", @id = "cep", @readonly = "readonly" } })
+        </div>
+    </div>
+    <div class="row" id="divEndereco2">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.Endereco.Bairro, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Bairro, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.Endereco.Municipio.NomeMunicipio, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Municipio.NomeMunicipio, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.Endereco.Municipio.Estado.NomeEstado, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.Endereco.Municipio.Estado.NomeEstado, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+</div>
+<br />
+<hr />
+<div id="divCNH">
+    <h4>CNH</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CNH.Numero, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CNH.Numero, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CNH.RENACH, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CNH.RENACH, new { htmlAttributes = new { @class = "form-control upper", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CNH.Espelho, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CNH.Espelho, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CNH.DataEmissao, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CNH.DataEmissao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CNH.DataValidade, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CNH.DataValidade, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(model => model.CNH.Categoria.Categoria, htmlAttributes: new { @class = "control-label legenda-campo" })
+            @Html.EditorFor(model => model.CNH.Categoria.Categoria, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<hr />
+<h4>Veículos</h4>
+<hr />
+<div id="divVeiculos">
+    <table class="table">
+        <tr class="head-tabela">
+            <th>
+                @Html.DisplayName("Placa")
+            </th>
+            <th>
+                @Html.DisplayName("Marca")
+            </th>
+            <th>
+                @Html.DisplayName("Modelo")
+            </th>
+            <th>
+                @Html.DisplayName("Tipo")
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ListaVeiculos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Placa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Marca.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Modelo.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tipo.Descricao)
+                </td>
+                <td>
+                    <a title="Visualizar" class="btn btn-default btn-xs" href="/Veiculo/VisualizarVeiculo/@item.ID"><span class="glyphicon glyphicon-eye-open"></span></a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
