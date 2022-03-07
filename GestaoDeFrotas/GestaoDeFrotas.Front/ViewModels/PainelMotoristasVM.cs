@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DBENTITIES;
 
 namespace CadastroDeCaminhoneiro.ViewModels
 {
@@ -14,7 +15,7 @@ namespace CadastroDeCaminhoneiro.ViewModels
         public bool Todos { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public IEnumerable<Motorista> Motoristas { get; set; }
+        public IEnumerable<MotoristaDBE> Motoristas { get; set; }
 
         public PainelMotoristasVM()
         {
