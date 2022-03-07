@@ -10,14 +10,13 @@ using GestaoDeFrotas.Data.DBENTITIES;
 
 namespace CadastroDeCaminhoneiro.ViewModels
 {
-    // TODO Adicionar campo de placa e transferir validação da model para cá
     public class CadastroVeiculoVM
     {
         public VeiculoDBE VeiculoDBE { get; set; }
 
         [Required(ErrorMessage = "Campo obrigatório")]
         [RegularExpression(@"[A-Z]{3}-[0-9]{1}[A-Z0-9]{1}[0-9]{2}", ErrorMessage = "Valor inválido")]
-        [Remote("VeiculoExiste", "Veiculo", AdditionalFields = "ID", ErrorMessage = "A placa inserida já foi cadastrada")]
+        [Remote("ValidaVeiculoAtivo", "Veiculo")]
         [DisplayName("Placa")]
         public string Placa { get; set; }
 

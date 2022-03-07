@@ -111,6 +111,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             vm.VeiculoDBE.Marca.ID = vm.MarcaID;
             vm.VeiculoDBE.Modelo.ID = vm.ModeloID;
             vm.VeiculoDBE.Tipo.ID = vm.TipoID;
+            vm.VeiculoDBE.Placa = vm.Placa;
 
             try
             {
@@ -152,9 +153,12 @@ namespace CadastroDeCaminhoneiro.Controllers
             return View(vm);
         }
 
-        public ActionResult VeiculoExiste(string placa)
+        public ActionResult ValidaVeiculoAtivo(string Placa)
         {
-            return Json(new VeiculoDAL().BuscarPorPlaca(placa.ToUpper(), true).ID == 0);
+            if (new VeiculoDAL().BuscarPorPlaca(Placa.ToUpper(), true).ID > 0)
+                return Json("Placa já cadastrada", JsonRequestBehavior.AllowGet);
+            else
+                return Json(true, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
