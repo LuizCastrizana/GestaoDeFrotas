@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using System.Web.Services;
 using CadastroDeCaminhoneiro.Models;
 using CadastroDeCaminhoneiro.ViewModels;
+using GestaoDeFrotas.Data.DAL;
+using GestaoDeFrotas.Data.DBENTITIES;
 using X.PagedList;
 
 namespace CadastroDeCaminhoneiro.Controllers
@@ -31,10 +33,10 @@ namespace CadastroDeCaminhoneiro.Controllers
                 };
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
-            viewModelPainel.Motoristas = Enumerable.Empty<Motorista>().ToPagedList(1, 10);
+            viewModelPainel.Motoristas = Enumerable.Empty<MotoristaDBE>().ToPagedList(1, 10);
             try
             {
-                viewModelPainel.Motoristas = new Motorista().List(false).OrderBy(x => x.PrimeiroNome);
+                viewModelPainel.Motoristas = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
                 viewModelPainel.Motoristas = viewModelPainel.Motoristas.ToPagedList(1, 10);
                 viewModelPainel.BuscaMotorista = "";
                 viewModelPainel.Todos = false;
@@ -69,7 +71,7 @@ namespace CadastroDeCaminhoneiro.Controllers
                 // remove caracteres da string de busca
                 vm.BuscaMotorista = StringTools.RemoverCaracteres(vm.BuscaMotorista, "-.");
                 // busca por nome ou cpf
-                vm.Motoristas = new Motorista().List(vm.Todos)
+                vm.Motoristas = new MotoristaDAL().List(vm.Todos)
                                                       .Where(m => (m.PrimeiroNome + " " + m.Sobrenome).ToUpper()
                                                       .Contains(vm.BuscaMotorista.ToUpper())
                                                       ||
@@ -117,7 +119,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             catch (Exception)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados do painel.";
-                vm.Motoristas = Enumerable.Empty<Motorista>().ToPagedList(numPagina, 10);
+                vm.Motoristas = Enumerable.Empty<MotoristaDBE>().ToPagedList(numPagina, 10);
                 return View(vm);
             }
         }
@@ -131,8 +133,8 @@ namespace CadastroDeCaminhoneiro.Controllers
             try
             {
                 ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<Municipio>(), "ID", "NomeMunicipio");
-                ViewData["EstadoSelecionado"] = new SelectList(new Estado().List(), "ID", "NomeEstado");
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNH().List(), "ID", "Categoria");
+                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado");
+                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria");
 
                 return View(vm);
             }
@@ -147,19 +149,19 @@ namespace CadastroDeCaminhoneiro.Controllers
         [HttpPost]
         public ActionResult IncluirMotorista(CadastroMotoristaVM vm)
         {
-            vm.VmToModel();
+            vm.CastToMotoristaVM();
 
             try
             {
-                ViewData["EstadoSelecionado"] = new SelectList(new Estado().List(), "ID", "NomeEstado", vm.EstadoSelecionado);
-                ViewData["MunicipioSelecionado"] = new SelectList(new Municipio().ListarMunicipios(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNH().List(), "ID", "Categoria", vm.CategoriaSelecionada);
+                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado", vm.EstadoSelecionado);
+                ViewData["MunicipioSelecionado"] = new SelectList(new MunicipioDAL().ListarMunicipios(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
+                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria", vm.CategoriaSelecionada);
             }
             catch (Oracle.ManagedDataAccess.Client.OracleException)
             {
-                ViewData["EstadoSelecionado"] = new SelectList(Enumerable.Empty<Municipio>(), "ID", "NomeEstado");
-                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<Estado>(), "ID", "NomeMunicipio");
-                ViewData["CategoriaSelecionada"] = new SelectList(Enumerable.Empty<CategoriaCNH>(), "ID", "Categoria");
+                ViewData["EstadoSelecionado"] = new SelectList(Enumerable.Empty<MunicipioDBE>(), "ID", "NomeEstado");
+                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<EstadoDBE>(), "ID", "NomeMunicipio");
+                ViewData["CategoriaSelecionada"] = new SelectList(Enumerable.Empty<CategoriaCNHDBE>(), "ID", "Categoria");
             }
 
             if (ModelState.IsValid)
@@ -167,31 +169,47 @@ namespace CadastroDeCaminhoneiro.Controllers
                 try
                 {
                     int idMotorista = 0;
+
+                    var motoristaDBE = vm.Motorista.CastToDBE();
+
                     // Verifica se existe cadastro inativo com o mesmo CPF
-                    vm.Motorista.GetByCPF(vm.Motorista.CPF, null);
-                    if (vm.Motorista.ID != 0)
+                    //vm.Motorista.GetByCPF(vm.Motorista.CPF, null);
+                    var motoristaInativoID = new MotoristaDAL().GetByCPF(vm.Motorista.CPF, null).ID;
+                    //if (vm.Motorista.ID != 0)
+                    if (motoristaInativoID > 0)
                     {
                         TempData["MensagemAviso"] = "O CPF inserido está vinculado a este cadastro inativo!";
-                        return RedirectToAction("VisualizarMotorista", new { id = vm.Motorista.ID });
+                        return RedirectToAction("VisualizarMotorista", new { id = motoristaInativoID });
                     }
                     // Insere endereço
-                    vm.Motorista.Endereco.Create();
+                    new EnderecoDAL().Create(motoristaDBE.Endereco);
+                    //vm.Motorista.Endereco.Create();
+
                     // Verifica se existe CNH
-                    switch (vm.Motorista.CNH.VerificaSeEstaCadastrado(ref idMotorista))
+                    //switch (vm.Motorista.CNH.VerificaSeEstaCadastrado(ref idMotorista))
+                    switch (new CNHDAL().VerificaSeEstaCadastrado(ref idMotorista, motoristaDBE.CNH))
                     {
                         // Não existe CNH com os mesmos dados
                         case false:
-                            vm.Motorista.CNH.Create();
-                            vm.Motorista.Create();
+                            //vm.Motorista.CNH.Create();
+                            new CNHDAL().Create(motoristaDBE.CNH);
+
+                            //vm.Motorista.Create();
+                            new MotoristaDAL().Create(motoristaDBE);
+
                             TempData["MensagemSucesso"] = "Motorista cadastrado com sucesso!";
                             return RedirectToAction("PainelDeMotoristas");
+
                         // Existe CNH associada a um motorista
                         case true:
                             TempData["MensagemAviso"] = "Um ou mais dados da CNH inseridos estão associados a este motorista!";
                             return RedirectToAction("VisualizarMotorista", new { id = idMotorista });
+
                         // Existe CNH cadastrada mas não está vinculada a nenhum motorista (houve uma tentativa de cadastro do motorista mas ocorreu um erro)
                         case null:
-                            vm.Motorista.Create();
+                            //vm.Motorista.Create();
+                            new MotoristaDAL().Create(motoristaDBE);
+
                             TempData["MensagemSucesso"] = "Motorista cadastrado com sucesso!";
                             return RedirectToAction("PainelDeMotoristas");
                     }
@@ -235,19 +253,20 @@ namespace CadastroDeCaminhoneiro.Controllers
         #region Editar
         public ActionResult VisualizarMotorista(int id)
         {
-            Motorista motorista = new Motorista();
+            MotoristaVM vm = new MotoristaVM();
             try
             {
-                motorista.GetByID(id, true);
-                motorista.Endereco.Municipio = new Municipio().ListarMunicipios().Where(m => m.ID == motorista.Endereco.Municipio.ID).First();
-                motorista.ListaVeiculos = new Veiculo().ListarVeiculosPorIDMotorista(id, true);
+                //vm.GetByID(id, true);
+                vm.CastFromDBE(new MotoristaDAL().GetByID(id, true));
+                vm.Endereco.Municipio = new MunicipioDAL().ListarMunicipios().Where(m => m.ID == vm.Endereco.Municipio.ID).First();
+                vm.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(id, true);
             }
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados do motorista - " + e.Message;
                 return RedirectToAction("PainelDeMotoristas");
             }
-            return View(motorista);
+            return View(vm);
         }
 
         public ActionResult EditarMotorista(int id)
@@ -255,14 +274,14 @@ namespace CadastroDeCaminhoneiro.Controllers
             CadastroMotoristaVM vm = new CadastroMotoristaVM();
             try
             {
-                vm.Motorista.GetByID(id, true);
-                vm.Motorista.ListaVeiculos = new Veiculo().ListarVeiculosPorIDMotorista(id, true);
+                vm.Motorista.CastFromDBE(new MotoristaDAL().GetByID(id, true));
+                vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(id, true);
                 vm.DataNascimento = vm.Motorista.DataNascimento.ToString("yyyy-MM-dd");
                 vm.DataEmissao = vm.Motorista.CNH.DataEmissao.ToString("yyyy-MM-dd");
                 vm.DataValidade = vm.Motorista.CNH.DataValidade.ToString("yyyy-MM-dd");
-                ViewData["MunicipioSelecionado"] = new SelectList(new Municipio().ListarMunicipios(), "ID", "NomeMunicipio", vm.Motorista.Endereco.Municipio.ID.ToString());
-                ViewData["EstadoSelecionado"] = new SelectList(new Estado().List(), "ID", "NomeEstado", vm.Motorista.Endereco.Municipio.Estado.ID.ToString());
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNH().List(), "ID", "Categoria", vm.Motorista.CNH.Categoria.ID.ToString());
+                ViewData["MunicipioSelecionado"] = new SelectList(new MunicipioDAL().ListarMunicipios(), "ID", "NomeMunicipio", vm.Motorista.Endereco.Municipio.ID.ToString());
+                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado", vm.Motorista.Endereco.Municipio.Estado.ID.ToString());
+                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria", vm.Motorista.CNH.Categoria.ID.ToString());
                 return View(vm);
             }
             catch (Exception e)
@@ -275,27 +294,29 @@ namespace CadastroDeCaminhoneiro.Controllers
         [HttpPost]
         public ActionResult EditarMotorista(CadastroMotoristaVM vm)
         {
-            vm.VmToModel();
+            vm.CastToMotoristaVM();
+            var motoristaDBE = vm.Motorista.CastToDBE();
             try
             {
-                vm.Motorista.ListaVeiculos = new Veiculo().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
-                ViewData["MunicipioSelecionado"] = new SelectList(new Municipio().ListarMunicipios(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
-                ViewData["EstadoSelecionado"] = new SelectList(new Estado().List(), "ID", "NomeEstado", vm.EstadoSelecionado);
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNH().List(), "ID", "Categoria", vm.CategoriaSelecionada.ToString());
+                vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
+                ViewData["MunicipioSelecionado"] = new SelectList(new MunicipioDAL().ListarMunicipios(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
+                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado", vm.EstadoSelecionado);
+                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria", vm.CategoriaSelecionada.ToString());
             }
             catch (Oracle.ManagedDataAccess.Client.OracleException)
             {
-                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<Municipio>(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
-                ViewData["EstadoSelecionado"] = new SelectList(Enumerable.Empty<Estado>(), "ID", "NomeEstado", vm.EstadoSelecionado);
-                ViewData["CategoriaSelecionada"] = new SelectList(Enumerable.Empty<CategoriaCNH>(), "ID", "Categoria", vm.CategoriaSelecionada.ToString());
+                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<MunicipioDBE>(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
+                ViewData["EstadoSelecionado"] = new SelectList(Enumerable.Empty<EstadoDBE>(), "ID", "NomeEstado", vm.EstadoSelecionado);
+                ViewData["CategoriaSelecionada"] = new SelectList(Enumerable.Empty<CategoriaCNHDBE>(), "ID", "Categoria", vm.CategoriaSelecionada.ToString());
             }
             if (ModelState.IsValid)
             {
                 try
                 {
-                    vm.Motorista.Endereco.Update();
-                    vm.Motorista.CNH.Update();
-                    vm.Motorista.Update();
+                    new EnderecoDAL().Update(motoristaDBE.Endereco);
+                    new CNHDAL().Update(motoristaDBE.CNH);
+                    new MotoristaDAL().Update(motoristaDBE);
+
                     TempData["MensagemSucesso"] = "Cadastro editado com sucesso!";
                     return RedirectToAction("PainelDeMotoristas");
                 }
@@ -314,7 +335,7 @@ namespace CadastroDeCaminhoneiro.Controllers
         {
             try
             {
-                new Motorista().UpdateStatus(id, !status);
+                new MotoristaDAL().UpdateStatus(id, !status);
                 TempData["MensagemSucesso"] = "Cadastro atualizado com sucesso!";
                 return RedirectToAction("EditarMotorista", new { id });
             }
@@ -330,17 +351,16 @@ namespace CadastroDeCaminhoneiro.Controllers
         [HttpPost]
         public ActionResult VincularVeiculo(CadastroMotoristaVM vm)
         {
-            Veiculo veiculo;
+            VeiculoDBE veiculo;
             if (vm.BuscaPlaca == null)
                 vm.BuscaPlaca = string.Empty;
             try
             {
-                vm.Motorista.GetByID(vm.Motorista.ID, true);
-                vm.Motorista.ListaVeiculos = new Veiculo().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
-                veiculo = new Veiculo().BuscarPorPlaca(vm.BuscaPlaca.ToUpper(), true);
-
+                vm.Motorista.CastFromDBE(new MotoristaDAL().GetByID(vm.Motorista.ID, true));
+                vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
+                veiculo = new VeiculoDAL().BuscarPorPlaca(vm.BuscaPlaca.ToUpper(), true);
             }
-            catch (Oracle.ManagedDataAccess.Client.OracleException e)
+            catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados de motorista e veículo - " + e.Message;
                 return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
@@ -357,7 +377,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             }
             try
             {
-                vm.Motorista.VincularVeiculo(veiculo.ID);
+                new MotoristaDAL().VincularVeiculoMotorista(veiculo.ID, vm.Motorista.ID);
                 TempData["MensagemSucesso"] = "Veículo vinculado com sucesso!";
                 return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
             }
@@ -371,7 +391,7 @@ namespace CadastroDeCaminhoneiro.Controllers
         {
             try
             {
-                new Motorista().DesvincularVeiculoMotorista(veiculoid, motoristaid);
+                new MotoristaDAL().DesvincularVeiculoMotorista(veiculoid, motoristaid);
                 TempData["MensagemSucesso"] = "Veículo desvinculado com sucesso!";
                 return RedirectToAction("EditarMotorista", new { id = motoristaid });
             }
@@ -387,16 +407,16 @@ namespace CadastroDeCaminhoneiro.Controllers
         [WebMethod]
         public JsonResult BuscaMunicipio(int idEstado)
         {
-            IEnumerable<Municipio> ListaMunicipios = new Municipio().ListarMunicipios();
+            IEnumerable<MunicipioDBE> ListaMunicipios = new MunicipioDAL().ListarMunicipios();
             return Json(new SelectList(ListaMunicipios
                 .Where(x => x.Estado.ID == idEstado)
                 .OrderBy(x => x.NomeMunicipio)
                 , "ID", "NomeMunicipio"));
         }
-        public ActionResult ValidaCpf(Motorista motorista)
+        public ActionResult ValidaCpf(MotoristaDBE motorista)
         {
             int idEntrada = motorista.ID;
-            motorista.GetByCPF(motorista.CPF, false);
+            motorista = new MotoristaDAL().GetByCPF(motorista.CPF, false);
             if (motorista.ID > 0 && motorista.ID != idEntrada)
                 return Json("CPF já cadastrado", JsonRequestBehavior.AllowGet);
             if (!CPF.ValidaCpf(motorista.CPF))
@@ -411,7 +431,7 @@ namespace CadastroDeCaminhoneiro.Controllers
         {
             try
             {
-                new Endereco().Delete(id);
+                new EnderecoDAL().Delete(id);
                 return true;
             }
             catch (CadastroEnderecoException)
