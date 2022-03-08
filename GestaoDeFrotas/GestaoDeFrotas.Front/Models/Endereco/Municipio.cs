@@ -8,7 +8,7 @@ using System.Web;
 
 namespace CadastroDeCaminhoneiro.Models
 {
-    public class Municipio : OracleModel, IModel
+    public class Municipio : OracleModel
     {
         public int ID { get; set; }
         [DisplayName("Município")]
@@ -100,21 +100,6 @@ namespace CadastroDeCaminhoneiro.Models
                 Conexao.Open();
                 Comando.ExecuteNonQuery();
             }
-        }
-
-        public void Read(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStatus(int id, bool status)
-        {
-            throw new NotImplementedException();
         }
     }
 }
