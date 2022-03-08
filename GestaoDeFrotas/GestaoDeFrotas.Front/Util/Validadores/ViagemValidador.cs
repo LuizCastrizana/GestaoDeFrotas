@@ -1,5 +1,7 @@
 ﻿using CadastroDeCaminhoneiro.DBEnums;
 using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DAL;
+using GestaoDeFrotas.Data.DBENTITIES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ namespace CadastroDeCaminhoneiro
 {
     public static class ViagemValidador
     {
-        public static RetornoValidacao ValidaInclusao(Viagem viagem)
+        public static RetornoValidacao ValidaInclusao(ViagemDBE viagem)
         {
             var Retorno = new RetornoValidacao()
             {
@@ -37,7 +39,7 @@ namespace CadastroDeCaminhoneiro
                 Retorno.Sucesso = false;
                 Retorno.Mensagem += "Veículo não informado. \n";
             }
-            if (Retorno.Sucesso && !new Veiculo().ListarVeiculosPorIDMotorista(idMotorista, true).Where(v => v.ID == idVeiculo).Any())
+            if (Retorno.Sucesso && !new VeiculoDAL().ListarVeiculosPorIDMotorista(idMotorista, true).Where(v => v.ID == idVeiculo).Any())
             {
                 Retorno.Sucesso = false;
                 Retorno.Mensagem += "O motorista não está vinculado ao veículo" + "\n";
@@ -57,20 +59,20 @@ namespace CadastroDeCaminhoneiro
                 (int)ENUMSTATUSVIAGEM.EMANDAMENTO,
                 (int)ENUMSTATUSVIAGEM.PROGRAMADA
             };
-            var buscaMotorista = new Viagem()
+            var buscaMotorista = new ViagemDBE()
             {
-                MotoristaViagem = new Motorista()
+                MotoristaViagem = new MotoristaDBE()
                 {
                     ID = idMotorista
                 },
             };
             foreach( var statusID in statusViagem)
             {
-                buscaMotorista.ViagemStatus = new StatusViagem()
+                buscaMotorista.ViagemStatus = new StatusViagemDBE()
                 {
                     ID = statusID
                 };
-                var viagens = buscaMotorista.Read();
+                var viagens = new ViagemDAL().Read(buscaMotorista);
                 if (viagens.Any())
                 {
                     Retorno.Sucesso = false;
@@ -91,32 +93,26 @@ namespace CadastroDeCaminhoneiro
                 (int)ENUMSTATUSVIAGEM.EMANDAMENTO,
                 (int)ENUMSTATUSVIAGEM.PROGRAMADA
             };
-            var buscaVeiculo = new Viagem()
+            var buscaVeiculo = new ViagemDBE()
             {
-                VeiculoViagem = new Veiculo()
+                VeiculoViagem = new VeiculoDBE()
                 {
                     ID = idVeiculo
                 }
             };
             foreach (var statusID in statusViagem)
             {
-                buscaVeiculo.ViagemStatus = new StatusViagem()
+                buscaVeiculo.ViagemStatus = new StatusViagemDBE()
                 {
                     ID = statusID
                 };
-                var viagens = buscaVeiculo.Read();
+                var viagens = new ViagemDAL().Read(buscaVeiculo);
                 if (viagens.Any())
                 {
                     Retorno.Sucesso = false;
                     Retorno.Mensagem += "Veículo está vinculado a uma viagem em andamento: " + viagens.First().Codigo + "\n";
                 }
             }
-            //var viagens = buscaVeiculo.Read(buscaVeiculo);
-            //if (viagens.Any())
-            //{
-            //    Retorno.Sucesso = false;
-            //    Retorno.Mensagem += "Veiculo está vinculado a uma viagem em andamento: " + viagens.First().Codigo + "\n";
-            //}
         }
     }
 }

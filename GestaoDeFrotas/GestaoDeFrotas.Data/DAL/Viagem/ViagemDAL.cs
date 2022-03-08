@@ -1,4 +1,4 @@
-﻿using GestaoDeFrotas.Backend.DBENTITIES;
+﻿using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.Enums;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -107,13 +107,13 @@ namespace GestaoDeFrotas.Data.DAL
                             ViagemDBE itemLista = new ViagemDBE();
                             itemLista.ID = Convert.ToInt32(reader["ID"]);
                             itemLista.Codigo = Convert.ToString(reader["CODIGO"]);
-                            itemLista.MotoristaViagem = new MotoristaDAL().GetByID(Convert.ToInt32(DataReader["MOTORISTAID"]), true);
-                            itemLista.VeiculoViagem = new VeiculoDAL().BuscarPorId(Convert.ToInt32(DataReader["VEICULOID"]), null);
+                            itemLista.MotoristaViagem = new MotoristaDAL().GetByID(Convert.ToInt32(reader["MOTORISTAID"]), true);
+                            itemLista.VeiculoViagem = new VeiculoDAL().BuscarPorId(Convert.ToInt32(reader["VEICULOID"]), null);
                             itemLista.Inicio = Convert.ToDateTime(reader["INICIO"]);
                             if (reader["FIM"] != DBNull.Value)
                                 itemLista.Fim = Convert.ToDateTime(reader["FIM"]);
-                            itemLista.Motivo = new MotivoViagemDAL().Read(Convert.ToInt32(DataReader["MOTIVOID"]));
-                            itemLista.ViagemStatus = new StatusViagemDAL().Read(Convert.ToInt32(DataReader["STATUSVIAGEMID"]));
+                            itemLista.Motivo = new MotivoViagemDAL().Read(Convert.ToInt32(reader["MOTIVOID"]));
+                            itemLista.ViagemStatus = new StatusViagemDAL().Read(Convert.ToInt32(reader["STATUSVIAGEMID"]));
                             itemLista.DataInclusao = Convert.ToDateTime(reader["DATAINCLUSAO"]);
                             if (reader["DATAALTERACAO"] != DBNull.Value)
                                 itemLista.DataAlteracao = Convert.ToDateTime(reader["DATAALTERACAO"]);

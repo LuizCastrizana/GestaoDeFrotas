@@ -8,6 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using X.PagedList;
+using GestaoDeFrotas.Data.DAL;
+using GestaoDeFrotas.Data.DBENTITIES;
 
 namespace CadastroDeCaminhoneiro.Controllers
 {
@@ -58,11 +60,11 @@ namespace CadastroDeCaminhoneiro.Controllers
 
             try
             {
-                vm.Viagens = ViagemHelper.BuscarViagensPainel(new Viagem(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 10);
+                vm.Viagens = ViagemHelper.BuscarViagensPainel(new ViagemDBE(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 10);
             }
             catch(Exception e)
             {
-                TempData["MensagemErro"] = "Erro ao buscar dados do painel.";
+                TempData["MensagemErro"] = "Erro ao buscar dados do painel: " + e.Message;
                 return View(vm);
             }
             return View(vm);
@@ -105,11 +107,11 @@ namespace CadastroDeCaminhoneiro.Controllers
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
             ViewData["StatusViagem"] = new SelectList(StatusViagem, "Id", "Text");
 
-            vm.Viagens = Enumerable.Empty<Viagem>().ToPagedList(numPagina, 10);
+            vm.Viagens = Enumerable.Empty<ViagemDBE>().ToPagedList(numPagina, 10);
 
             try
             {
-                var ViagemBusca = new Viagem();
+                var ViagemBusca = new ViagemDBE();
                 ViagemBusca.ViagemStatus.ID = vm.StatusViagem;
 
                 vm.Viagens = ViagemHelper.BuscarViagensPainel(ViagemBusca, vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao);
@@ -130,14 +132,14 @@ namespace CadastroDeCaminhoneiro.Controllers
         #region Cadastro
         public ActionResult VisualizarViagem(int id)
         {
-            Viagem viagem = new Viagem();
+            ViagemDBE viagem;
             try
             {
-                viagem.Read(id);
+                viagem = new ViagemDAL().Read(id);
             }
             catch (Exception e)
             {
-                TempData["MensagemErro"] = "Erro ao buscar dados da viagem.";
+                TempData["MensagemErro"] = "Erro ao buscar dados da viagem: " + e.Message;
                 return RedirectToAction("PainelDeViagens");
             }
             return View(viagem);
@@ -146,10 +148,10 @@ namespace CadastroDeCaminhoneiro.Controllers
         public ActionResult IncluirViagem()
         {
             CadastroViagemVM vm = new CadastroViagemVM();
-            ViewData["VeiculoID"] = new SelectList(Enumerable.Empty<Veiculo>(), "ID", "Placa");
+            ViewData["VeiculoID"] = new SelectList(Enumerable.Empty<VeiculoDBE>(), "ID", "Placa");
             try
             {
-                ViewData["MotivoID"] = new SelectList(new MotivoViagem().List(), "ID", "Descricao");
+                ViewData["MotivoID"] = new SelectList(new MotivoViagemDAL().List(), "ID", "Descricao");
             }
             catch (Exception e)
             {
@@ -162,21 +164,25 @@ namespace CadastroDeCaminhoneiro.Controllers
         [HttpPost]
         public ActionResult IncluirViagem(CadastroViagemVM vm)
         {
-            ViewData["MotivoID"] = new SelectList(Enumerable.Empty<MotivoViagem>(), "ID", "Descricao");
-            ViewData["VeiculoID"] = new SelectList(Enumerable.Empty<Veiculo>(), "ID", "Placa");
+            ViewData["MotivoID"] = new SelectList(Enumerable.Empty<MotivoViagemDBE>(), "ID", "Descricao");
+            ViewData["VeiculoID"] = new SelectList(Enumerable.Empty<VeiculoDBE>(), "ID", "Placa");
 
             try
             {
-                ViewData["MotivoID"] = new SelectList(new MotivoViagem().List(), "ID", "Descricao");
-                ViewData["VeiculoID"] = new SelectList(new Veiculo().ListarVeiculosPorIDMotorista(vm.Viagem.MotoristaViagem.ID, true), "ID", "Placa", vm.Viagem.VeiculoViagem.ID);
+                ViewData["MotivoID"] = new SelectList(new MotivoViagemDAL().List(), "ID", "Descricao");
+                ViewData["VeiculoID"] = new SelectList(new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.MotoristaID, true), "ID", "Placa", vm.VeiculoID);
 
-                vm.VmToModel();
+                vm.VmToDBE();
+
+                GeradorCodigoViagem.GerarCodigo(vm.Viagem);
+
                 vm.Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.PROGRAMADA;
 
                 var retorno = ViagemValidador.ValidaInclusao(vm.Viagem);
                 if (retorno.Sucesso)
                 {
-                    vm.Viagem.Create();
+                    new ViagemDAL().Create(vm.Viagem);
+                    //vm.Viagem.Create();
                     TempData["MensagemSucesso"] = "Viagem cadastrada com sucesso!";
                     return RedirectToAction("PainelDeViagens");
                 }
@@ -196,14 +202,14 @@ namespace CadastroDeCaminhoneiro.Controllers
             CadastroViagemVM vm = new CadastroViagemVM();
             try
             {
-                vm.Viagem.Read(id);
-                vm.Viagem.MotoristaViagem.GetByID(vm.Viagem.MotoristaViagem.ID, true);
-                vm.Viagem.VeiculoViagem = new Veiculo().BuscarPorId(vm.Viagem.VeiculoViagem.ID, null);
-                vm.ModelToVM();
+                vm.Viagem = new ViagemDAL().Read(id);
+                vm.Viagem.MotoristaViagem = new MotoristaDAL().GetByID(vm.Viagem.MotoristaViagem.ID, true);
+                vm.Viagem.VeiculoViagem = new VeiculoDAL().BuscarPorId(vm.Viagem.VeiculoViagem.ID, null);
+                vm.DBEToVM();
             }
             catch (Exception e)
             {
-                TempData["MensagemErro"] = "Erro ao buscar dados da viagem.";
+                TempData["MensagemErro"] = "Erro ao buscar dados da viagem: " + e.Message;
                 return RedirectToAction("PainelVigens");
             }
             return View(vm);
@@ -211,13 +217,13 @@ namespace CadastroDeCaminhoneiro.Controllers
 
         public ActionResult IniciarViagem(int id)
         {
-            var Viagem = new Viagem();
+            ViagemDBE Viagem;
             try
             {
-                Viagem.Read(id);
+                Viagem = new ViagemDAL().Read(id);
                 Viagem.Inicio = DateTime.Now;
                 Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.EMANDAMENTO;
-                Viagem.Update();
+                new ViagemDAL().Update(Viagem);
 
                 TempData["MensagemSucesso"] = "Viagem: " + Viagem.Codigo + " iniciada! ";
                 return RedirectToAction("PainelDeViagens");
@@ -225,18 +231,18 @@ namespace CadastroDeCaminhoneiro.Controllers
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao iniciar viagem: " + e.Message;
-                return RedirectToAction("AdministrarViagem", new { id = Viagem.ID });
+                return RedirectToAction("AdministrarViagem", new { id });
             }
         }
         public ActionResult FinalizarViagem(int id)
         {
-            var Viagem = new Viagem();
+            ViagemDBE Viagem;
             try
             {
-                Viagem.Read(id);
+                Viagem = new ViagemDAL().Read(id);
                 Viagem.Fim = DateTime.Now;
                 Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.ENCERRADA;
-                Viagem.Update();
+                new ViagemDAL().Update(Viagem);
 
                 TempData["MensagemSucesso"] = "Viagem: " + Viagem.Codigo + " encerrada! ";
                 return RedirectToAction("PainelDeViagens");
@@ -244,17 +250,17 @@ namespace CadastroDeCaminhoneiro.Controllers
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao encerrar viagem: " + e.Message;
-                return RedirectToAction("AdministrarViagem", new { id = Viagem.ID });
+                return RedirectToAction("AdministrarViagem", new { id });
             }
         }
         public ActionResult CancelarViagem(int id)
         {
-            var Viagem = new Viagem();
+            ViagemDBE Viagem;
             try
             {
-                Viagem.Read(id);
+                Viagem = new ViagemDAL().Read(id);
                 Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.CANCELADA;
-                Viagem.Update();
+                new ViagemDAL().Update(Viagem);
 
                 TempData["MensagemSucesso"] = "Viagem: " + Viagem.Codigo + " cancelada! ";
                 return RedirectToAction("PainelDeViagens");
@@ -262,7 +268,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao cancelar viagem: " + e.Message;
-                return RedirectToAction("AdministrarViagem", new { id = Viagem.ID });
+                return RedirectToAction("AdministrarViagem", new { id });
             }
         }
         #endregion
@@ -277,13 +283,13 @@ namespace CadastroDeCaminhoneiro.Controllers
 
         public JsonResult BuscaVeiculosPorMotoristaID(string motoristaID)
         {
-            var veiculos = new Veiculo().ListarVeiculosPorIDMotorista(Convert.ToInt32(motoristaID), true);
+            var veiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(Convert.ToInt32(motoristaID), true);
             return Json(new SelectList(veiculos, "ID", "Placa"));
         }
 
         public JsonResult SelecionaVeiculo(string veiculoID)
         {
-            var veiculo = new Veiculo().BuscarPorId(Convert.ToInt32(veiculoID), true);
+            var veiculo = new VeiculoDAL().BuscarPorId(Convert.ToInt32(veiculoID), true);
             return Json(veiculo);
         }
 

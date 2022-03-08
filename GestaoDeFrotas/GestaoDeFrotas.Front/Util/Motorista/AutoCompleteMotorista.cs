@@ -1,4 +1,5 @@
 ﻿using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DBENTITIES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace CadastroDeCaminhoneiro
         {
 
         }
-        public AutoCompleteMotorista(Motorista motorista)
+        public AutoCompleteMotorista(MotoristaDBE motorista)
         {
             Nome = motorista.CPF + " / " + motorista.PrimeiroNome + " " + motorista.Sobrenome;
             CPF = motorista.CPF;

@@ -1,4 +1,4 @@
-﻿using GestaoDeFrotas.Backend.DBENTITIES;
+﻿using GestaoDeFrotas.Data.DBENTITIES;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;

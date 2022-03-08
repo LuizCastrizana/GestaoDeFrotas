@@ -46,6 +46,7 @@ namespace CadastroDeCaminhoneiro.ViewModels
         {
             VeiculoDBE = new VeiculoDBE();
         }
+
         public CadastroVeiculoVM(VeiculoDBE veiculo)
         {
             VeiculoDBE = veiculo;

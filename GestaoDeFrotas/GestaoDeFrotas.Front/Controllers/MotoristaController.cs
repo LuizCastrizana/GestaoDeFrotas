@@ -132,7 +132,7 @@ namespace CadastroDeCaminhoneiro.Controllers
 
             try
             {
-                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<Municipio>(), "ID", "NomeMunicipio");
+                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<MunicipioDBE>(), "ID", "NomeMunicipio");
                 ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado");
                 ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria");
 

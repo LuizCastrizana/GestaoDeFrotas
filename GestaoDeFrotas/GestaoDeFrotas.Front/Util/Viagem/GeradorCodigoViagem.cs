@@ -1,4 +1,6 @@
 ﻿using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Data.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace CadastroDeCaminhoneiro
     {
         private const string CONTADORINICIAL = "00001";
         private const int CONTADORMAXIMO = 99999;
-        public static void GerarCodigo(Viagem viagem)
+        public static void GerarCodigo(ViagemDBE viagem)
         {
             if(viagem.Motivo.ID == 0)
                 throw new Exception("Não foi possível gerar um novo código de viagem: Motivo não informado.");
@@ -23,11 +25,11 @@ namespace CadastroDeCaminhoneiro
                 DateTime.Now.ToString("MM");
 
             // Busca viagens geradas na data atual e com o mesmo motivo, pois nesse caso o início do código será igual ao cógigo que está sendo gerado
-            var viagemBusca = new Viagem()
+            var viagemBusca = new ViagemDBE()
             {
                 Motivo = viagem.Motivo
             };
-            var viagensDia = viagemBusca.Read().Where(m=>m.DataInclusao.Date == DateTime.Now.Date);
+            var viagensDia = new ViagemDAL().Read(viagemBusca).Where(m=>m.DataInclusao.Date == DateTime.Now.Date);
 
             // Se houver qualquer viagem gerada na data atual e com o mesmo motivo, verifica o valor do contador do código da viagem mais recente e incrementa o valor
             // Em seguida concatena o valor do contador ao código da viagem

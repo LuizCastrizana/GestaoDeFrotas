@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestaoDeFrotas.Backend.DBENTITIES
+namespace GestaoDeFrotas.Data.DBENTITIES
 {
     public class StatusViagemDBE
     {

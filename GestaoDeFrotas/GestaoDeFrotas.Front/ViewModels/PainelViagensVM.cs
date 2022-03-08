@@ -1,4 +1,5 @@
 ﻿using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DBENTITIES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace CadastroDeCaminhoneiro.ViewModels
 {
     public class PainelViagensVM
     {
-        public IEnumerable<Viagem> Viagens { get; set; }
+        public IEnumerable<ViagemDBE> Viagens { get; set; }
         public string BuscaViagem { get; set; }
         public int OpcoesFiltragem { get; set; }
         public int OpcaoOrdenacao { get; set; }
@@ -17,7 +18,7 @@ namespace CadastroDeCaminhoneiro.ViewModels
         public bool Todos { get; set; }
         public PainelViagensVM()
         {
-            Viagens = Enumerable.Empty<Viagem>();
+            Viagens = Enumerable.Empty<ViagemDBE>();
             BuscaViagem = string.Empty;
             Todos = false;
         }
