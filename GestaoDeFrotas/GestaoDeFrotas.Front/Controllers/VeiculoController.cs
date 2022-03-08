@@ -121,9 +121,9 @@ namespace CadastroDeCaminhoneiro.Controllers
             }
             catch (Oracle.ManagedDataAccess.Client.OracleException)
             {
-                ViewData["MarcaID"] = new SelectList(Enumerable.Empty<MarcaVeiculo>(), "ID", "Nome");
-                ViewData["ModeloID"] = new SelectList(Enumerable.Empty<ModeloVeiculo>(), "ID", "Nome");
-                ViewData["TipoID"] = new SelectList(Enumerable.Empty<TipoVeiculo>(), "ID", "Descricao");
+                ViewData["MarcaID"] = new SelectList(Enumerable.Empty<MarcaVeiculoDBE>(), "ID", "Nome");
+                ViewData["ModeloID"] = new SelectList(Enumerable.Empty<ModeloVeiculoDBE>(), "ID", "Nome");
+                ViewData["TipoID"] = new SelectList(Enumerable.Empty<TipoVeiculoDBE>(), "ID", "Descricao");
             }
 
             if (ModelState.IsValid)
@@ -222,9 +222,9 @@ namespace CadastroDeCaminhoneiro.Controllers
             vm.VeiculoDBE.Tipo.ID = vm.TipoID;
             vm.VeiculoDBE.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(vm.VeiculoDBE.ID, true);
 
-            ViewData["MarcaID"] = new SelectList(Enumerable.Empty<MarcaVeiculo>(), "ID", "Nome");
-            ViewData["ModeloID"] = new SelectList(Enumerable.Empty<ModeloVeiculo>(), "ID", "Nome");
-            ViewData["TipoID"] = new SelectList(Enumerable.Empty<TipoVeiculo>(), "ID", "Descricao");
+            ViewData["MarcaID"] = new SelectList(Enumerable.Empty<MarcaVeiculoDBE>(), "ID", "Nome");
+            ViewData["ModeloID"] = new SelectList(Enumerable.Empty<ModeloVeiculoDBE>(), "ID", "Nome");
+            ViewData["TipoID"] = new SelectList(Enumerable.Empty<TipoVeiculoDBE>(), "ID", "Descricao");
             try 
             {
                 ViewData["MarcaID"] = new SelectList(new MarcaVeiculoDAL().ListarMarcas(), "ID", "Nome");

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace CadastroDeCaminhoneiro.Models
 {
-    public class Estado : OracleModel, IModel
+    public class Estado : OracleModel
     {
         public int ID { get; set; }
         [DisplayName("Estado")]
@@ -80,21 +80,6 @@ namespace CadastroDeCaminhoneiro.Models
                 Comando.CommandText = comandoSql;
                 Comando.ExecuteNonQuery();
             }
-        }
-
-        public void Read(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStatus(int id, bool status)
-        {
-            throw new NotImplementedException();
         }
     }
 }

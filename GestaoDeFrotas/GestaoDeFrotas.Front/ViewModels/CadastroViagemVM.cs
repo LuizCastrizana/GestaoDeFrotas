@@ -6,12 +6,14 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Data.DAL;
 
 namespace CadastroDeCaminhoneiro.ViewModels
 {
     public class CadastroViagemVM
     {
-        public Viagem Viagem { get; set; }
+        public ViagemDBE Viagem { get; set; }
         public string BuscaMotorista { get; set; }
 
         public int VeiculoID { get; set; }
@@ -64,10 +66,10 @@ namespace CadastroDeCaminhoneiro.ViewModels
 
         public CadastroViagemVM()
         {
-            Viagem = new Viagem();
+            Viagem = new ViagemDBE();
         }
 
-        public void ModelToVM()
+        public void DBEToVM()
         {
             Inicio = Viagem.Inicio.ToString("dd/MM/yyyy HH:mm");
             Fim = Viagem.Fim.ToString("dd/MM/yyyy HH:mm");
@@ -85,14 +87,53 @@ namespace CadastroDeCaminhoneiro.ViewModels
             Tipo = Viagem.VeiculoViagem.Tipo.Descricao;
         }
 
-        public void VmToModel()
+        public void VmToDBE()
         {
             Viagem.Inicio = StringTools.ConverterEmData(Inicio, "en-US");
             Viagem.MotoristaViagem.ID = MotoristaID;
             Viagem.VeiculoViagem.ID = VeiculoID;
-            Viagem.Motivo.Read(MotivoID);
-            GeradorCodigoViagem.GerarCodigo(Viagem);
+            Viagem.Motivo = new MotivoViagemDAL().Read(MotivoID);
         }
 
     }
+
+    public class ViagemVM
+    {
+        public int ID { get; set; }
+
+        [DisplayName("Código da viagem")]
+        public string Codigo { get; set; }
+
+        public MotoristaDBE MotoristaViagem { get; set; }
+
+        public VeiculoDBE VeiculoViagem { get; set; }
+
+        [DisplayName("Início")]
+        public DateTime Inicio { get; set; }
+
+        [DisplayName("Fim")]
+        public DateTime Fim { get; set; }
+
+        public MotivoViagemDBE Motivo { get; set; }
+
+        public StatusViagemDBE ViagemStatus { get; set; }
+
+        [DisplayName("Data de inclusão")]
+        public DateTime DataInclusao { get; set; }
+
+        [DisplayName("Data de alteração")]
+        public DateTime DataAlteracao { get; set; }
+
+        [DisplayName("Status")]
+        public bool Status { get; set; }
+
+        public ViagemVM()
+        {
+            Motivo = new MotivoViagemDBE();
+            ViagemStatus = new StatusViagemDBE();
+            MotoristaViagem = new MotoristaDBE();
+            VeiculoViagem = new VeiculoDBE();
+        }
+    }
+
 }

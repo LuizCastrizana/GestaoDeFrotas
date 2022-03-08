@@ -132,7 +132,7 @@ namespace CadastroDeCaminhoneiro.Controllers
 
             try
             {
-                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<Municipio>(), "ID", "NomeMunicipio");
+                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<MunicipioDBE>(), "ID", "NomeMunicipio");
                 ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado");
                 ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria");
 
@@ -415,10 +415,11 @@ namespace CadastroDeCaminhoneiro.Controllers
         }
         public ActionResult ValidaCpf(MotoristaDBE motorista)
         {
-            int idEntrada = motorista.ID;
-            motorista = new MotoristaDAL().GetByCPF(motorista.CPF, false);
-            if (motorista.ID > 0 && motorista.ID != idEntrada)
+            var motoristaBusca = new MotoristaDAL().GetByCPF(motorista.CPF, false);
+
+            if (motoristaBusca.ID > 0 && motoristaBusca.ID != motorista.ID)
                 return Json("CPF já cadastrado", JsonRequestBehavior.AllowGet);
+
             if (!CPF.ValidaCpf(motorista.CPF))
             {
                 return Json("CPF inválido", JsonRequestBehavior.AllowGet);

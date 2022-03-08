@@ -125,7 +125,7 @@ else
 <hr />
 <h4>Motoristas</h4>
 <hr />
-@using (Html.BeginForm("VincularMotorista", "VeiculoDBE", FormMethod.Post, htmlAttributes: new { id = "form-vincular" }))
+@using (Html.BeginForm("VincularMotorista", "Veiculo", FormMethod.Post, htmlAttributes: new { id = "form-vincular" }))
 {
     if (Model.VeiculoDBE.Status == true)
     {
