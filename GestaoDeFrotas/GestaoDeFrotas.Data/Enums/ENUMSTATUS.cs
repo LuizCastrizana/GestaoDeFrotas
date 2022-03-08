@@ -10,6 +10,9 @@ namespace GestaoDeFrotas.Data.Enums
     public enum ENUMSTATUS
     {
         [EnumMember]
+        INATIVO = 0,
+
+        [EnumMember]
         ATIVO = 1,
     }
 }

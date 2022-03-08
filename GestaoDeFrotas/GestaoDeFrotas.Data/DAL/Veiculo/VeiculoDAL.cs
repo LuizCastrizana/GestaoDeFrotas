@@ -3,6 +3,7 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GestaoDeFrotas.Data.DAL
 {
@@ -329,10 +330,63 @@ namespace GestaoDeFrotas.Data.DAL
 
         public VeiculoDBE Read(int id)
         {
-            throw new NotImplementedException();
+            VeiculoDBE veiculo = new VeiculoDBE();
+
+            string comandoSql = "SELECT V.ID, " +
+                                "V.PLACA, " +
+                                "V.MARCAVEICULOID, " +
+                                "V.MODELOVEICULOID, " +
+                                "V.TIPOVEICULOID, " +
+                                "V.DATAINCLUSAO, " +
+                                "V.DATAALTERACAO, " +
+                                "V.STATUS " +
+                                "FROM VEICULO V " +
+                                "WHERE V.ID = " + id.ToString();
+
+            using (Conexao = new OracleConnection(stringConexao))
+            using (Comando = new OracleCommand(comandoSql, Conexao))
+            {
+                Conexao.Open();
+                using (var reader = Comando.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        veiculo.ID = reader.GetInt32(0);
+                        veiculo.Placa = reader.GetString(1);
+                        veiculo.Marca = new MarcaVeiculoDAL().BuscarPorId(reader.GetInt32(2));
+                        veiculo.Modelo = new ModeloVeiculoDAL().BuscarPorId(reader.GetInt32(3));
+                        veiculo.Tipo = new TipoVeiculoDAL().BuscarPorId(reader.GetInt32(4));
+                        veiculo.DataInclusao = reader.GetDateTime(5);
+                        if (!reader.IsDBNull(6))
+                            veiculo.DataAlteracao = reader.GetDateTime(6);
+                        veiculo.Status = Convert.ToBoolean(reader.GetInt32(7));
+                    }
+                }
+            }
+
+            return veiculo;
         }
 
-        public void UpdateStatus(int id, bool status)
+        public void Delete(int id)
+        {
+            StringBuilder textoComando = new StringBuilder("DELETE FROM VEICULO WHERE ID = :ID");
+
+            using (Conexao = new OracleConnection(stringConexao))
+            using (Comando = new OracleCommand(textoComando.ToString(), Conexao))
+            {
+                Conexao.Open();
+
+                Comando.Parameters.Add("ID", id);
+
+                if (Comando.ExecuteNonQuery() == 0)
+                {
+                    throw new Exception("Erro ao excluir veículo!");
+                }
+            }
+        }
+
+        public IEnumerable<VeiculoDBE> Read(VeiculoDBE obj)
         {
             throw new NotImplementedException();
         }

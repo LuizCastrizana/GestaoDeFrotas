@@ -3,10 +3,11 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GestaoDeFrotas.Data.DAL
 {
-    public class MunicipioDAL : OracleBaseDAL, IDal<MunicipioDBE>
+    public class MunicipioDAL : OracleBaseDAL
     {
         public IEnumerable<MunicipioDBE> ListarMunicipios()
         {
@@ -85,17 +86,46 @@ namespace GestaoDeFrotas.Data.DAL
 
         public MunicipioDBE Read(int id)
         {
-            throw new NotImplementedException();
-        }
+            MunicipioDBE retorno = new MunicipioDBE();
 
-        public void Update(MunicipioDBE obj)
-        {
-            throw new NotImplementedException();
-        }
+            StringBuilder comandoSQL = new StringBuilder("SELECT " +
+                "M.ID, " +
+                "M.NOME, " +
+                "M.CODIGOIBGE, " +
+                "E.ID, " +
+                "E.NOME, " +
+                "E.UF, " +
+                "E.CODIGOIBGE " +
+                "FROM " +
+                "MUNICIPIO M " +
+                "INNER JOIN " +
+                "ESTADO E " +
+                "ON M.ESTADOID = E.ID " +
+                "WHERE M.ID = :ID");
 
-        public void UpdateStatus(int id, bool status)
-        {
-            throw new NotImplementedException();
+            using (Conexao = new OracleConnection(stringConexao))
+            using (Comando = new OracleCommand(comandoSQL.ToString(), Conexao))
+            {
+                Conexao.Open();
+                Comando.Parameters.Add("ID", id);
+
+                using (var reader = Comando.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        retorno.ID = reader.GetInt32(0);
+                        retorno.NomeMunicipio = reader.GetString(1).ToUpper();
+                        retorno.CodigoIbge = reader.GetString(2);
+                        retorno.Estado.ID = reader.GetInt32(3);
+                        retorno.Estado.NomeEstado = reader.GetString(4).ToUpper();
+                        retorno.Estado.UF = reader.GetString(5);
+                        retorno.Estado.CodigoIbge = reader.GetString(6);
+                    }
+                }
+            }
+
+            return retorno;
         }
     }
 }

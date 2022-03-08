@@ -156,90 +156,7 @@ namespace GestaoDeFrotas.Data.DAL
             }
             return Motoristas;
         }
-        /// <summary>
-        /// Busca motorista por ID
-        /// </summary>
-        /// <param name="id">ID a ser buscado</param>
-        /// <param name="todos">true - ativos e inativos | false - apenas ativos | null - apenas inativos</param>
-        public MotoristaDBE GetByID (int id, bool? todos)
-        {
-            var retorno = new MotoristaDBE();
 
-            StringBuilder textoComando = new StringBuilder("SELECT MO.ID, " +
-                                "MO.PRIMEIRONOME, " +
-                                "MO.SOBRENOME, " +
-                                "MO.CPF, " +
-                                "MO.RG," +
-                                "MO.DATANASCIMENTO," +
-                                "MO.DATAINCLUSAO, " +
-                                "MO.DATAALTERACAO, " +
-                                "MO.STATUS, " +
-                                "EN.ID AS ENDERECOID, " +
-                                "EN.LOGRADOURO, " +
-                                "EN.NUMERO, " +
-                                "EN.COMPLEMENTO, " +
-                                "EN.BAIRRO, " +
-                                "EN.MUNICIPIOID, " +
-                                "MN.ESTADOID, " +
-                                "EN.CEP, " +
-                                "CN.ID AS CNHID " +
-                                "FROM MOTORISTA MO " +
-                                "INNER JOIN " +
-                                "ENDERECO EN " +
-                                "ON MO.ENDERECOID = EN.ID " +
-                                "INNER JOIN " +
-                                "MUNICIPIO MN " +
-                                "ON EN.MUNICIPIOID = MN.ID " +
-                                "INNER JOIN " +
-                                "CNH CN " +
-                                "ON MO.CNHID = CN.ID " +
-                                "WHERE MO.ID = :ID");
-
-            using (Conexao = new OracleConnection(stringConexao))
-            using (Comando = new OracleCommand(null, Conexao))
-            {
-                Conexao.Open();
-                Comando.Parameters.Add("ID", id);
-
-                if (todos == false) { textoComando.Append(" AND MO.STATUS IN ( :STATUS )"); Comando.Parameters.Add("STATUS", (int)ENUMSTATUS.ATIVO); }
-                else if (todos == null) { textoComando.Append(" AND MO.STATUS NOT IN ( :STATUS )"); Comando.Parameters.Add("STATUS", (int)ENUMSTATUS.ATIVO); }
-
-                Comando.CommandText = textoComando.ToString();
-                //try catch
-                using (var DataReader = Comando.ExecuteReader())
-                {
-                    if (DataReader.HasRows)
-                    {
-                        DataReader.Read();
-                        retorno.ID = Convert.ToInt32(DataReader["ID"]);
-                        retorno.PrimeiroNome = Convert.ToString(DataReader["PRIMEIRONOME"]);
-                        retorno.Sobrenome = Convert.ToString(DataReader["SOBRENOME"]);
-                        retorno.CPF = Convert.ToString(DataReader["CPF"]);
-                        if (DataReader["RG"] != DBNull.Value)
-                            retorno.RG = Convert.ToString(DataReader["RG"]);
-                        retorno.DataNascimento = Convert.ToDateTime(DataReader["DATANASCIMENTO"]);
-                        retorno.DataInclusao = Convert.ToDateTime(DataReader["DATAINCLUSAO"]);
-                        if (DataReader["DATAALTERACAO"] != DBNull.Value)
-                            retorno.DataAlteracao = Convert.ToDateTime(DataReader["DATAALTERACAO"]);
-                        retorno.Status = Convert.ToBoolean(DataReader["STATUS"]);
-                        retorno.Endereco.ID = Convert.ToInt32(DataReader["ENDERECOID"]);
-                        retorno.Endereco.Logradouro = Convert.ToString(DataReader["LOGRADOURO"]);
-                        if (DataReader["NUMERO"] != DBNull.Value)
-                            retorno.Endereco.Numero = Convert.ToInt32(DataReader["NUMERO"]);
-                        if (DataReader["COMPLEMENTO"] != DBNull.Value)
-                            retorno.Endereco.Complemento = Convert.ToString(DataReader["COMPLEMENTO"]);
-                        if (DataReader["BAIRRO"] != DBNull.Value)
-                            retorno.Endereco.Bairro = Convert.ToString(DataReader["BAIRRO"]);
-                        retorno.Endereco.Municipio.ID = Convert.ToInt32(DataReader["MUNICIPIOID"]);
-                        retorno.Endereco.Municipio.Estado.ID = Convert.ToInt32(DataReader["ESTADOID"]);
-                        retorno.Endereco.Cep = Convert.ToString(DataReader["CEP"]);
-                        retorno.CNH = new CNHDAL().Read(Convert.ToInt32(DataReader["CNHID"]));
-                    }
-                }
-            }
-
-            return retorno;
-        }
         /// <summary>
         /// Busca dados do motorista por CPF e preenche as propriedades do objeto
         /// </summary>
@@ -266,7 +183,7 @@ namespace GestaoDeFrotas.Data.DAL
                                 "EN.MUNICIPIOID, " +
                                 "MN.ESTADOID, " +
                                 "EN.CEP, " +
-                                "CN.ID AS CNHID " +
+                                "MO.CNHID " +
                                 "FROM MOTORISTA MO " +
                                 "INNER JOIN " +
                                 "ENDERECO EN " +
@@ -274,9 +191,6 @@ namespace GestaoDeFrotas.Data.DAL
                                 "INNER JOIN " +
                                 "MUNICIPIO MN " +
                                 "ON EN.MUNICIPIOID = MN.ID " +
-                                "INNER JOIN " +
-                                "CNH CN " +
-                                "ON MO.CNHID = CN.ID " +
                                 "WHERE MO.CPF = :CPF");
 
             using (Conexao = new OracleConnection(stringConexao))
@@ -324,6 +238,7 @@ namespace GestaoDeFrotas.Data.DAL
 
             return retorno;
         }
+
         /// <summary>
         /// Inclui um novo motorista e endereço no banco de dados com os dados do objeto passado como parâmetro.
         /// Em caso de exception verificar inner exception.
@@ -361,6 +276,7 @@ namespace GestaoDeFrotas.Data.DAL
                 throw new CadastroMotoristaException("Erro ao cadastrar motorista!", e);
             }
         }
+
         /// <summary>
         /// Atualiza dados do motorista com os dados do objeto passado como parâmetro.
         /// Em caso de exception verificar inner exception.
@@ -394,13 +310,14 @@ namespace GestaoDeFrotas.Data.DAL
                 throw new CadastroMotoristaException("Erro ao editar motorista!", e);
             }
         }
+
         /// <summary>
         /// Atualiza status do motorista
         /// </summary>
         /// <param name="id">ID do motorista a ser atualizado</param>
         /// <param name="status">Status a inserir</param>
         /// <exception cref="CadastroMotoristaException"></exception>
-        public void UpdateStatus(int id, bool status)
+        public void AtualizarStatus(int id, bool status)
         {
             StringBuilder textoComando = new StringBuilder("UPDATE MOTORISTA SET STATUS = :STATUS WHERE ID = :ID"); 
             try
@@ -423,6 +340,7 @@ namespace GestaoDeFrotas.Data.DAL
                 throw new CadastroMotoristaException("Erro ao atualizar status do motorista!", e);
             }
         }
+
         /// <summary>
         /// Vincula um veículo ao motorista
         /// </summary>
@@ -449,6 +367,7 @@ namespace GestaoDeFrotas.Data.DAL
                 }
             }
         }
+
         /// <summary>
         /// Remove vinculo entre um motorista e um veículo
         /// </summary>
@@ -473,7 +392,92 @@ namespace GestaoDeFrotas.Data.DAL
             }
         }
 
+        /// <summary>
+        /// Busca motorista por ID
+        /// </summary>
+        /// <param name="id">ID do motorista</param>
+        /// <returns></returns>
         public MotoristaDBE Read(int id)
+        {
+            var retorno = new MotoristaDBE();
+
+            StringBuilder textoComando = new StringBuilder("SELECT MO.ID, " +
+                                "MO.PRIMEIRONOME, " +
+                                "MO.SOBRENOME, " +
+                                "MO.CPF, " +
+                                "MO.RG," +
+                                "MO.DATANASCIMENTO," +
+                                "MO.DATAINCLUSAO, " +
+                                "MO.DATAALTERACAO, " +
+                                "MO.STATUS, " +
+                                "MO.ENDERECOID, " +
+                                "MO.CNHID " +
+                                "FROM MOTORISTA MO " +
+                                "WHERE MO.ID = :ID");
+
+            using (Conexao = new OracleConnection(stringConexao))
+            using (Comando = new OracleCommand(textoComando.ToString(), Conexao))
+            {
+                Conexao.Open();
+                Comando.Parameters.Add("ID", id);
+
+                //try catch
+                using (var DataReader = Comando.ExecuteReader())
+                {
+                    if (DataReader.HasRows)
+                    {
+                        DataReader.Read();
+                        retorno.ID = Convert.ToInt32(DataReader["ID"]);
+                        retorno.PrimeiroNome = Convert.ToString(DataReader["PRIMEIRONOME"]);
+                        retorno.Sobrenome = Convert.ToString(DataReader["SOBRENOME"]);
+                        retorno.CPF = Convert.ToString(DataReader["CPF"]);
+                        if (DataReader["RG"] != DBNull.Value)
+                            retorno.RG = Convert.ToString(DataReader["RG"]);
+                        retorno.DataNascimento = Convert.ToDateTime(DataReader["DATANASCIMENTO"]);
+                        retorno.DataInclusao = Convert.ToDateTime(DataReader["DATAINCLUSAO"]);
+                        if (DataReader["DATAALTERACAO"] != DBNull.Value)
+                            retorno.DataAlteracao = Convert.ToDateTime(DataReader["DATAALTERACAO"]);
+                        retorno.Status = Convert.ToBoolean(DataReader["STATUS"]);
+                        retorno.Endereco = new EnderecoDAL().Read(Convert.ToInt32(DataReader["ENDERECOID"]));
+                        retorno.CNH = new CNHDAL().Read(Convert.ToInt32(DataReader["CNHID"]));
+                    }
+                }
+            }
+
+            return retorno;
+        }
+
+        /// <summary>
+        /// Excluir registro de motorista
+        /// </summary>
+        /// <param name="id">ID do motorista</param>
+        public void Delete(int id)
+        {
+            string comandoSql = "DELETE FROM MOTORISTA WHERE ID = :ID";
+            try
+            {
+                using (Conexao = new OracleConnection(stringConexao))
+                using (Comando = new OracleCommand(comandoSql, Conexao))
+                {
+                    Conexao.Open();
+                    Comando.Parameters.Add("ID", id);
+
+                    if (Comando.ExecuteNonQuery() < 1)
+                        throw new CadastroMotoristaException("Erro ao excluir motorista!");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new CadastroMotoristaException("Erro ao excluir motorista", e.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Busca motoristas com os dados do objeto passado como parametro
+        /// </summary>
+        /// <param name="obj">Dados a serem buscados</param>
+        /// <returns></returns>
+        public IEnumerable<MotoristaDBE> Read(MotoristaDBE obj)
         {
             throw new NotImplementedException();
         }

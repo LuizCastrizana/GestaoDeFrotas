@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace GestaoDeFrotas.Data.DAL
 {
-    public class StatusViagemDAL : OracleBaseDAL, IDal<StatusViagemDBE>
+    public class StatusViagemDAL : OracleBaseDAL
     {
         public IEnumerable<StatusViagemDBE> List()
         {
@@ -64,21 +64,6 @@ namespace GestaoDeFrotas.Data.DAL
             }
 
             return retorno;
-        }
-
-        public void Create(StatusViagemDBE obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(StatusViagemDBE obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStatus(int id, bool status)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace GestaoDeFrotas.Data.DAL
 {
-    public class EstadoDAL : OracleBaseDAL, IDal<EstadoDBE>
+    public class EstadoDAL : OracleBaseDAL
     {
         public IEnumerable<EstadoDBE> List()
         {
@@ -66,21 +66,6 @@ namespace GestaoDeFrotas.Data.DAL
                 Comando.CommandText = comandoSql;
                 Comando.ExecuteNonQuery();
             }
-        }
-
-        public EstadoDBE Read(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(EstadoDBE obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStatus(int id, bool status)
-        {
-            throw new NotImplementedException();
         }
     }
 }

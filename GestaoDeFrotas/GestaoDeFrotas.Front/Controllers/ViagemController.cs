@@ -203,8 +203,8 @@ namespace CadastroDeCaminhoneiro.Controllers
             try
             {
                 vm.Viagem = new ViagemDAL().Read(id);
-                vm.Viagem.MotoristaViagem = new MotoristaDAL().GetByID(vm.Viagem.MotoristaViagem.ID, true);
-                vm.Viagem.VeiculoViagem = new VeiculoDAL().BuscarPorId(vm.Viagem.VeiculoViagem.ID, null);
+                vm.Viagem.MotoristaViagem = new MotoristaDAL().Read(vm.Viagem.MotoristaViagem.ID);
+                vm.Viagem.VeiculoViagem = new VeiculoDAL().Read(vm.Viagem.VeiculoViagem.ID);
                 vm.DBEToVM();
             }
             catch (Exception e)

@@ -1,6 +1,7 @@
 ﻿using GestaoDeFrotas.Data.DBENTITIES;
 using Oracle.ManagedDataAccess.Client;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace GestaoDeFrotas.Data.DAL
@@ -35,6 +36,7 @@ namespace GestaoDeFrotas.Data.DAL
             {
                 Conexao.Open();
                 Comando.Parameters.Add("ID", id);
+
                 using (var oracle = Comando.ExecuteReader())
                 {
                     if (oracle.HasRows)
@@ -132,8 +134,9 @@ namespace GestaoDeFrotas.Data.DAL
                 {
                     Conexao.Open();
                     Comando.Parameters.Add("ID", id);
+
                     if (Comando.ExecuteNonQuery() == 0)
-                        throw new CadastroCNHException("Erro ao atualizar CNH!");
+                        throw new CadastroCNHException("Erro ao excluir CNH!");
                 }
             }
             catch (Exception e)
@@ -190,7 +193,7 @@ namespace GestaoDeFrotas.Data.DAL
             }
         }
 
-        public void UpdateStatus(int id, bool status)
+        public IEnumerable<CNHDBE> Read(CNHDBE obj)
         {
             throw new NotImplementedException();
         }

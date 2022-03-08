@@ -57,8 +57,8 @@ namespace GestaoDeFrotas.Data.DAL
                         DataReader.Read();
                         retorno.ID = Convert.ToInt32(DataReader["ID"]);
                         retorno.Codigo = Convert.ToString(DataReader["CODIGO"]);
-                        retorno.MotoristaViagem = new MotoristaDAL().GetByID(Convert.ToInt32(DataReader["MOTORISTAID"]), true);
-                        retorno.VeiculoViagem = new VeiculoDAL().BuscarPorId(Convert.ToInt32(DataReader["VEICULOID"]), null);
+                        retorno.MotoristaViagem = new MotoristaDAL().Read(Convert.ToInt32(DataReader["MOTORISTAID"]));
+                        retorno.VeiculoViagem = new VeiculoDAL().Read(Convert.ToInt32(DataReader["VEICULOID"]));
                         retorno.Inicio = Convert.ToDateTime(DataReader["INICIO"]);
                         if (DataReader["FIM"] != DBNull.Value)
                             retorno.Fim = Convert.ToDateTime(DataReader["FIM"]);
@@ -107,8 +107,8 @@ namespace GestaoDeFrotas.Data.DAL
                             ViagemDBE itemLista = new ViagemDBE();
                             itemLista.ID = Convert.ToInt32(reader["ID"]);
                             itemLista.Codigo = Convert.ToString(reader["CODIGO"]);
-                            itemLista.MotoristaViagem = new MotoristaDAL().GetByID(Convert.ToInt32(reader["MOTORISTAID"]), true);
-                            itemLista.VeiculoViagem = new VeiculoDAL().BuscarPorId(Convert.ToInt32(reader["VEICULOID"]), null);
+                            itemLista.MotoristaViagem = new MotoristaDAL().Read(Convert.ToInt32(reader["MOTORISTAID"]));
+                            itemLista.VeiculoViagem = new VeiculoDAL().Read(Convert.ToInt32(reader["VEICULOID"]));
                             itemLista.Inicio = Convert.ToDateTime(reader["INICIO"]);
                             if (reader["FIM"] != DBNull.Value)
                                 itemLista.Fim = Convert.ToDateTime(reader["FIM"]);
@@ -171,6 +171,24 @@ namespace GestaoDeFrotas.Data.DAL
             }
         }
 
+        public void Delete(int id)
+        {
+            StringBuilder textoComando = new StringBuilder("DELETE FROM VIAGEM WHERE ID = :ID");
+
+            using (Conexao = new OracleConnection(stringConexao))
+            using (Comando = new OracleCommand(textoComando.ToString(), Conexao))
+            {
+                Conexao.Open();
+
+                Comando.Parameters.Add("ID", id);
+
+                if (Comando.ExecuteNonQuery() == 0)
+                {
+                    throw new Exception("Erro ao excluir viagem!");
+                }
+            }
+        }
+
         public void UpdateStatus(int id, bool status)
         {
             StringBuilder textoComando = new StringBuilder("UPDATE VIAGEM SET STATUS = :STATUS WHERE ID = :ID");
@@ -217,8 +235,8 @@ namespace GestaoDeFrotas.Data.DAL
                             ViagemDBE itemLista = new ViagemDBE();
                             itemLista.ID = Convert.ToInt32(DataReader["ID"]);
                             itemLista.Codigo = Convert.ToString(DataReader["CODIGO"]);
-                            itemLista.MotoristaViagem = new MotoristaDAL().GetByID(Convert.ToInt32(DataReader["MOTORISTAID"]), true);
-                            itemLista.VeiculoViagem = new VeiculoDAL().BuscarPorId(Convert.ToInt32(DataReader["VEICULOID"]), null);
+                            itemLista.MotoristaViagem = new MotoristaDAL().Read(Convert.ToInt32(DataReader["MOTORISTAID"]));
+                            itemLista.VeiculoViagem = new VeiculoDAL().Read(Convert.ToInt32(DataReader["VEICULOID"]));
                             itemLista.Inicio = Convert.ToDateTime(DataReader["INICIO"]);
                             if (DataReader["FIM"] != DBNull.Value)
                                 itemLista.Fim = Convert.ToDateTime(DataReader["FIM"]);

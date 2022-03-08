@@ -257,7 +257,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             try
             {
                 //vm.GetByID(id, true);
-                vm.CastFromDBE(new MotoristaDAL().GetByID(id, true));
+                vm.CastFromDBE(new MotoristaDAL().Read(id));
                 vm.Endereco.Municipio = new MunicipioDAL().ListarMunicipios().Where(m => m.ID == vm.Endereco.Municipio.ID).First();
                 vm.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(id, true);
             }
@@ -274,7 +274,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             CadastroMotoristaVM vm = new CadastroMotoristaVM();
             try
             {
-                vm.Motorista.CastFromDBE(new MotoristaDAL().GetByID(id, true));
+                vm.Motorista.CastFromDBE(new MotoristaDAL().Read(id));
                 vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(id, true);
                 vm.DataNascimento = vm.Motorista.DataNascimento.ToString("yyyy-MM-dd");
                 vm.DataEmissao = vm.Motorista.CNH.DataEmissao.ToString("yyyy-MM-dd");
@@ -335,7 +335,7 @@ namespace CadastroDeCaminhoneiro.Controllers
         {
             try
             {
-                new MotoristaDAL().UpdateStatus(id, !status);
+                new MotoristaDAL().AtualizarStatus(id, !status);
                 TempData["MensagemSucesso"] = "Cadastro atualizado com sucesso!";
                 return RedirectToAction("EditarMotorista", new { id });
             }
@@ -356,7 +356,7 @@ namespace CadastroDeCaminhoneiro.Controllers
                 vm.BuscaPlaca = string.Empty;
             try
             {
-                vm.Motorista.CastFromDBE(new MotoristaDAL().GetByID(vm.Motorista.ID, true));
+                vm.Motorista.CastFromDBE(new MotoristaDAL().Read(vm.Motorista.ID));
                 vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
                 veiculo = new VeiculoDAL().BuscarPorPlaca(vm.BuscaPlaca.ToUpper(), true);
             }

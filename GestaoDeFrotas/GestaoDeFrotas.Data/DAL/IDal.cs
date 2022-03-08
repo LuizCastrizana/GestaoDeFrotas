@@ -11,6 +11,7 @@ namespace GestaoDeFrotas.Data.DAL
         void Create(T obj);
         T Read(int id);
         void Update(T obj);
-        void UpdateStatus(int id, bool status);
+        void Delete(int id);
+        IEnumerable<T> Read(T obj);
     }
 }
