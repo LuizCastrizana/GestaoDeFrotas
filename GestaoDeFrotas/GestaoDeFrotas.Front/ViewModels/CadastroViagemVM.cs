@@ -1,6 +1,4 @@
-﻿using CadastroDeCaminhoneiro.Models;
-using CadastroDeCaminhoneiro.DBEnums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;

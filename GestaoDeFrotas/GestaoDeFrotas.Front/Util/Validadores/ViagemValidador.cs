@@ -1,5 +1,4 @@
-﻿using CadastroDeCaminhoneiro.DBEnums;
-using CadastroDeCaminhoneiro.Models;
+﻿using GestaoDeFrotas.Data.Enums;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using System;

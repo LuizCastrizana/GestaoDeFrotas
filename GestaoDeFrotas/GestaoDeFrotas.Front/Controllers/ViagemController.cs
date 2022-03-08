@@ -1,6 +1,5 @@
 ﻿using CadastroDeCaminhoneiro.Enums;
-using CadastroDeCaminhoneiro.Models;
-using CadastroDeCaminhoneiro.DBEnums;
+using GestaoDeFrotas.Data.Enums;
 using CadastroDeCaminhoneiro.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -182,7 +181,6 @@ namespace CadastroDeCaminhoneiro.Controllers
                 if (retorno.Sucesso)
                 {
                     new ViagemDAL().Create(vm.Viagem);
-                    //vm.Viagem.Create();
                     TempData["MensagemSucesso"] = "Viagem cadastrada com sucesso!";
                     return RedirectToAction("PainelDeViagens");
                 }
