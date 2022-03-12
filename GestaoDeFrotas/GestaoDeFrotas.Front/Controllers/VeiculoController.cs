@@ -33,11 +33,11 @@ namespace CadastroDeCaminhoneiro.Controllers
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
 
-            vm.Veiculos = Enumerable.Empty<VeiculoDBE>().ToPagedList(1, 10);
+            vm.Veiculos = Enumerable.Empty<VeiculoDBE>().ToPagedList(1, 15);
 
             try
             {
-                vm.Veiculos = VeiculoHelper.BuscarVeiculosPainel(vm.BuscaPlaca, vm.OpcaoOrdenacao, vm.OpcoesFiltragem, vm.Todos).ToPagedList(1, 10);
+                vm.Veiculos = VeiculoTools.BuscarVeiculosPainel(vm.BuscaPlaca, vm.OpcaoOrdenacao, vm.OpcoesFiltragem, vm.Todos).ToPagedList(1, 15);
 
                 return View(vm);
             }
@@ -69,11 +69,11 @@ namespace CadastroDeCaminhoneiro.Controllers
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
 
-            vm.Veiculos = Enumerable.Empty<VeiculoDBE>().ToPagedList(numPagina, 10);
+            vm.Veiculos = Enumerable.Empty<VeiculoDBE>().ToPagedList(numPagina, 15);
 
             try
             {
-                vm.Veiculos = VeiculoHelper.BuscarVeiculosPainel(vm.BuscaPlaca, vm.OpcaoOrdenacao, vm.OpcoesFiltragem, vm.Todos).ToPagedList(numPagina, 10);
+                vm.Veiculos = VeiculoTools.BuscarVeiculosPainel(vm.BuscaPlaca, vm.OpcaoOrdenacao, vm.OpcoesFiltragem, vm.Todos).ToPagedList(numPagina, 15);
 
                 return View("PainelDeVeiculos", vm);
             }

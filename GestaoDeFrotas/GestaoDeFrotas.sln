@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoDeFrotas.Front", "Ges
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoDeFrotas.Data", "GestaoDeFrotas.Data\GestaoDeFrotas.Data.csproj", "{B88EE252-B475-489E-90A4-72DDBED81B14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoDeFrotas.Business", "GestaoDeFrotas.Business\GestaoDeFrotas.Business.csproj", "{EA121A51-7CC2-442A-BA0B-7564EA713ABD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{B88EE252-B475-489E-90A4-72DDBED81B14}.Release|x64.Build.0 = Release|Any CPU
 		{B88EE252-B475-489E-90A4-72DDBED81B14}.Release|x86.ActiveCfg = Release|Any CPU
 		{B88EE252-B475-489E-90A4-72DDBED81B14}.Release|x86.Build.0 = Release|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Debug|x64.Build.0 = Debug|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Debug|x86.Build.0 = Debug|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Release|x64.ActiveCfg = Release|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Release|x64.Build.0 = Release|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA121A51-7CC2-442A-BA0B-7564EA713ABD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

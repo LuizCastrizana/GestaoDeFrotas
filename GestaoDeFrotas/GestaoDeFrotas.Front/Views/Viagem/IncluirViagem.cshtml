@@ -5,123 +5,128 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Incluir Viagem</h2>
-<hr />
+<div class="container-titulo container-fluid">
+    <h2 class="titulo-pag">Incluir Viagem</h2>
+</div>
+<br />
+<div class="container-form">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <!-- #region Dados de motorista e veículo -->
-    <div class="row" id="divMotoristaVeiculo">
-        @Html.HiddenFor(model => model.MotoristaID, htmlAttributes: new { })
-        <div class="col-md-6" id="divMotorista">
-            <div class="div-item-viagem">
-                <h4>@Html.Label("Motorista", htmlAttributes: new { @class = "" })</h4>
-                <div class="row" id="divBuscaMotorista">
-                    <div class="col-md-6">
-                        @Html.EditorFor(m => m.BuscaMotorista, new { htmlAttributes = new { @class = "form-control", placeholder = "Nome/CPF" } })
+        <!-- #region Dados de motorista e veículo -->
+        <div class="row" id="divMotoristaVeiculo">
+            @Html.HiddenFor(model => model.MotoristaID, htmlAttributes: new { })
+            <div class="col-md-6" id="divMotorista">
+                <div class="container-bordertop">
+                    <h4>Motorista</h4>
+                    <br />
+                    <div class="row" id="divBuscaMotorista">
+                        <div class="col-md-6">
+                            @Html.EditorFor(m => m.BuscaMotorista, new { htmlAttributes = new { @class = "form-control", placeholder = "Nome/CPF" } })
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-default" onclick="BuscaMotorista()" id="btnBuscaMotorista" title="Adicionar">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <a class="btn btn-default" onclick="BuscaMotorista()" id="btnBuscaMotorista" title="Adicionar">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </a>
+                    <br />
+                    <div class="row" id="divDadosMotorista1">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.PrimeiroNome, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.PrimeiroNome, null, new { htmlAttributes = new { @id = "PrimeiroNome", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                            @Html.ValidationMessageFor(m => m.MotoristaID)
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Sobrenome, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Sobrenome, null, new { htmlAttributes = new { @id = "Sobrenome", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                        </div>
                     </div>
+                    <br />
+                    <div class="row" id="divDadosMotorista2">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.CPF, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.CPF, null, new { htmlAttributes = new { @id = "CPF", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.CNH, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.CNH, null, new { htmlAttributes = new { @id = "CNH", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                        </div>
+                    </div>
+                    <br />
                 </div>
-                <br />
-                <div class="row" id="divDadosMotorista1">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.PrimeiroNome, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.PrimeiroNome, null, new { htmlAttributes = new { @id = "PrimeiroNome", @class = "form-control", @readonly = "readonly" } })
-                        @Html.ValidationMessageFor(m => m.MotoristaID)
+            </div>
+            <div class="col-md-6" id="divVeiculo">
+                <div class="container-bordertop">
+                    <h4>Veículo</h4>
+                    <br />
+                    <div class="row" id="divBuscaVeiculo">
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(m => m.VeiculoID, null, "Busque um motorista...", new { @class = "form-control", onchange = "SelecionaVeiculo(this.value)" })
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Sobrenome, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Sobrenome, null, new { htmlAttributes = new { @id = "Sobrenome", @class = "form-control", @readonly = "readonly" } })
+                    <br />
+                    <div class="row" id="divDadosVeiculo1">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Placa, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Placa, null, new { htmlAttributes = new { @id = "Placa", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                            @Html.ValidationMessageFor(m => m.MotoristaID)
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Tipo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Tipo, null, new { htmlAttributes = new { @id = "Tipo", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                        </div>
                     </div>
+                    <br />
+                    <div class="row" id="divDadosVeiculo2">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Marca, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Marca, null, new { htmlAttributes = new { @id = "Marca", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Modelo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Modelo, null, new { htmlAttributes = new { @id = "Modelo", @class = "form-control", @readonly = "readonly", tabindex = "-1" } })
+                        </div>
+                    </div>
+                    <br />
                 </div>
-                <br />
-                <div class="row" id="divDadosMotorista2">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.CPF, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.CPF, null, new { htmlAttributes = new { @id = "CPF", @class = "form-control", @readonly = "readonly" } })
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.CNH, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.CNH, null, new { htmlAttributes = new { @id = "CNH", @class = "form-control", @readonly = "readonly" } })
-                    </div>
-                </div>
-                <br />
             </div>
         </div>
-        <div class="col-md-6" id="divVeiculo">
-            <div class="div-item-viagem">
-                <h4>@Html.Label("Veículo", htmlAttributes: new { @class = "control-label" })</h4> 
-                <div class="row" id="divBuscaVeiculo">
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(m => m.VeiculoID, null, "Busque um motorista...", new { @class = "form-control", onchange = "SelecionaVeiculo(this.value)" })
-                    </div>
-                </div>
-                <br />
-                <div class="row" id="divDadosVeiculo1">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Placa, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Placa, null, new { htmlAttributes = new { @id = "Placa", @class = "form-control", @readonly = "readonly" } })
-                        @Html.ValidationMessageFor(m => m.MotoristaID)
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Tipo, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Tipo, null, new { htmlAttributes = new { @id = "Tipo", @class = "form-control", @readonly = "readonly" } })
-                    </div>
-                </div>
-                <br />
-                <div class="row" id="divDadosVeiculo2">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Marca, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Marca, null, new { htmlAttributes = new { @id = "Marca", @class = "form-control", @readonly = "readonly" } })
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Modelo, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Modelo, null, new { htmlAttributes = new { @id = "Modelo", @class = "form-control", @readonly = "readonly" } })
-                    </div>
-                </div>
-                <br />
+        <br />
+        <!-- #endregion -->
+
+        <!-- #region Dados de viagem -->
+        <div class="row" id="divDadosViagem">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.Inicio, htmlAttributes: new { @class = "control-label legenda-campo" })
+                @Html.EditorFor(model => model.Inicio, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+                @Html.ValidationMessageFor(model => model.Inicio, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.MotivoID, htmlAttributes: new { @class = "control-label legenda-campo" })
+                @Html.DropDownListFor(model => model.MotivoID, null, new { @class = "form-control" })
             </div>
         </div>
-    </div>
-    <br />
-    <!-- #endregion -->
+        <br />
+        <br />
+        <!-- #endregion -->
 
-    <!-- #region Dados de viagem -->
-    <div class="row" id="divDadosViagem">
-        <div class="col-md-3">
-            @Html.LabelFor(model => model.Inicio, htmlAttributes: new { @class = "control-label legenda-campo" })
-            @Html.EditorFor(model => model.Inicio, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
-            @Html.ValidationMessageFor(model => model.Inicio, "", new { @class = "text-danger" })
+        <!-- #region Botoes -->
+        <div id="divBotoes">
+            <button type="submit" value="Salvar" class="btn btn-success">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                <strong>Salvar</strong>
+            </button>
+
+            <a title="Voltar" id="btnVoltar" class="btn btn-default" href="@Url.Action("PainelDeViagens", "Viagem")">
+                <span class="glyphicon glyphicon-backward"></span>
+                <strong>Voltar</strong>
+            </a>
         </div>
-        <div class="col-md-3">
-            @Html.LabelFor(model => model.MotivoID, htmlAttributes: new { @class = "control-label legenda-campo" })
-            @Html.DropDownListFor(model => model.MotivoID, null, new { @class = "form-control" })
-        </div>
-    </div>
-    <br />
-    <br />
-    <!-- #endregion -->
-
-    <!-- #region Botoes -->
-    <div id="divBotoes">
-        <button type="submit" value="Salvar" class="btn btn-success">
-            <span class="glyphicon glyphicon-floppy-disk"></span>
-            <strong>Salvar</strong>
-        </button>
-
-        <a title="Voltar" id="btnVoltar" class="btn btn-default" href="@Url.Action("PainelDeViagens", "Viagem")">
-            <span class="glyphicon glyphicon-backward"></span>
-            <strong>Voltar</strong>
-        </a>
-    </div>
-    <!-- #endregion -->
-}
+        <!-- #endregion -->
+    }
+</div>
 
 <!-- #region Scripts -->
 @section Scripts {

@@ -9,7 +9,7 @@ using System.Web;
 
 namespace CadastroDeCaminhoneiro
 {
-    public static class VeiculoHelper
+    public static class VeiculoTools
     {
         public static IEnumerable<VeiculoDBE> BuscarVeiculosPainel(string busca, int opcaoOrdenacao, int opcaoFiltragem, bool? todos)
         {

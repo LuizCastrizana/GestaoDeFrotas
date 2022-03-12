@@ -27,7 +27,8 @@ namespace CadastroDeCaminhoneiro
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/yeti.css",
+                      "~/Content/style.css",
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/inputmask").Include(

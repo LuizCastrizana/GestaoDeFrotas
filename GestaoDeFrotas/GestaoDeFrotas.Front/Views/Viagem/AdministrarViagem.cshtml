@@ -6,14 +6,11 @@
     ViewBag.Title = "AdministrarViagem";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Administrar Viagem</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <!-- #region Codigo e status da viagem -->
+<div class="container-fluid container-titulo">
+    <div class=""><h2 class="titulo-pag">Administrar Viagem</h2></div>
+</div>
+<!-- #region Codigo e status da viagem -->
+<div class="container-menu">
     <div class="row" id="divCodigoViagem">
         <div class="col-md-3">
             @Html.LabelFor(model => model.Viagem.Codigo, htmlAttributes: new { @class = "control-label legenda-campo" })
@@ -24,141 +21,148 @@
             @Html.EditorFor(model => model.StatusViagem, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
         </div>
     </div>
-    <hr />
-    <!-- #endregion -->
+    <br />
+</div>
+<br />
+<!-- #endregion -->
 
-    <!-- #region Dados de motorista e veículo -->
-    <div class="row" id="divMotoristaVeiculo">
-        @Html.HiddenFor(model => model.MotoristaID, htmlAttributes: new { @id = "motoristaID" })
-        @Html.HiddenFor(model => model.VeiculoID, htmlAttributes: new { @id = "veiculoID" })
-        <div class="col-md-6" id="divMotorista">
-            <div class="div-item-viagem">
-                <div class="row">
-                    <div class="col-md-6"><h4>@Html.Label("Motorista", htmlAttributes: new { @class = "" })</h4></div>
+<div class="container-form">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <!-- #region Dados de motorista e veículo -->
+        <div class="row" id="divMotoristaVeiculo">
+            @Html.HiddenFor(model => model.MotoristaID, htmlAttributes: new { @id = "motoristaID" })
+            @Html.HiddenFor(model => model.VeiculoID, htmlAttributes: new { @id = "veiculoID" })
+            <div class="col-md-6" id="divMotorista">
+                <div class="container-bordertop">
+                    <div class="row">
+                        <div class="col-md-6"><h4>Motorista</h4></div>
+                        <br />
+                        <div class="col-md-6 campo-direita">
+                            <a href="@Url.Action("VisualizarMotorista", "Motorista", new { id = Model.MotoristaID })"
+                               class="btn btn-default" id="VisualizarMotorista" target="_blank" title="Visualizar">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" id="divDadosMotorista1">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.PrimeiroNome, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.PrimeiroNome, null, new { htmlAttributes = new { @id = "PrimeiroNome", @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Sobrenome, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Sobrenome, null, new { htmlAttributes = new { @id = "Sobrenome", @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
                     <br />
-                    <div class="col-md-6 campo-direita">
-                        <a href="@Url.Action("VisualizarMotorista", "Motorista", new { id = Model.MotoristaID })"
-                           class="btn btn-default" id="VisualizarMotorista" target="_blank" title="Visualizar">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                        </a>
+                    <div class="row" id="divDadosMotorista2">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.CPF, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.CPF, null, new { htmlAttributes = new { @id = "CPF", @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.CNH, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.CNH, null, new { htmlAttributes = new { @id = "CNH", @class = "form-control", @disabled = "disabled" } })
+                        </div>
                     </div>
+                    <br />
                 </div>
-                <div class="row" id="divDadosMotorista1">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.PrimeiroNome, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.PrimeiroNome, null, new { htmlAttributes = new { @id = "PrimeiroNome", @class = "form-control", @disabled = "disabled" } })
+            </div>
+            <div class="col-md-6" id="divVeiculo">
+                <div class="container-bordertop">
+                    <div class="row">
+                        <div class="col-md-6"><h4>Veículo</h4></div>
+                        <br />
+                        <div class="col-md-6 campo-direita">
+                            <a href="@Url.Action("VisualizarVeiculo", "Veiculo", new { id = Model.VeiculoID })"
+                               class="btn btn-default" id="VisualizarVeiculo" target="_blank" title="Visualizar">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Sobrenome, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Sobrenome, null, new { htmlAttributes = new { @id = "Sobrenome", @class = "form-control", @disabled = "disabled" } })
+                    <div class="row" id="divDadosVeiculo1">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Placa, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Placa, null, new { htmlAttributes = new { @id = "Placa", @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Tipo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Tipo, null, new { htmlAttributes = new { @id = "Tipo", @class = "form-control", @disabled = "disabled" } })
+                        </div>
                     </div>
+                    <br />
+                    <div class="row" id="divDadosVeiculo2">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Marca, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Marca, null, new { htmlAttributes = new { @id = "Marca", @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Modelo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                            @Html.EditorFor(m => m.Modelo, null, new { htmlAttributes = new { @id = "Modelo", @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <br />
                 </div>
-                <br />
-                <div class="row" id="divDadosMotorista2">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.CPF, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.CPF, null, new { htmlAttributes = new { @id = "CPF", @class = "form-control", @disabled = "disabled" } })
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.CNH, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.CNH, null, new { htmlAttributes = new { @id = "CNH", @class = "form-control", @disabled = "disabled" } })
-                    </div>
-                </div>
-                <br />
             </div>
         </div>
-        <div class="col-md-6" id="divVeiculo">
-            <div class="div-item-viagem">
-                <div class="row">
-                    <div class="col-md-6"><h4>@Html.Label("Veículo", htmlAttributes: new { @class = "control-label" })</h4></div>
-                    <br />
-                    <div class="col-md-6 campo-direita">
-                        <a href="@Url.Action("VisualizarVeiculo", "Veiculo", new { id = Model.VeiculoID })"
-                           class="btn btn-default" id="VisualizarVeiculo" target="_blank" title="Visualizar">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="row" id="divDadosVeiculo1">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Placa, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Placa, null, new { htmlAttributes = new { @id = "Placa", @class = "form-control", @disabled = "disabled" } })
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Tipo, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Tipo, null, new { htmlAttributes = new { @id = "Tipo", @class = "form-control", @disabled = "disabled" } })
-                    </div>
-                </div>
-                <br />
-                <div class="row" id="divDadosVeiculo2">
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Marca, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Marca, null, new { htmlAttributes = new { @id = "Marca", @class = "form-control", @disabled = "disabled" } })
-                    </div>
-                    <div class="col-md-6">
-                        @Html.LabelFor(m => m.Modelo, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(m => m.Modelo, null, new { htmlAttributes = new { @id = "Modelo", @class = "form-control", @disabled = "disabled" } })
-                    </div>
-                </div>
-                <br />
-            </div>
-        </div>
-    </div>
-    <hr />
-    <!-- #endregion -->
+        <br />
+        <!-- #endregion -->
 
-    <!-- #region Dados de viagem -->
-    <div class="row" id="divDadosViagem">
-        <div class="col-md-3">
-            @Html.LabelFor(model => model.Inicio, htmlAttributes: new { @class = "control-label legenda-campo" })
-            @Html.EditorFor(model => model.Inicio, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @readonly = "readonly" } })
-        </div>
-        @if (Model.Viagem.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.ENCERRADA)
-        {
+        <!-- #region Dados de viagem -->
+        <div class="row" id="divDadosViagem">
             <div class="col-md-3">
-                @Html.LabelFor(model => model.Fim, htmlAttributes: new { @class = "control-label legenda-campo" })
-                @Html.EditorFor(model => model.Fim, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @readonly = "readonly" } })
+                @Html.LabelFor(model => model.Inicio, htmlAttributes: new { @class = "control-label legenda-campo" })
+                @Html.EditorFor(model => model.Inicio, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @readonly = "readonly" } })
             </div>
-        }
-        <div class="col-md-3">
-            @Html.LabelFor(model => model.Motivo, htmlAttributes: new { @class = "control-label legenda-campo" })
-            @Html.EditorFor(model => model.Motivo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @if (Model.Viagem.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.ENCERRADA)
+            {
+                <div class="col-md-3">
+                    @Html.LabelFor(model => model.Fim, htmlAttributes: new { @class = "control-label legenda-campo" })
+                    @Html.EditorFor(model => model.Fim, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @readonly = "readonly" } })
+                </div>
+            }
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.Motivo, htmlAttributes: new { @class = "control-label legenda-campo" })
+                @Html.EditorFor(model => model.Motivo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            </div>
         </div>
-    </div>
-    <br />
-    <br />
-    <!-- #endregion -->
+        <br />
+        <br />
+        <!-- #endregion -->
 
-    <!-- #region Botões -->
-    <div id="divBotoes">
-        @if (Model.Viagem.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.PROGRAMADA)
-        {
-            <a title="Iniciar" id="btnIniciar" class="btn btn-success" onclick="return confirm('Deseja iniciar a viagem ?');"
-               href="@Url.Action("IniciarViagem", "Viagem", new { id = Model.Viagem.ID } )">
-                <span class="glyphicon glyphicon-road"></span>
-                <strong>Iniciar</strong>
+        <!-- #region Botões -->
+        <div id="divBotoes">
+            @if (Model.Viagem.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.PROGRAMADA)
+            {
+                <a title="Iniciar" id="btnIniciar" class="btn btn-success" onclick="return confirm('Deseja iniciar a viagem ?');"
+                   href="@Url.Action("IniciarViagem", "Viagem", new { id = Model.Viagem.ID } )">
+                    <span class="glyphicon glyphicon-road"></span>
+                    <strong>Iniciar</strong>
+                </a>
+                <a title="Cancelar" id="btnCancelar" class="btn btn-danger" onclick="return confirm('Deseja cancelar a viagem ?');"
+                   href="@Url.Action("CancelarViagem", "Viagem", new { id = Model.Viagem.ID } )">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    <strong>Cancelar</strong>
+                </a>
+            }
+
+            @if (Model.Viagem.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.EMANDAMENTO)
+            {
+                <a title="Finalizar" id="btnFinalizar" class="btn btn-info" onclick="return confirm('Deseja finalizar a viagem ?');"
+                   href="@Url.Action("FinalizarViagem", "Viagem", new { id = Model.Viagem.ID } )">
+                    <span class="glyphicon glyphicon-stop"></span>
+                    <strong>Finalizar</strong>
+                </a>
+            }
+
+            <a title="Voltar" id="btnVoltar" class="btn btn-default" href="@Url.Action("PainelDeViagens", "Viagem")">
+                <span class="glyphicon glyphicon-backward"></span>
+                <strong>Voltar</strong>
             </a>
-            <a title="Cancelar" id="btnCancelar" class="btn btn-danger" onclick="return confirm('Deseja cancelar a viagem ?');"
-               href="@Url.Action("CancelarViagem", "Viagem", new { id = Model.Viagem.ID } )">
-                <span class="glyphicon glyphicon-remove"></span>
-                <strong>Cancelar</strong>
-            </a>
-        }
-
-        @if (Model.Viagem.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.EMANDAMENTO)
-        {
-            <a title="Finalizar" id="btnFinalizar" class="btn btn-info" onclick="return confirm('Deseja finalizar a viagem ?');"
-               href="@Url.Action("FinalizarViagem", "Viagem", new { id = Model.Viagem.ID } )">
-                <span class="glyphicon glyphicon-stop"></span>
-                <strong>Finalizar</strong>
-            </a>
-        }
-
-        <a title="Voltar" id="btnVoltar" class="btn btn-default" href="@Url.Action("PainelDeViagens", "Viagem")">
-            <span class="glyphicon glyphicon-backward"></span>
-            <strong>Voltar</strong>
-        </a>
-    </div>
-    <!-- #endregion -->
-}
-
+        </div>
+        <!-- #endregion -->
+    }
+</div>

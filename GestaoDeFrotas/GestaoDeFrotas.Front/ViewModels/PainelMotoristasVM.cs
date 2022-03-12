@@ -15,7 +15,7 @@ namespace CadastroDeCaminhoneiro.ViewModels
         public bool Todos { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public IEnumerable<MotoristaDBE> Motoristas { get; set; }
+        public IEnumerable<MotoristaVM> Motoristas { get; set; }
 
         public PainelMotoristasVM()
         {

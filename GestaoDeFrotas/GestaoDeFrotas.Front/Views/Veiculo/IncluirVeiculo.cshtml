@@ -4,8 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Incluir Veículo</h2>
-<hr />
+<div class="container-menu"><h2>Incluir Veículo</h2></div>
+<br />
 
 @using (Html.BeginForm())
 {
@@ -17,7 +17,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Placa, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.Placa, new { htmlAttributes = new { @class = "form-control", @id = "placa" } })
                 @Html.ValidationMessageFor(model => model.Placa, "", new { @class = "text-danger" })
             </div>
@@ -25,7 +25,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.MarcaID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.DropDownListFor(model => model.MarcaID, null, "", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MarcaID, "", new { @class = "text-danger" })
             </div>
@@ -33,7 +33,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ModeloID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.DropDownListFor(model => model.ModeloID, null, "", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ModeloID, "", new { @class = "text-danger" })
             </div>
@@ -41,7 +41,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.TipoID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.DropDownListFor(model => model.TipoID, null, "", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TipoID, "", new { @class = "text-danger" })
             </div>

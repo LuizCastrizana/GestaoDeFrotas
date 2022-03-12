@@ -22,6 +22,191 @@ body {
     margin: 0;
 }
 
+/*Personalizados*/
+.display-inline-block {
+    display: inline-block;
+}
+
+.campo-centro {
+    text-align: center;
+}
+
+.campo-direita {
+    text-align: right;
+}
+
+.alinhar-direita {
+    float: right
+}
+
+.alinhar-esquerda {
+    float: left !important
+}
+
+.campo-form {
+    max-width: 100%;
+}
+
+.titulo-pag {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    font-weight: bold
+}
+
+.container-menu {
+    border: 1px solid;
+    background-color: whitesmoke;
+    border-color: lightgray;
+    border-radius: 0px;
+    box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+
+.row-titulo {
+    border: 1px solid;
+    background-color: whitesmoke;
+    border-color: lightgray;
+    border-radius: 5px;
+    box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+
+.head-tabela {
+    border: 1px solid !important;
+    border-radius: 5px;
+    background-color: whitesmoke;
+    border-color: lightgray !important;
+    box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+
+.legenda-campo {
+    font-size: 12px
+}
+
+.row-inativos {
+    padding: 0px 0px 0px 5px !important;
+    font-size: 12px
+}
+
+.inativos-legenda {
+    float: left;
+    position: relative;
+    padding-top: 3px;
+}
+
+.campos-painel {
+    float: left;
+    padding: 0px 0px 0px 5px !important;
+    position: relative;
+}
+
+.campos-painel-sm {
+    width: 95px !important
+}
+
+.campos-painel-md {
+    width: 140px !important
+}
+
+.campos-painel-lg {
+    width: 280px !important
+}
+
+.botao-buscar {
+    width: 45px !important
+}
+
+.botao-novo {
+    padding: 20px 0px 0px 0px !important;
+    width: 90px !important;
+    position: relative;
+}
+
+.botao-nova-viagem {
+    padding: 20px 0px 0px 0px !important;
+    width: 145px !important;
+    position: relative;
+}
+
+.paginas {
+    padding: 0px 0px 5px 0px !important;
+    width: 600px !important;
+}
+
+.legenda-painel {
+    padding: 5px 10px 5px 10px !important;
+    border: 1px solid;
+    background-color: whitesmoke;
+    border-color: lightgray;
+    border-radius: 5px;
+    box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+
+.linha-painel {
+}
+
+    .linha-painel:hover {
+        background-color: whitesmoke;
+        cursor: pointer;
+    }
+
+.botao-menu {
+    float: left;
+    height: 50px;
+    padding: 10px 10px 10px 10px !important;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+.botao-superior {
+    float: right;
+    padding: 15px 10px 0px 0px;
+}
+
+.botao-inferior {
+    float: right;
+    padding: 0px 10px 0px 0px;
+}
+
+.info-popularbd {
+    border: 1px solid;
+    background-color: aliceblue;
+    border-color: lightskyblue;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px lightgrey;
+    padding: 5px 10px 0px 10px !important;
+    width: 650px;
+}
+
+.row-popularbd {
+    padding: 0px 0px 0px 15px !important;
+}
+
+.campo-configuracoes {
+    width: 250px !important
+}
+
+.campo-caminho {
+    width: 300px !important;
+    max-width: 300px !important;
+}
+
+.dropdown-configuracoes {
+    width: 110px !important
+}
+
+.div-item-viagem {
+    border: 1px solid;
+    background-color: rgb(230 240 245);
+    border-color: rgb(216 235 245);
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px lightgrey;
+    padding: 0px 15px 0px 15px !important;
+    width: 100%;
+}
+
+.pointer {
+    cursor: pointer;
+}
+/*Personalizados*/
+
 article,
 aside,
 details,
@@ -2009,6 +2194,18 @@ pre {
     }
 }
 
+@media (min-width: 1366px) {
+    .container {
+        width: 1300px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .container {
+        width: 1500px;
+    }
+}
+
 .container-fluid {
     padding-right: 15px;
     padding-left: 15px;
@@ -2916,7 +3113,7 @@ th {
     .table > thead > tr > td,
     .table > tbody > tr > td,
     .table > tfoot > tr > td {
-        padding: 8px;
+        padding: 4px;
         line-height: 1.42857143;
         vertical-align: top;
         border-top: 1px solid #ecf0f1;

@@ -1,0 +1,192 @@
+﻿/*Personalizados*/
+.jumbotron{
+background-color: #008cba;
+box-shadow: 0px 2px 2px 0.01em darkgrey;
+}
+.lead{
+color: white;
+/*text-shadow: 2px 2px 2px black;*/
+}
+.btn-info {
+    background-color: #33bae2;
+}
+.table > tbody > tr > th{
+border-top: none !important;
+}
+.display-inline-block{
+display: inline-block;
+}
+.campo-centro {
+text-align: center;
+}
+.campo-direita {
+text-align: right;
+}
+.alinhar-direita {
+float: right
+}
+.alinhar-esquerda {
+float: left !important
+}
+.campo-form {
+max-width: 100%;
+}
+.titulo-pag {
+font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+font-weight: bold;
+text-shadow: 2px 2px 2px #383838;
+color: white !important;
+}
+.legenda-campo {
+    font-size: 12px
+}
+.row-inativos {
+ padding: 3px 0px 0px 0px !important;
+ font-size: 12px
+}
+.inativos-legenda {
+/*    float: left;
+    position: relative;*/
+/*    padding-top: 3px;*/
+}
+.campos-painel {
+ float: left;
+ padding: 0px 0px 0px 5px !important;
+ position: relative;
+}
+.campos-painel-sm {
+ width: 95px !important
+}
+.campos-painel-md {
+ width: 140px !important
+}
+.campos-painel-lg {
+ width: 280px !important
+}
+.botao-buscar {
+ width: 45px !important
+}
+.botao-novo {
+ padding: 20px 0px 0px 0px !important;
+ width: 90px !important;
+ position: relative;
+}
+.botao-nova-viagem {
+ padding: 20px 0px 0px 0px !important;
+ width: 150px !important;
+ position: relative;
+}
+.paginas {
+padding: 0px 0px 5px 0px !important;
+width: 600px !important;
+}
+.linha-painel:hover {
+background-color: lightskyblue;
+cursor: pointer;
+}
+.botao-menu {
+float: left;
+height: 50px;
+padding: 10px 10px 10px 10px !important;
+font-size: 18px;
+line-height: 20px;
+}
+.botao-superior {
+float: right;
+padding: 15px 10px 0px 0px;
+}
+.botao-inferior {
+float: right;
+padding: 0px 10px 0px 0px;
+}
+.row-popularbd {
+padding: 0px 0px 0px 15px !important;
+}
+.campo-configuracoes {
+width: 250px !important
+}
+.campo-caminho {
+width: 300px !important;
+max-width: 300px !important;
+}
+.dropdown-configuracoes {
+width: 110px !important
+}
+.head-tabela {
+border: 1px solid !important;
+background-color: #383838;
+color: white;
+border-color: black !important;
+box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+.legenda-painel {
+padding: 5px 10px 5px 10px !important;
+border: 1px solid;
+background-color: whitesmoke;
+border-color: lightgray;
+box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+.info-popularbd {
+border: 1px solid;
+background-color: aliceblue;
+border-color: lightskyblue;
+border-radius: 5px;
+box-shadow: 2px 2px 2px 1px lightgrey;
+padding: 5px 10px 0px 10px !important;
+width: 650px;
+}
+.container-menu {
+padding: 2px 20px 2px 20px;
+border: 1px solid;
+background-color: whitesmoke;
+border-color: lightgray;
+border-radius: 0px;
+box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+.container-form{
+border: 1px solid;
+background-color: white;
+border-color: lightgray;
+padding: 15px 15px 15px 15px;
+box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+.container-bordertop{
+border: 1px solid;
+border-top: 10px solid;
+/*border-top-color: darkgrey !important;*/
+background-color: white;
+border-color: #008cba;
+padding: 0px 15px 15px 15px;
+box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+.container-bordertop > h4:first-child,
+.container-bordertop > .row > div > h4:first-child{
+color: #008cba;
+font-weight: bold;
+}
+.container-titulo{
+background-color: #008cba;
+color: white;
+border: 1px solid;
+border-color: steelblue;
+box-shadow: 0px 1px 1px 0.01em lightgrey;
+}
+.pointer {
+cursor: pointer;
+}
+body{
+    background-color: white !important;
+}
+.body-content {
+background-color: white !important;
+}
+@media (min-width: 1366px) {
+    .container {
+        width: 1300px;
+    }
+}
+@media (min-width: 1600px) {
+    .container {
+        width: 1500px;
+    }
+}

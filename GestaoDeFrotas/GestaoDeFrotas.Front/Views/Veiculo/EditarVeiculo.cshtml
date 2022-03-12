@@ -5,31 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="display-inline-block">Editar Veiculo</h2>
+<div class="container-menu">
+    <h2 class="display-inline-block">Editar Veiculo</h2>
 
-@*Desativar/Reativar*@
-@if (Model.VeiculoDBE.Status == true)
-{
-    <div class="display-inline-block botao-superior">
-        <a title="Desativar" id="btnDesativar" class="btn btn-warning" onclick="return confirm('Deseja desativar o veículo ?');"
-           href="@Url.Action("DesativarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID } )">
-            <span class="glyphicon glyphicon-eye-close"></span>
-            <strong>Desativar</strong>
-        </a>
-    </div>
-}
-else
-{
-    <div class="display-inline-block botao-superior">
-        <a title="Reativar" id="btnReativar" class="btn btn-info" onclick="return confirm('Deseja reativar o veículo ?');"
-           href="@Url.Action("ReativarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID } )">
-            <span class="glyphicon glyphicon-eye-open"></span>
-            <strong>Reativar</strong>
-        </a>
-    </div>
-}
-<hr />
-
+    @*Desativar/Reativar*@
+    @if (Model.VeiculoDBE.Status == true)
+    {
+        <div class="display-inline-block botao-superior">
+            <a title="Desativar" id="btnDesativar" class="btn btn-warning" onclick="return confirm('Deseja desativar o veículo ?');"
+               href="@Url.Action("DesativarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID } )">
+                <span class="glyphicon glyphicon-eye-close"></span>
+                <strong>Desativar</strong>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="display-inline-block botao-superior">
+            <a title="Reativar" id="btnReativar" class="btn btn-info" onclick="return confirm('Deseja reativar o veículo ?');"
+               href="@Url.Action("ReativarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID } )">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                <strong>Reativar</strong>
+            </a>
+        </div>
+    }
+</div>
+<br />
 @*Form Veiculos*@
 @using (Html.BeginForm())
 {
@@ -44,7 +45,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.VeiculoDBE.Placa, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.VeiculoDBE.Placa, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 @Html.ValidationMessageFor(model => model.VeiculoDBE.Placa, "", new { @class = "text-danger" })
             </div>
@@ -52,7 +53,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.MarcaID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.DropDownListFor(model => model.MarcaID, null, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MarcaID, "", new { @class = "text-danger" })
             </div>
@@ -60,7 +61,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.ModeloID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.DropDownListFor(model => model.ModeloID, null, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ModeloID, "", new { @class = "text-danger" })
             </div>
@@ -68,7 +69,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.TipoID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.DropDownListFor(model => model.TipoID, null, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TipoID, "", new { @class = "text-danger" })
             </div>
@@ -76,7 +77,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.DataInclusao, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.DataInclusao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 @Html.ValidationMessageFor(model => model.DataInclusao, "", new { @class = "text-danger" })
             </div>
@@ -84,7 +85,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.DataAlteracao, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.DataAlteracao, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 @Html.ValidationMessageFor(model => model.DataAlteracao, "", new { @class = "text-danger" })
             </div>
@@ -92,7 +93,7 @@ else
 
         <div class="form-group">
             @Html.LabelFor(model => model.VeiculoDBE.Status, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="checkbox col-md-10">
+            <div class="checkbox col-md-3">
                 @if (Model.VeiculoDBE.Status == true)
                 {
                     <span class="glyphicon glyphicon-ok"></span>
@@ -129,13 +130,24 @@ else
 {
     if (Model.VeiculoDBE.Status == true)
     {
-        <div class="navbar-form">
+        @*<div class="navbar-form">
             @Html.HiddenFor(model => model.VeiculoDBE.ID)
             @Html.EditorFor(model => model.BuscaMotorista, null, new { htmlAttributes = new { @class = "form-control col-md-2", @id = "cpf", @placeholder = "CPF" } })
             &nbsp
             <button type="submit" class="btn btn-default" onclick="return confirm('Deseja vincular o motorista ?');">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
+        </div>*@
+        <div class="form-horizontal">
+            @Html.HiddenFor(model => model.VeiculoDBE.ID)
+            <div class="input-group col-md-2">
+                @Html.EditorFor(model => model.BuscaMotorista, null, new { htmlAttributes = new { @class = "form-control upper", @id = "cpf", @placeholder = "CPF" } })
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default" onclick="return confirm('Deseja vincular o motorista ?');">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </span>
+            </div>
         </div>
     }
     <br />
@@ -162,10 +174,10 @@ else
                         @Html.DisplayFor(modelItem => item.CPF)
                     </td>
                     <td>
-                        <a title="Visualizar" class="btn btn-default btn-xs" href="@Url.Action("VisualizarMotorista", "Motorista", new { id = item.ID} )">
+                        <a title="Visualizar" class="btn btn-info btn-xs" href="@Url.Action("VisualizarMotorista", "Motorista", new { id = item.ID} )">
                             <span class="glyphicon glyphicon-eye-open"></span>
                         </a>
-                        <a title="Desvincular" class="btn btn-default btn-xs" onclick="return confirm('Deseja desvincular o motorista ?');"
+                        <a title="Desvincular" class="btn btn-warning btn-xs" onclick="return confirm('Deseja desvincular o motorista ?');"
                            href="@Url.Action("DesvincularMotoristaVeiculo", "Veiculo", new { veiculoid = Model.VeiculoDBE.ID, motoristaid = item.ID })">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>

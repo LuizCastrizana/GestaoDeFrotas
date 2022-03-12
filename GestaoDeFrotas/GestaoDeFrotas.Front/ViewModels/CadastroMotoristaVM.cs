@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 
 namespace CadastroDeCaminhoneiro.ViewModels
@@ -95,6 +96,9 @@ namespace CadastroDeCaminhoneiro.ViewModels
         [DisplayName("Data de alteração")]
         public DateTime DataAlteracao { get; set; }
 
+        [DisplayName("Veículos")]
+        public int ContagemVeiculos { get; set; }
+
         [DisplayName("Ativo")]
         public bool Status { get; set; }
 
@@ -149,6 +153,8 @@ namespace CadastroDeCaminhoneiro.ViewModels
             DataAlteracao = dbe.DataAlteracao;
             Status = dbe.Status;
 
+            ContagemVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(ID, null).Count();
+
             CNH.ID = dbe.CNH.ID;
             CNH.Numero = dbe.CNH.Numero;
             CNH.RENACH = dbe.CNH.RENACH;
@@ -165,7 +171,10 @@ namespace CadastroDeCaminhoneiro.ViewModels
             Endereco.Cep = dbe.Endereco.Cep;
             Endereco.Bairro = dbe.Endereco.Bairro;
             Endereco.Municipio.ID = dbe.Endereco.Municipio.ID;
+            Endereco.Municipio.NomeMunicipio = dbe.Endereco.Municipio.NomeMunicipio;
             Endereco.Municipio.Estado.ID = dbe.Endereco.Municipio.Estado.ID;
+            Endereco.Municipio.Estado.NomeEstado = dbe.Endereco.Municipio.Estado.NomeEstado;
+            Endereco.Municipio.Estado.UF = dbe.Endereco.Municipio.Estado.UF;
 
         }
     }

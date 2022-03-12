@@ -2,31 +2,22 @@
 
 @{
     ViewBag.Title = "PainelDeViagens";
-    Layout = "~/Views/Shared/_LayoutFluid.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @using X.PagedList;
 @using X.PagedList.Mvc;
 @using GestaoDeFrotas.Data.Enums;
 
-<h2 class="titulo-pag">Painel De Viagens</h2>
+<div class="container-fluid container-titulo">
+    <h2 class="titulo-pag">Painel De Viagens</h2>
+</div>
 
 <!-- #region Menu -->
 @using (Html.BeginForm("BuscarViagensPainel", "Viagem", FormMethod.Get))
 {
     <div class="container-fluid container-menu">
         <div class="row row-menu">
-            <div class="campos-painel campos-painel-md">
-                <l class="legenda-campo">Buscar por:</l>
-                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control", onchange = "OpcaoBuscaViagem(this.value)" })
-            </div>
-            <div class="campos-painel campos-painel-lg">
-                <l class="legenda-campo" id="BuscaCodigo">Buscar por codigo:</l>
-                <l class="legenda-campo" id="BuscaData">Buscar por data de inclusao:</l>
-                <l class="legenda-campo" id="BuscaVeiculo">Buscar por placa:</l>
-                <l class="legenda-campo" id="BuscaMotorista">Buscar por nome ou CPF:</l>
-                @Html.EditorFor(model => model.BuscaViagem, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
             <div class="campos-painel campos-painel-md">
                 <l class="legenda-campo">Ordenar por:</l>
                 @Html.DropDownListFor(model => model.OpcaoCampoOrdenacao, null, new { @class = "form-control" })
@@ -39,11 +30,23 @@
                 <l class="legenda-campo" id="">Status:</l>
                 @Html.DropDownListFor(model => model.StatusViagem, null, new { @class = "form-control" })
             </div>
-            <div class="botao-buscar campos-painel">
-                &nbsp;
-                <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
-                    <span class="glyphicon glyphicon-search"></span>
-                </button>
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Buscar por:</l>
+                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control", onchange = "OpcaoBuscaViagem(this.value)" })
+            </div>
+            <div class="campos-painel campos-painel-lg">
+                <l class="legenda-campo" id="BuscaCodigo">Buscar por codigo:</l>
+                <l class="legenda-campo" id="BuscaData">Buscar por data de inclusao:</l>
+                <l class="legenda-campo" id="BuscaVeiculo">Buscar por placa:</l>
+                <l class="legenda-campo" id="BuscaMotorista">Buscar por nome ou CPF:</l>
+                <div class="input-group">
+                    @Html.EditorFor(model => model.BuscaViagem, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-btn">
+                        <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
             </div>
             <div class="botao-nova-viagem alinhar-direita">
                 <a title="Novo" id="btnNovo" class="btn btn-info" href="@Url.Action("IncluirViagem", "Viagem")">
@@ -114,19 +117,19 @@
             <td class="campo-centro">
                 @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.EMANDAMENTO)
                 {
-                    <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+                    <img src="~/Content/Img/status-verde.png" height="20" width="20" />
                 }
                 @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.CANCELADA)
                 {
-                    <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+                    <img src="~/Content/Img/status-vermelho.png" height="20" width="20" />
                 }
                 @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.PROGRAMADA)
                 {
-                    <img src="~/Content/Img/status-azul-claro.png" height="24" width="24" />
+                    <img src="~/Content/Img/status-azul-claro.png" height="20" width="20" />
                 }
                 @if (item.ViagemStatus.ID == (int)ENUMSTATUSVIAGEM.ENCERRADA)
                 {
-                    <img src="~/Content/Img/status-roxo.png" height="24" width="24" />
+                    <img src="~/Content/Img/status-roxo.png" height="20" width="20" />
                 }
             </td>
         </tr>
@@ -141,10 +144,10 @@
     </div>
     <div class="alinhar-direita">
         <div class="legenda-painel">
-            Programada <img src="~/Content/Img/status-azul-claro.png" height="24" width="24" /> &nbsp; &nbsp;
-            Em Andamento <img src="~/Content/Img/status-verde.png" height="24" width="24" /> &nbsp; &nbsp;
-            Encerrada <img src="~/Content/Img/status-roxo.png" height="24" width="24" /> &nbsp; &nbsp;
-            Cancelada <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+            Programada <img src="~/Content/Img/status-azul-claro.png" height="20" width="20" /> &nbsp; &nbsp;
+            Em Andamento <img src="~/Content/Img/status-verde.png" height="20" width="20" /> &nbsp; &nbsp;
+            Encerrada <img src="~/Content/Img/status-roxo.png" height="20" width="20" /> &nbsp; &nbsp;
+            Cancelada <img src="~/Content/Img/status-vermelho.png" height="20" width="20" />
         </div>
     </div>
 </div>

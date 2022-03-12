@@ -8,7 +8,7 @@ using System.Web;
 
 namespace CadastroDeCaminhoneiro
 {
-    public static class MotoristaHelper
+    public static class MotoristaTools
     {
         public static IEnumerable<MotoristaDBE> BuscarPorNomeOuCPF (string busca, bool? todos)
         {

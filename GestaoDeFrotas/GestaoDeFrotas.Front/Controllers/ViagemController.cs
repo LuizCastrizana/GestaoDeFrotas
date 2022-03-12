@@ -18,48 +18,23 @@ namespace CadastroDeCaminhoneiro.Controllers
         public ActionResult PainelDeViagens()
         {
             PainelViagensVM vm = new PainelViagensVM();
-            var OpcoesOrdenacao = new List<DropDownItem>
-                {
-                    new DropDownItem((int)ENUMOPCOESORDENACAO.CRESCENTE, "Crescente"),
-                    new DropDownItem((int)ENUMOPCOESORDENACAO.DECRESCENTE, "Decrescente")
-                };
-            var OpcoesFiltragem = new List<DropDownItem>
-                {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.CODIGO, "Codigo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.VEICULO, "Veiculo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA, "Motorista")
-                };
-            var OpcaoCampoOrdenacao = new List<DropDownItem>
-                {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.CODIGO, "Codigo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.STATUS, "Status"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.VEICULO, "Veiculo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA, "Motorista")
-                };
-            var StatusViagem = new List<DropDownItem>
-                {
-                    new DropDownItem(0, "Todos"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.PROGRAMADA, "Programada"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.EMANDAMENTO, "Em Andamento"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.ENCERRADA, "Encerrada"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.CANCELADA, "Cancelada")
-                };
-            ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
-            ViewData["OpcaoCampoOrdenacao"] = new SelectList(OpcaoCampoOrdenacao, "Id", "Text");
-            ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
-            ViewData["StatusViagem"] = new SelectList(StatusViagem, "Id", "Text");
 
-            vm.OpcoesFiltragem = 1;
-            vm.OpcaoCampoOrdenacao = 2;
-            vm.OpcaoOrdenacao = 2;
+            var opcoesPainel = ViagemTools.MontarListasOpcoesPainel();
 
-            vm.Viagens.ToPagedList(1, 10);
+            ViewData["OpcaoOrdenacao"] = new SelectList(opcoesPainel.Ordenacao, "Id", "Text");
+            ViewData["OpcaoCampoOrdenacao"] = new SelectList(opcoesPainel.CampoOrdenacao, "Id", "Text");
+            ViewData["OpcoesFiltragem"] = new SelectList(opcoesPainel.Filtros, "Id", "Text");
+            ViewData["StatusViagem"] = new SelectList(opcoesPainel.StatusViagem, "Id", "Text");
+
+            vm.OpcoesFiltragem = (int)ENUMCAMPOSPAIELVIAGEM.CODIGO;
+            vm.OpcaoCampoOrdenacao = (int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO;
+            vm.OpcaoOrdenacao = (int)ENUMOPCOESORDENACAO.DECRESCENTE;
+
+            vm.Viagens.ToPagedList(1, 15);
 
             try
             {
-                vm.Viagens = ViagemHelper.BuscarViagensPainel(new ViagemDBE(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 10);
+                vm.Viagens = ViagemTools.BuscarViagensPainel(new ViagemDBE(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 15);
             }
             catch(Exception e)
             {
@@ -73,49 +48,24 @@ namespace CadastroDeCaminhoneiro.Controllers
         {
             var numPagina = pagina ?? 1;
 
-            var OpcoesOrdenacao = new List<DropDownItem>
-                {
-                    new DropDownItem((int)ENUMOPCOESORDENACAO.CRESCENTE, "Crescente"),
-                    new DropDownItem((int)ENUMOPCOESORDENACAO.DECRESCENTE, "Decrescente")
-                };
-            var OpcoesFiltragem = new List<DropDownItem>
-                {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.CODIGO, "Codigo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.VEICULO, "Veiculo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA, "Motorista")
-                };
-            var OpcaoCampoOrdenacao = new List<DropDownItem>
-                {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.CODIGO, "Codigo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.STATUS, "Status"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.VEICULO, "Veiculo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA, "Motorista")
-                };
-            var StatusViagem = new List<DropDownItem>
-                {
-                    new DropDownItem(0, "Todos"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.PROGRAMADA, "Programada"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.EMANDAMENTO, "Em Andamento"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.ENCERRADA, "Encerrada"),
-                    new DropDownItem((int)ENUMSTATUSVIAGEM.CANCELADA, "Cancelada")
-                };
-            ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
-            ViewData["OpcaoCampoOrdenacao"] = new SelectList(OpcaoCampoOrdenacao, "Id", "Text");
-            ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
-            ViewData["StatusViagem"] = new SelectList(StatusViagem, "Id", "Text");
+            var opcoesPainel = ViagemTools.MontarListasOpcoesPainel();
 
-            vm.Viagens = Enumerable.Empty<ViagemDBE>().ToPagedList(numPagina, 10);
+            ViewData["OpcaoOrdenacao"] = new SelectList(opcoesPainel.Ordenacao, "Id", "Text");
+            ViewData["OpcaoCampoOrdenacao"] = new SelectList(opcoesPainel.CampoOrdenacao, "Id", "Text");
+            ViewData["OpcoesFiltragem"] = new SelectList(opcoesPainel.Filtros, "Id", "Text");
+            ViewData["StatusViagem"] = new SelectList(opcoesPainel.StatusViagem, "Id", "Text");
+
+            vm.Viagens = Enumerable.Empty<ViagemDBE>().ToPagedList(numPagina, 15);
 
             try
             {
                 var ViagemBusca = new ViagemDBE();
+
                 ViagemBusca.ViagemStatus.ID = vm.StatusViagem;
 
-                vm.Viagens = ViagemHelper.BuscarViagensPainel(ViagemBusca, vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao);
+                vm.Viagens = ViagemTools.BuscarViagensPainel(ViagemBusca, vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao);
 
-                vm.Viagens = vm.Viagens.ToPagedList(numPagina, 10);
+                vm.Viagens = vm.Viagens.ToPagedList(numPagina, 15);
 
                 return View("PainelDeViagens", vm);
             }
@@ -173,7 +123,7 @@ namespace CadastroDeCaminhoneiro.Controllers
 
                 vm.VmToDBE();
 
-                GeradorCodigoViagem.GerarCodigo(vm.Viagem);
+                ViagemTools.GerarCodigoViagem(vm.Viagem);
 
                 vm.Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.PROGRAMADA;
 
@@ -274,7 +224,7 @@ namespace CadastroDeCaminhoneiro.Controllers
         #region Buscas Json
         public JsonResult BuscaMotorista(string busca)
         {
-            var lista = MotoristaHelper.BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID);
+            var lista = MotoristaTools.BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID);
 
             return Json(lista.First());
         }
@@ -295,7 +245,7 @@ namespace CadastroDeCaminhoneiro.Controllers
         public JsonResult AutoCompleteMotorista(string busca)
         {
             var lista = new List<AutoCompleteMotorista>();
-            foreach (var item in MotoristaHelper.BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID))
+            foreach (var item in MotoristaTools.BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID))
             {
                 lista.Add(new AutoCompleteMotorista(item));
             }

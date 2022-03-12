@@ -15,11 +15,10 @@ namespace CadastroDeCaminhoneiro.Controllers
 {
     public class MotoristaController : Controller
     {
-        // GET: Motorista
         #region Painel
         public ActionResult PainelDeMotoristas()
         {
-            PainelMotoristasVM viewModelPainel = new PainelMotoristasVM();
+            PainelMotoristasVM vm = new PainelMotoristasVM();
             var OpcoesOrdenacao = new List<DropDownItem>
                 {
                     new DropDownItem(1, "Crescente"),
@@ -33,19 +32,31 @@ namespace CadastroDeCaminhoneiro.Controllers
                 };
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
-            viewModelPainel.Motoristas = Enumerable.Empty<MotoristaDBE>().ToPagedList(1, 10);
+            vm.Motoristas = Enumerable.Empty<MotoristaVM>().ToPagedList(1, 15);
             try
             {
-                viewModelPainel.Motoristas = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
-                viewModelPainel.Motoristas = viewModelPainel.Motoristas.ToPagedList(1, 10);
-                viewModelPainel.BuscaMotorista = "";
-                viewModelPainel.Todos = false;
-                return View(viewModelPainel);
+                //vm.Motoristas = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
+                var listaMotoristasDBE = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
+                var listaMotoristasVM = new List<MotoristaVM>();
+
+                foreach (var item in listaMotoristasDBE)
+                {
+                    var motorista = new MotoristaVM();
+                    motorista.CastFromDBE(item);
+                    listaMotoristasVM.Add(motorista);
+                }
+
+                vm.Motoristas = listaMotoristasVM;
+
+                vm.Motoristas = vm.Motoristas.ToPagedList(1, 15);
+                vm.BuscaMotorista = "";
+                vm.Todos = false;
+                return View(vm);
             }
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados do painel." + e.Message;
-                return View(viewModelPainel);
+                return View(vm);
             }
         }
         public ActionResult BuscarMotoristasPainel(PainelMotoristasVM vm, int? pagina)
@@ -71,12 +82,24 @@ namespace CadastroDeCaminhoneiro.Controllers
                 // remove caracteres da string de busca
                 vm.BuscaMotorista = StringTools.RemoverCaracteres(vm.BuscaMotorista, "-.");
                 // busca por nome ou cpf
-                vm.Motoristas = new MotoristaDAL().List(vm.Todos)
+                var listaMotoristasDBE = new MotoristaDAL().List(vm.Todos)
                                                       .Where(m => (m.PrimeiroNome + " " + m.Sobrenome).ToUpper()
                                                       .Contains(vm.BuscaMotorista.ToUpper())
                                                       ||
                                                      (StringTools.RemoverCaracteres(m.CPF, "-."))
                                                      .Contains(vm.BuscaMotorista));
+
+                var listaMotoristasVM = new List<MotoristaVM>();
+
+                foreach (var item in listaMotoristasDBE)
+                {
+                    var motorista = new MotoristaVM();
+                    motorista.CastFromDBE(item);
+                    listaMotoristasVM.Add(motorista);
+                }
+
+                vm.Motoristas = listaMotoristasVM;
+
                 if (vm.OpcaoOrdenacao == "1")
                 {
                     switch (vm.OpcoesFiltragem)
@@ -113,13 +136,13 @@ namespace CadastroDeCaminhoneiro.Controllers
                             break;
                     }
                 }
-                vm.Motoristas = vm.Motoristas.ToPagedList(numPagina, 10);
+                vm.Motoristas = vm.Motoristas.ToPagedList(numPagina, 15);
                 return View("PainelDeMotoristas", vm);
             }
             catch (Exception)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados do painel.";
-                vm.Motoristas = Enumerable.Empty<MotoristaDBE>().ToPagedList(numPagina, 10);
+                vm.Motoristas = Enumerable.Empty<MotoristaVM>().ToPagedList(numPagina, 15);
                 return View(vm);
             }
         }

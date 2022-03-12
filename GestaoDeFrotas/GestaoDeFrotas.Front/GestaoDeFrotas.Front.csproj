@@ -191,9 +191,9 @@
     <Compile Include="Models\Veiculo\DetalheVeiculo.cs" />
     <Compile Include="Models\OracleModel.cs" />
     <Compile Include="Util\Motorista\AutoCompleteMotorista.cs" />
-    <Compile Include="Util\Motorista\MotoristaHelper.cs" />
+    <Compile Include="Util\Motorista\MotoristaTools.cs" />
     <Compile Include="Enums\ENUMCAMPOSPAIELVIAGEM.cs" />
-    <Compile Include="Util\Veiculo\VeiculoHelper.cs" />
+    <Compile Include="Util\Veiculo\VeiculoTools.cs" />
     <Compile Include="Util\Viagem\GeradorCodigoViagem.cs" />
     <Compile Include="Util\Comum\StringTools.cs" />
     <Compile Include="Util\Comum\DropDownItem.cs" />
@@ -202,7 +202,8 @@
     <Compile Include="Util\Validadores\CPF.cs" />
     <Compile Include="Util\Validadores\RetornoValidacao.cs" />
     <Compile Include="Util\Validadores\ViagemValidador.cs" />
-    <Compile Include="Util\Viagem\ViagemHelper.cs" />
+    <Compile Include="Util\Viagem\FiltrosPainelViagem.cs" />
+    <Compile Include="Util\Viagem\ViagemTools.cs" />
     <Compile Include="ViewModels\CadastroMotoristaVM.cs" />
     <Compile Include="ViewModels\CadastroVeiculoVM.cs" />
     <Compile Include="ViewModels\CadastroViagemVM.cs" />
@@ -280,6 +281,8 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\yeti.css" />
+    <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -413,6 +416,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties content_4bootstrap_1css_1map__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />

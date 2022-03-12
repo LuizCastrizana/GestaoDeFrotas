@@ -2,18 +2,20 @@
 
 @{
     ViewBag.Title = "PainelDeMotoristas";
-    Layout = "~/Views/Shared/_LayoutFluid.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @using X.PagedList;
 @using X.PagedList.Mvc;
 
-<h2 class="titulo-pag">Painel De Motoristas</h2>
+<div class="container-fluid container-titulo">
+    <h2 class="titulo-pag">Painel De Motoristas</h2>
+</div>
 
 @using (Html.BeginForm("BuscarMotoristasPainel", "Motorista", FormMethod.Get))
 {
     <div class="container-fluid container-menu">
-        <div class="row row-menu">
+        <div class="row">
             <div class="campos-painel campos-painel-sm">
                 <l class="legenda-campo">Ordenar por:</l>
                 @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control" })
@@ -23,23 +25,24 @@
                 @Html.DropDownListFor(model => model.OpcaoOrdenacao, null, new { @class = "form-control" })
             </div>
             @*<div class="campos-painel campos-painel-md">
-                <l class="legenda-campo">Data inicial:</l>
-                @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+            <l class="legenda-campo">Data inicial:</l>
+            @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+        </div>
+        <div class="campos-painel campos-painel-md">
+            <l class="legenda-campo">Data final:</l>
+            @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+        </div>*@
+        <div class="campos-painel campos-painel-lg">
+            <l class="legenda-campo">Buscar por:</l>
+            <div class="input-group">
+                @Html.EditorFor(model => model.BuscaMotorista, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nome/CPF", @id = "BuscaMotorista" } })
+                <span class="input-group-btn">
+                    <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
             </div>
-            <div class="campos-painel campos-painel-md">
-                <l class="legenda-campo">Data final:</l>
-                @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-            </div>*@
-            <div class="campos-painel campos-painel-lg">
-                <l class="legenda-campo">Buscar por:</l>
-                @Html.EditorFor(model => model.BuscaMotorista, new { htmlAttributes = new { @class = "form-control upper", @placeholder = "Nome/CPF" } })
-            </div>
-            <div class="botao-buscar campos-painel">
-                &nbsp;
-                <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
-                    <span class="glyphicon glyphicon-search"></span>
-                </button>
-            </div>
+        </div>
             <div class="botao-novo alinhar-direita">
                 <a title="Novo" id="btnNovo" class="btn btn-info" href="@Url.Action("IncluirMotorista", "Motorista")">
                     <span class="glyphicon glyphicon-plus"></span>
@@ -47,13 +50,13 @@
                 </a>
             </div>
         </div>
-        <div class="row row-menu row-inativos">
-            <span class="inativos-legenda">
-                Exibir inativos
-            </span>
-            <span class="campos-painel">
+        <div class="row row-inativos">
+            <div class="campos-painel">
                 @Html.EditorFor(model => model.Todos, new { htmlAttributes = new { } })
-            </span>
+            </div>
+            <div class="campos-painel">
+                Exibir inativos
+            </div>
         </div>
     </div>
 }
@@ -80,6 +83,9 @@
             @Html.DisplayName("Data de alteração")
         </th>
         <th class="campo-centro">
+            @Html.DisplayName("Veículos")
+        </th>
+        <th class="campo-centro">
             @Html.DisplayName("Status")
         </th>
     </tr>
@@ -89,7 +95,7 @@
         <tr title="Visualizar" class="linha-painel" onclick="location.href='@Url.Action("VisualizarMotorista", "Motorista", new { id = item.ID })'" ;">
             <td class="campo-centro">
                 <a title="Editar" class="btn-editar" href='@Url.Action("EditarMotorista", "Motorista", new { id = item.ID })'>
-                    <img src="~/Content/Img/editar.png" />
+                    <img src="~/Content/Img/editar.png" height="18" width="18" />
                 </a>
             </td>
             <td>
@@ -113,13 +119,16 @@
                 @Html.DisplayFor(modelItem => item.DataAlteracao)
             </td>
             <td class="campo-centro">
+                @Html.DisplayFor(modelItem => item.ContagemVeiculos)
+            </td>
+            <td class="campo-centro">
                 @if (Html.ValueFor(modelItem => item.Status).ToString() == "True")
                 {
-                    <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+                    <img src="~/Content/Img/status-verde.png" height="20" width="20" />
                 }
                 else
                 {
-                    <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+                    <img src="~/Content/Img/status-vermelho.png" height="20" width="20" />
                 }
             </td>
         </tr>
@@ -132,9 +141,9 @@
     </div>
     <div class="alinhar-direita">
         <div class="legenda-painel">
-            Ativo <img src="~/Content/Img/status-verde.png" height="24" width="24" />
+            Ativo <img src="~/Content/Img/status-verde.png" height="20" width="20" />
             &nbsp; &nbsp;
-            Inativo <img src="~/Content/Img/status-vermelho.png" height="24" width="24" />
+            Inativo <img src="~/Content/Img/status-vermelho.png" height="20" width="20" />
         </div>
     </div>
 </div>
@@ -143,9 +152,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
-            $("#cpf").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true })
-            $("#cep").inputmask("mask", { "mask": "99999-999", });
-            $(".upper").inputmask({ casing: "upper" });
+            $("#BuscaMotorista").inputmask({ regex: "[A-Za-z0-9-. ]+", casing: "upper", placeholder: " " });
         });
     </script>
 }
