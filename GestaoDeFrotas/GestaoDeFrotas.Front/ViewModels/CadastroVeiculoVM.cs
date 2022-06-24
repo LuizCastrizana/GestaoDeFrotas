@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 
 namespace CadastroDeCaminhoneiro.ViewModels
@@ -50,6 +51,54 @@ namespace CadastroDeCaminhoneiro.ViewModels
         public CadastroVeiculoVM(VeiculoDBE veiculo)
         {
             VeiculoDBE = veiculo;
+        }
+    }
+
+    public class VeiculoVM
+    {
+        public int ID { get; set; }
+
+        public string Placa { get; set; }
+
+        public MarcaVeiculoDBE Marca { get; set; }
+
+        public ModeloVeiculoDBE Modelo { get; set; }
+
+        public TipoVeiculoDBE Tipo { get; set; }
+
+        public IEnumerable<MotoristaDBE> ListaMotoristas { get; set; }
+
+        public DateTime DataInclusao { get; set; }
+
+        public DateTime DataAlteracao { get; set; }
+
+        public bool Status { get; set; }
+        public int ContagemMotoristas { get; set; }
+
+        public VeiculoVM()
+        {
+            Marca = new MarcaVeiculoDBE();
+            Modelo = new ModeloVeiculoDBE();
+            Tipo = new TipoVeiculoDBE();
+            ListaMotoristas = Enumerable.Empty<MotoristaDBE>();
+        }
+
+        public VeiculoVM CastFromDBE(VeiculoDBE obj)
+        {
+            VeiculoVM vm = new VeiculoVM
+            {
+                ID = obj.ID,
+                Placa = obj.Placa,
+                Marca = obj.Marca,
+                Modelo = obj.Modelo,
+                Tipo = obj.Tipo,
+                DataInclusao = obj.DataInclusao,
+                DataAlteracao = obj.DataAlteracao,
+                Status = obj.Status,
+                ContagemMotoristas = new MotoristaDAL().ListByVeiculoID(obj.ID, true).Count()
+            };
+
+            return vm;
         }
     }
 }

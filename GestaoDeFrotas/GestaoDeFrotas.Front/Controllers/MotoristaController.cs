@@ -35,18 +35,10 @@ namespace CadastroDeCaminhoneiro.Controllers
             vm.Motoristas = Enumerable.Empty<MotoristaVM>().ToPagedList(1, 15);
             try
             {
-                //vm.Motoristas = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
                 var listaMotoristasDBE = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
                 var listaMotoristasVM = new List<MotoristaVM>();
 
-                foreach (var item in listaMotoristasDBE)
-                {
-                    var motorista = new MotoristaVM();
-                    motorista.CastFromDBE(item);
-                    listaMotoristasVM.Add(motorista);
-                }
-
-                vm.Motoristas = listaMotoristasVM;
+                vm.CastListaMotoristasParaVM(listaMotoristasDBE);
 
                 vm.Motoristas = vm.Motoristas.ToPagedList(1, 15);
                 vm.BuscaMotorista = "";
@@ -91,14 +83,7 @@ namespace CadastroDeCaminhoneiro.Controllers
 
                 var listaMotoristasVM = new List<MotoristaVM>();
 
-                foreach (var item in listaMotoristasDBE)
-                {
-                    var motorista = new MotoristaVM();
-                    motorista.CastFromDBE(item);
-                    listaMotoristasVM.Add(motorista);
-                }
-
-                vm.Motoristas = listaMotoristasVM;
+                vm.CastListaMotoristasParaVM(listaMotoristasDBE);
 
                 if (vm.OpcaoOrdenacao == "1")
                 {
@@ -136,6 +121,7 @@ namespace CadastroDeCaminhoneiro.Controllers
                             break;
                     }
                 }
+
                 vm.Motoristas = vm.Motoristas.ToPagedList(numPagina, 15);
                 return View("PainelDeMotoristas", vm);
             }

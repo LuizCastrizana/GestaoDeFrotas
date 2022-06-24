@@ -29,5 +29,16 @@ namespace CadastroDeCaminhoneiro.ViewModels
             this.OpcoesFiltragem = filtragem;
             this.Todos = todos;
         }
+        public void CastListaMotoristasParaVM(IEnumerable<MotoristaDBE> obj)
+        {
+            var lista = new List<MotoristaVM>();
+            foreach (var item in obj)
+            {
+                var itemLista = new MotoristaVM();
+                itemLista.CastFromDBE(item);
+                lista.Add(itemLista);
+            }
+            Motoristas = lista;
+        }
     }
 }

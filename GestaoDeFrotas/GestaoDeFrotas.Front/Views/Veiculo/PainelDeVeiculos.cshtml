@@ -75,6 +75,9 @@
             @Html.DisplayName("Data de alteração")
         </th>
         <th class="campo-centro">
+            @Html.DisplayName("Motoristas")
+        </th>
+        <th class="campo-centro">
             @Html.DisplayName("Status")
         </th>
     </tr>
@@ -104,6 +107,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DataAlteracao)
+            </td>
+            <td class="campo-centro">
+                @Html.DisplayFor(modelItem => item.ContagemMotoristas)
             </td>
             <td class="campo-centro">
                 @if (Html.ValueFor(modelItem => item.Status).ToString() == "True")

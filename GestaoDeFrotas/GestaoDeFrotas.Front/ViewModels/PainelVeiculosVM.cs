@@ -15,8 +15,8 @@ namespace CadastroDeCaminhoneiro.ViewModels
         public bool Todos { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public IEnumerable<VeiculoDBE> Veiculos { get; set; }
-        
+        public IEnumerable<VeiculoVM> Veiculos { get; set; }
+
         public PainelVeiculosVM()
         {
             OpcoesFiltragem = 1;
@@ -29,6 +29,16 @@ namespace CadastroDeCaminhoneiro.ViewModels
             OpcoesFiltragem = filtragem;
             OpcaoOrdenacao = ordenacao;
             Todos = todos;
+        }
+
+        public void CastListaVeiculosParaVM(IEnumerable<VeiculoDBE> obj) 
+        {
+            var lista = new List<VeiculoVM>();
+            foreach (var item in obj)
+            {
+                lista.Add(new VeiculoVM().CastFromDBE(item));
+            }
+            Veiculos = lista;
         }
     }
 }
