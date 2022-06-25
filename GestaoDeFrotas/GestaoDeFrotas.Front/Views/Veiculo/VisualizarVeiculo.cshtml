@@ -7,7 +7,7 @@
 
 <h2 class="display-inline-block">Visualizar Veículo</h2>
 <div class="display-inline-block botao-superior">
-    <a title="Editar" class="btn btn-info" href="@Url.Action("EditarVeiculo", "Veiculo", new { id = Model.VeiculoDBE.ID} )">
+    <a title="Editar" class="btn btn-info" href="@Url.Action("EditarVeiculo", "Veiculo", new { id = Model.VeiculoVM.ID} )">
         <span class="glyphicon glyphicon-pencil"></span>
         <strong>Editar</strong>
     </a>
@@ -21,43 +21,43 @@
 <div>
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.VeiculoDBE.Placa)
+            @Html.DisplayNameFor(model => model.VeiculoVM.Placa)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.VeiculoDBE.Placa)
+            @Html.DisplayFor(model => model.VeiculoVM.Placa)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.VeiculoDBE.Marca.Nome)
+            @Html.DisplayNameFor(model => model.VeiculoVM.Marca.Nome)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.VeiculoDBE.Marca.Nome)
+            @Html.DisplayFor(model => model.VeiculoVM.Marca.Nome)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.VeiculoDBE.Modelo.Nome)
+            @Html.DisplayNameFor(model => model.VeiculoVM.Modelo.Nome)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.VeiculoDBE.Modelo.Nome)
+            @Html.DisplayFor(model => model.VeiculoVM.Modelo.Nome)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.VeiculoDBE.Tipo.Descricao)
+            @Html.DisplayNameFor(model => model.VeiculoVM.Tipo.Descricao)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.VeiculoDBE.Tipo.Descricao)
+            @Html.DisplayFor(model => model.VeiculoVM.Tipo.Descricao)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.VeiculoDBE.Status)
+            @Html.DisplayNameFor(model => model.VeiculoVM.Status)
         </dt>
 
         <dd>
-            @if (Model.VeiculoDBE.Status == true)
+            @if (Model.VeiculoVM.Status == true)
             {
                 <span class="glyphicon glyphicon-ok"></span>
             }
@@ -82,7 +82,7 @@
             <th></th>
         </tr>
 
-        @foreach (var item in Model.VeiculoDBE.ListaMotoristas)
+        @foreach (var item in Model.VeiculoVM.ListaMotoristas)
         {
             <tr>
                 <td>

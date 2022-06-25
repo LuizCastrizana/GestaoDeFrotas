@@ -113,10 +113,10 @@ namespace CadastroDeCaminhoneiro.Controllers
         [HttpPost]
         public ActionResult IncluirVeiculo(CadastroVeiculoVM vm)
         {
-            vm.VeiculoDBE.Marca.ID = vm.MarcaID;
-            vm.VeiculoDBE.Modelo.ID = vm.ModeloID;
-            vm.VeiculoDBE.Tipo.ID = vm.TipoID;
-            vm.VeiculoDBE.Placa = vm.Placa;
+            vm.VeiculoVM.Marca.ID = vm.MarcaID;
+            vm.VeiculoVM.Modelo.ID = vm.ModeloID;
+            vm.VeiculoVM.Tipo.ID = vm.TipoID;
+            vm.VeiculoVM.Placa = vm.Placa;
 
             try
             {
@@ -136,13 +136,13 @@ namespace CadastroDeCaminhoneiro.Controllers
                 try
                 {                   
                     //verifica se existe cadastro inativo com a mesma placa
-                    if (new VeiculoDAL().BuscarPorPlaca(vm.VeiculoDBE.Placa, false).ID != 0)
+                    if (new VeiculoDAL().BuscarPorPlaca(vm.VeiculoVM.Placa, false).ID != 0)
                     {
                         TempData["MensagemAviso"] = "A Placa inserida está vinculada a este cadastro inativo.";
-                        return RedirectToAction("VisualizarVeiculo", new { id = vm.VeiculoDBE.ID });
+                        return RedirectToAction("VisualizarVeiculo", new { id = vm.VeiculoVM.ID });
                     }
-
-                    new VeiculoDAL().Create(vm.VeiculoDBE);
+                    
+                    new VeiculoDAL().Create(vm.VeiculoVM.CastToDBE());
 
                     TempData["MensagemSucesso"] = "Veículo cadastrado com sucesso!";
 
@@ -174,11 +174,8 @@ namespace CadastroDeCaminhoneiro.Controllers
 
             try
             {
-                vm.VeiculoDBE = new VeiculoDAL().BuscarPorId(id, null);
-                vm.VeiculoDBE.Marca = new MarcaVeiculoDAL().BuscarPorId(vm.VeiculoDBE.Marca.ID);
-                vm.VeiculoDBE.Modelo = new ModeloVeiculoDAL().BuscarPorId(vm.VeiculoDBE.Modelo.ID);
-                vm.VeiculoDBE.Tipo = new TipoVeiculoDAL().BuscarPorId(vm.VeiculoDBE.Tipo.ID);
-                vm.VeiculoDBE.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(id, false);
+                vm.VeiculoVM.CastFromDBE(new VeiculoDAL().BuscarPorId(id, null));
+                vm.VeiculoVM.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(id, false);
             }
             catch (Exception e)
             {
@@ -197,13 +194,13 @@ namespace CadastroDeCaminhoneiro.Controllers
             try
             {
                 vm = new CadastroVeiculoVM();
-                vm.VeiculoDBE = new VeiculoDAL().BuscarPorId(id, null);
-                vm.DataInclusao = vm.VeiculoDBE.DataInclusao.ToString("dd/MM/yyyy HH:mm");
-                vm.DataAlteracao = vm.VeiculoDBE.DataAlteracao.ToString("dd/MM/yyyy HH:mm");
-                vm.VeiculoDBE.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(id, true);
-                vm.MarcaID = vm.VeiculoDBE.Marca.ID;
-                vm.ModeloID = vm.VeiculoDBE.Modelo.ID;
-                vm.TipoID = vm.VeiculoDBE.Modelo.ID;
+                vm.VeiculoVM.CastFromDBE(new VeiculoDAL().BuscarPorId(id, null));
+                vm.DataInclusao = vm.VeiculoVM.DataInclusao.ToString("dd/MM/yyyy HH:mm");
+                vm.DataAlteracao = vm.VeiculoVM.DataAlteracao.ToString("dd/MM/yyyy HH:mm");
+                vm.VeiculoVM.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(id, true);
+                vm.MarcaID = vm.VeiculoVM.Marca.ID;
+                vm.ModeloID = vm.VeiculoVM.Modelo.ID;
+                vm.TipoID = vm.VeiculoVM.Modelo.ID;
 
                 ViewData["MarcaID"] = new SelectList(new MarcaVeiculoDAL().ListarMarcas(), "ID", "Nome");
                 ViewData["ModeloID"] = new SelectList(new ModeloVeiculoDAL().ListarModelos(), "ID", "Nome");
@@ -222,10 +219,10 @@ namespace CadastroDeCaminhoneiro.Controllers
         [HttpPost]
         public ActionResult EditarVeiculo(CadastroVeiculoVM vm)
         {
-            vm.VeiculoDBE.Marca.ID = vm.MarcaID;
-            vm.VeiculoDBE.Modelo.ID = vm.ModeloID;
-            vm.VeiculoDBE.Tipo.ID = vm.TipoID;
-            vm.VeiculoDBE.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(vm.VeiculoDBE.ID, true);
+            vm.VeiculoVM.Marca.ID = vm.MarcaID;
+            vm.VeiculoVM.Modelo.ID = vm.ModeloID;
+            vm.VeiculoVM.Tipo.ID = vm.TipoID;
+            vm.VeiculoVM.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(vm.VeiculoVM.ID, true);
 
             ViewData["MarcaID"] = new SelectList(Enumerable.Empty<MarcaVeiculoDBE>(), "ID", "Nome");
             ViewData["ModeloID"] = new SelectList(Enumerable.Empty<ModeloVeiculoDBE>(), "ID", "Nome");
@@ -246,7 +243,7 @@ namespace CadastroDeCaminhoneiro.Controllers
             {
                 try
                 {
-                    new VeiculoDAL().Update(vm.VeiculoDBE);
+                    new VeiculoDAL().Update(vm.VeiculoVM.CastToDBE());
                     TempData["MensagemSucesso"] = "Cadastro editado com sucesso!";
                     return RedirectToAction("PainelDeVeiculos");
 
@@ -302,43 +299,43 @@ namespace CadastroDeCaminhoneiro.Controllers
 
             try
             {
-                vm.VeiculoDBE = new VeiculoDAL().BuscarPorId(vm.VeiculoDBE.ID, true);
-                vm.VeiculoDBE.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(vm.VeiculoDBE.ID, true);
+                vm.VeiculoVM.CastFromDBE(new VeiculoDAL().BuscarPorId(vm.VeiculoVM.ID, true));
+                vm.VeiculoVM.ListaMotoristas = new MotoristaDAL().ListByVeiculoID(vm.VeiculoVM.ID, true);
                 motorista = new MotoristaDAL().GetByCPF(vm.BuscaMotorista, false);
             }
             catch (Exception)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados de motorista e veículo";
 
-                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoDBE.ID });
+                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoVM.ID });
             }
 
-            if (vm.VeiculoDBE.ListaMotoristas.Any(x => x.CPF == vm.BuscaMotorista))
+            if (vm.VeiculoVM.ListaMotoristas.Any(x => x.CPF == vm.BuscaMotorista))
             {
                 TempData["MensagemErro"] = "O motorista informado já está vinculado ao veículo!";
 
-                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoDBE.ID });
+                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoVM.ID });
             }
             if (motorista.ID == 0)
             {
                 TempData["MensagemErro"] = "Motorista não encontrado ou inativo! CPF: " + vm.BuscaMotorista;
 
-                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoDBE.ID });
+                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoVM.ID });
             }
 
             try
             {
-                new MotoristaDAL().VincularVeiculoMotorista(vm.VeiculoDBE.ID, motorista.ID);
+                new MotoristaDAL().VincularVeiculoMotorista(vm.VeiculoVM.ID, motorista.ID);
 
                 TempData["MensagemSucesso"] = "Motorista vinculado com sucesso!";
 
-                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoDBE.ID });
+                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoVM.ID });
             }
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao vincular motorista - " + e.Message;
 
-                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoDBE.ID });
+                return RedirectToAction("EditarVeiculo", new { id = vm.VeiculoVM.ID });
             }
         }
 

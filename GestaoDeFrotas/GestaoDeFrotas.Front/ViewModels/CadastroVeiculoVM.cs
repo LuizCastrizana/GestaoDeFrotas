@@ -13,7 +13,7 @@ namespace CadastroDeCaminhoneiro.ViewModels
 {
     public class CadastroVeiculoVM
     {
-        public VeiculoDBE VeiculoDBE { get; set; }
+        public VeiculoVM VeiculoVM { get; set; }
 
         [Required(ErrorMessage = "Campo obrigatório")]
         [RegularExpression(@"[A-Z]{3}-[0-9]{1}[A-Z0-9]{1}[0-9]{2}", ErrorMessage = "Valor inválido")]
@@ -45,12 +45,12 @@ namespace CadastroDeCaminhoneiro.ViewModels
 
         public CadastroVeiculoVM()
         {
-            VeiculoDBE = new VeiculoDBE();
+            VeiculoVM = new VeiculoVM();
         }
 
-        public CadastroVeiculoVM(VeiculoDBE veiculo)
+        public CadastroVeiculoVM(VeiculoVM veiculo)
         {
-            VeiculoDBE = veiculo;
+            VeiculoVM = veiculo;
         }
     }
 
@@ -83,22 +83,34 @@ namespace CadastroDeCaminhoneiro.ViewModels
             ListaMotoristas = Enumerable.Empty<MotoristaDBE>();
         }
 
-        public VeiculoVM CastFromDBE(VeiculoDBE obj)
+        public void CastFromDBE(VeiculoDBE obj)
         {
-            VeiculoVM vm = new VeiculoVM
+            ID = obj.ID;
+            Placa = obj.Placa;
+            Marca = obj.Marca;
+            Modelo = obj.Modelo;
+            Tipo = obj.Tipo;
+            DataInclusao = obj.DataInclusao;
+            DataAlteracao = obj.DataAlteracao;
+            Status = obj.Status;
+            ContagemMotoristas = new MotoristaDAL().ListByVeiculoID(obj.ID, true).Count();
+        }
+
+        public VeiculoDBE CastToDBE()
+        {
+            var VeiculoDBE = new VeiculoDBE
             {
-                ID = obj.ID,
-                Placa = obj.Placa,
-                Marca = obj.Marca,
-                Modelo = obj.Modelo,
-                Tipo = obj.Tipo,
-                DataInclusao = obj.DataInclusao,
-                DataAlteracao = obj.DataAlteracao,
-                Status = obj.Status,
-                ContagemMotoristas = new MotoristaDAL().ListByVeiculoID(obj.ID, true).Count()
+                ID = this.ID,
+                Placa = this.Placa,
+                Marca = this.Marca,
+                Modelo = this.Modelo,
+                Tipo = this.Tipo,
+                DataInclusao = this.DataInclusao,
+                DataAlteracao = this.DataAlteracao,
+                Status = this.Status,
             };
 
-            return vm;
+            return VeiculoDBE;
         }
     }
 }

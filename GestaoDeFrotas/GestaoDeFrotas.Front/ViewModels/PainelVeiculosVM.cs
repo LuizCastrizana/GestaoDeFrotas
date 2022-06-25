@@ -36,7 +36,9 @@ namespace CadastroDeCaminhoneiro.ViewModels
             var lista = new List<VeiculoVM>();
             foreach (var item in obj)
             {
-                lista.Add(new VeiculoVM().CastFromDBE(item));
+                var VeiculoVM = new VeiculoVM();
+                VeiculoVM.CastFromDBE(item);
+                lista.Add(VeiculoVM);
             }
             Veiculos = lista;
         }
