@@ -370,6 +370,13 @@
       <Project>{b88ee252-b475-489e-90a4-72ddbed81b14}</Project>
       <Name>GestaoDeFrotas.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GestaoDeFrotas.Shared\GestaoDeFrotas.Shared.csproj">
+      <Project>{10df30b5-44d7-4f81-97cb-e618207313ad}</Project>
+      <Name>GestaoDeFrotas.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

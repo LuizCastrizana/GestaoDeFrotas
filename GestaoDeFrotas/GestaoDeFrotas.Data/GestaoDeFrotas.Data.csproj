@@ -114,7 +114,12 @@
     <Compile Include="Exceptions\CadastroMotoristaException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GestaoDeFrotas.Shared\GestaoDeFrotas.Shared.csproj">
+      <Project>{10DF30B5-44D7-4F81-97CB-E618207313AD}</Project>
+      <Name>GestaoDeFrotas.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">

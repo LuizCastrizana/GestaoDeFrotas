@@ -1,5 +1,6 @@
 ﻿using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.Enums;
+using GestaoDeFrotas.Shared.FiltroBusca;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -477,6 +478,54 @@ namespace GestaoDeFrotas.Data.DAL
         /// </summary>
         /// <param name="obj">Dados a serem buscados</param>
         /// <returns></returns>
+        public IEnumerable<MotoristaDBE> Read(FiltroBusca filtro)
+        {
+            var retorno = new List<MotoristaDBE>();
+
+            var query = new StringBuilder($@"SELECT
+                                ID,
+                                PRIMEIRONOME,
+                                SOBRENOME,
+                                CPF,
+                                CNHID,
+                                DATAINCLUSAO,
+                                DATAALTERACAO,
+                                STATUS,
+                                ENDERECOID
+                            FROM MOTORISTA
+                            WHERE (1 = 1)");
+
+            query.Append(MontarFiltros(filtro));
+
+            using (Conexao = new OracleConnection(stringConexao))
+            using (Comando = new OracleCommand(query.ToString(), Conexao))
+            {
+                Conexao.Open();
+                using (var DataReader = Comando.ExecuteReader())
+                {
+                    if (DataReader.HasRows)
+                    {
+                        while (DataReader.Read())
+                        {
+                            MotoristaDBE motorista = new MotoristaDBE();
+                            motorista.ID = Convert.ToInt32(DataReader["ID"]);
+                            motorista.PrimeiroNome = Convert.ToString(DataReader["PRIMEIRONOME"]);
+                            motorista.Sobrenome = Convert.ToString(DataReader["SOBRENOME"]);
+                            motorista.CPF = Convert.ToString(DataReader["CPF"]);
+                            motorista.CNH = new CNHDAL().Read(Convert.ToInt32(DataReader["CNHID"]));
+                            motorista.DataInclusao = Convert.ToDateTime(DataReader["DATAINCLUSAO"]);
+                            if (DataReader["DATAALTERACAO"] != DBNull.Value)
+                                motorista.DataAlteracao = Convert.ToDateTime(DataReader["DATAALTERACAO"]);
+                            motorista.Status = Convert.ToBoolean(DataReader["STATUS"]);
+                            motorista.Endereco = new EnderecoDAL().Read(Convert.ToInt32(DataReader["ENDERECOID"]));
+                            retorno.Add(motorista);
+                        }
+                    }
+                }
+            }
+        return retorno;
+        }
+
         public IEnumerable<MotoristaDBE> Read(MotoristaDBE obj)
         {
             throw new NotImplementedException();

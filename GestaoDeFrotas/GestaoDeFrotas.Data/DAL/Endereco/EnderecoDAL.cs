@@ -1,4 +1,5 @@
 ﻿using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Shared.FiltroBusca;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -153,7 +154,7 @@ namespace GestaoDeFrotas.Data.DAL
             return retorno;
         }
 
-        public IEnumerable<EnderecoDBE> Read(EnderecoDBE obj)
+        public IEnumerable<EnderecoDBE> Read(FiltroBusca filtro)
         {
             throw new NotImplementedException();
         }

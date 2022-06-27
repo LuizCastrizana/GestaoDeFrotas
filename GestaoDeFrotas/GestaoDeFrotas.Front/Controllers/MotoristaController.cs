@@ -11,6 +11,8 @@ using GestaoDeFrotas.Front.ViewModels;
 using X.PagedList;
 using GestaoDeFrotas.Business.BLL;
 using GestaoDeFrotas.Business;
+using GestaoDeFrotas.Shared.FiltroBusca;
+using GestaoDeFrotas.Shared.Enums;
 
 namespace GestaoDeFrotas.Controllers
 {
@@ -34,8 +36,25 @@ namespace GestaoDeFrotas.Controllers
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
             vm.Motoristas = Enumerable.Empty<MotoristaVM>().ToPagedList(1, 15);
+
             try
             {
+                //var FiltroBusca = new FiltroBusca
+                //{
+                //    ListaExpressao = new List<Expressao>
+                //    {
+                //        new Expressao()
+                //        {
+                //            OperadorLogico = EnumOperadorLogico.E,
+                //            ListaCondicao = new List<Condicao>
+                //            {
+                //                new Condicao("DATAINCLUSAO", DateTime.Now.AddMonths(-6), EnumTipoCondicao.MAIOR_OU_IGUAL)
+                //            }
+                //        }
+                //    }
+                //};
+
+                //var listaMotoristasDBE = new MotoristaDAL().Read(FiltroBusca).OrderBy(x => x.PrimeiroNome);
                 var listaMotoristasDBE = new MotoristaDAL().List(false).OrderBy(x => x.PrimeiroNome);
                 var listaMotoristasVM = new List<MotoristaVM>();
 
@@ -74,6 +93,7 @@ namespace GestaoDeFrotas.Controllers
             {
                 // remove caracteres da string de busca
                 vm.BuscaMotorista = StringTools.RemoverCaracteres(vm.BuscaMotorista, "-.");
+
                 // busca por nome ou cpf
                 var listaMotoristasDBE = new MotoristaDAL().List(vm.Todos)
                                                       .Where(m => (m.PrimeiroNome + " " + m.Sobrenome).ToUpper()
