@@ -7,7 +7,7 @@ using System.Web;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.DAL;
 
-namespace CadastroDeCaminhoneiro.ViewModels
+namespace GestaoDeFrotas.Front.ViewModels
 {
     public class CadastroViagemVM
     {

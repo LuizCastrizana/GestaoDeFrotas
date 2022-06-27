@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GestaoDeFrotas.Enums
+namespace GestaoDeFrotas.Business
 {
     [DataContract]
-    public enum ENUMCAMPOSPAIELVEICULOS
+    public enum EnumStatusResposta
     {
         [EnumMember]
-        PLACA = 1,
+        Sucesso = 1,
 
         [EnumMember]
-        DATAINCLUSAO = 2,
+        Erro = 2,
 
         [EnumMember]
-        STATUS = 3,
-
+        ErroValidacao = 3,
     }
 }

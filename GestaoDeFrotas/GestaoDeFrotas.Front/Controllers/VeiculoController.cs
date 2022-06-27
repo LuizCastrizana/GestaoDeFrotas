@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using CadastroDeCaminhoneiro.Enums;
-using CadastroDeCaminhoneiro.Models;
-using CadastroDeCaminhoneiro.ViewModels;
+using GestaoDeFrotas.Enums;
+using GestaoDeFrotas.Front.ViewModels;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using X.PagedList;
 
-namespace CadastroDeCaminhoneiro.Controllers
+namespace GestaoDeFrotas.Controllers
 {
     public class VeiculoController : Controller
     {

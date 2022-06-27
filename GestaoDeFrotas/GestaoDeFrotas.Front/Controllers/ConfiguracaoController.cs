@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Front.ViewModels;
+using GestaoDeFrotas.Models;
 
-namespace CadastroDeCaminhoneiro.Controllers
+namespace GestaoDeFrotas.Controllers
 {
     public class ConfiguracaoController : Controller
     {

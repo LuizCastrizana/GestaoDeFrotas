@@ -5,7 +5,7 @@ using System.Web;
 using System.Configuration;
 using Oracle.ManagedDataAccess.Client;
 
-namespace CadastroDeCaminhoneiro
+namespace GestaoDeFrotas
 {
     public class OracleModel
     {

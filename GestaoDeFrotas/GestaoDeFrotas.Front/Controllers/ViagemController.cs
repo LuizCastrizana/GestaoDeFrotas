@@ -1,6 +1,6 @@
-﻿using CadastroDeCaminhoneiro.Enums;
+﻿using GestaoDeFrotas.Enums;
 using GestaoDeFrotas.Data.Enums;
-using CadastroDeCaminhoneiro.ViewModels;
+using GestaoDeFrotas.Front.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using X.PagedList;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 
-namespace CadastroDeCaminhoneiro.Controllers
+namespace GestaoDeFrotas.Controllers
 {
     public class ViagemController : Controller
     {

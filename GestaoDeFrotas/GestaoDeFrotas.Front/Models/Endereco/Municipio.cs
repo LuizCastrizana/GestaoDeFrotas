@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace CadastroDeCaminhoneiro.Models
+namespace GestaoDeFrotas.Models
 {
     public class Municipio : OracleModel
     {

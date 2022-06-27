@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace CadastroDeCaminhoneiro.Models
+namespace GestaoDeFrotas.Models
 {
     public class DetalheVeiculo : OracleModel
     {

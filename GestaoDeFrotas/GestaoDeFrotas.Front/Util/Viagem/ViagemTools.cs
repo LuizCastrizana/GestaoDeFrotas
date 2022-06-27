@@ -1,5 +1,4 @@
-﻿using CadastroDeCaminhoneiro.Enums;
-using CadastroDeCaminhoneiro.Models;
+﻿using GestaoDeFrotas.Enums;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.Enums;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace CadastroDeCaminhoneiro
+namespace GestaoDeFrotas
 { 
     public static class ViagemTools
     {

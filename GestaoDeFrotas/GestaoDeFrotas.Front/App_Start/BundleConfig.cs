@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace CadastroDeCaminhoneiro
+namespace GestaoDeFrotas
 {
     public class BundleConfig
     {

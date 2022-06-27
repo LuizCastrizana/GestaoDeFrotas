@@ -5,13 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services;
-using CadastroDeCaminhoneiro.Models;
-using CadastroDeCaminhoneiro.ViewModels;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Front.ViewModels;
 using X.PagedList;
 
-namespace CadastroDeCaminhoneiro.Controllers
+namespace GestaoDeFrotas.Controllers
 {
     public class MotoristaController : Controller
     {

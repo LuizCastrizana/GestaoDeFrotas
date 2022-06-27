@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.IO;
 using System.Text;
-using CadastroDeCaminhoneiro.Models;
+using GestaoDeFrotas.Models;
 
-namespace CadastroDeCaminhoneiro
+namespace GestaoDeFrotas
 {
     public class LeitorCSV
     {

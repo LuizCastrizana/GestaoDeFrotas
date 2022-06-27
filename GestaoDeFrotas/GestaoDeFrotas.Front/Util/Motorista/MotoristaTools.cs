@@ -1,12 +1,11 @@
-﻿using CadastroDeCaminhoneiro.Models;
-using GestaoDeFrotas.Data.DAL;
+﻿using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace CadastroDeCaminhoneiro
+namespace GestaoDeFrotas
 {
     public static class MotoristaTools
     {

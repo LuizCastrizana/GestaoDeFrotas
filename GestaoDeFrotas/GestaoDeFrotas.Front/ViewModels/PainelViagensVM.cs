@@ -1,11 +1,10 @@
-﻿using CadastroDeCaminhoneiro.Models;
-using GestaoDeFrotas.Data.DBENTITIES;
+﻿using GestaoDeFrotas.Data.DBENTITIES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace CadastroDeCaminhoneiro.ViewModels
+namespace GestaoDeFrotas.Front.ViewModels
 {
     public class PainelViagensVM
     {

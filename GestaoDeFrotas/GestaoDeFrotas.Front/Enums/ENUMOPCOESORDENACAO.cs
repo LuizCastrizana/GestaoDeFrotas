@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace CadastroDeCaminhoneiro.Enums
+namespace GestaoDeFrotas.Enums
 {
     [DataContract]
     public enum ENUMOPCOESORDENACAO
