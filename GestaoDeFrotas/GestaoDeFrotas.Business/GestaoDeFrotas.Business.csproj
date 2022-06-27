@@ -52,10 +52,6 @@
       <Project>{B88EE252-B475-489E-90A4-72DDBED81B14}</Project>
       <Name>GestaoDeFrotas.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GestaoDeFrotas.Front\GestaoDeFrotas.Front.csproj">
-      <Project>{2F613A45-32A9-44E2-B093-FA9663274401}</Project>
-      <Name>GestaoDeFrotas.Front</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

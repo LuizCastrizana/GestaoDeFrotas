@@ -76,7 +76,7 @@ namespace GestaoDeFrotas.Data.DAL
                     Comando.Parameters.Add("RENACH", obj.RENACH.ToUpper());
                     Comando.Parameters.Add("ESPELHO", obj.Espelho.ToUpper());
                     Comando.Parameters.Add("DATAEMISSAO", obj.DataEmissao);
-                    Comando.Parameters.Add("DATAVALIDADE", obj.DataAlteracao);
+                    Comando.Parameters.Add("DATAVALIDADE", obj.DataValidade);
                     Comando.Parameters.Add("CATEGORIAID", obj.Categoria.ID);
 
                     Comando.Parameters.Add(new OracleParameter
@@ -181,6 +181,7 @@ namespace GestaoDeFrotas.Data.DAL
                     if (reader.HasRows)
                     {
                         // existe CNH e está associada a um motorista
+                        reader.Read();
                         idMotorista = reader.GetInt32(0);
                         return true;
                     }

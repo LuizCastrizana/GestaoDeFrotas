@@ -9,6 +9,8 @@ using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Front.ViewModels;
 using X.PagedList;
+using GestaoDeFrotas.Business.BLL;
+using GestaoDeFrotas.Business;
 
 namespace GestaoDeFrotas.Controllers
 {
@@ -157,6 +159,7 @@ namespace GestaoDeFrotas.Controllers
         [HttpPost]
         public ActionResult IncluirMotorista(CadastroMotoristaVM vm)
         {
+            var Resposta = new Resposta<MotoristaDBE>();
             vm.CastToMotoristaVM();
 
             try
@@ -174,82 +177,28 @@ namespace GestaoDeFrotas.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                try 
                 {
-                    int idMotorista = 0;
-
-                    var motoristaDBE = vm.Motorista.CastToDBE();
-
-                    // Verifica se existe cadastro inativo com o mesmo CPF
-                    //vm.Motorista.GetByCPF(vm.Motorista.CPF, null);
-                    var motoristaInativoID = new MotoristaDAL().GetByCPF(vm.Motorista.CPF, null).ID;
-                    //if (vm.Motorista.ID != 0)
-                    if (motoristaInativoID > 0)
+                    new MotoristaBLL().CadastrarMotorista(vm.Motorista.CastToDBE(), ref Resposta);
+                    switch (Resposta.Status)
                     {
-                        TempData["MensagemAviso"] = "O CPF inserido está vinculado a este cadastro inativo!";
-                        return RedirectToAction("VisualizarMotorista", new { id = motoristaInativoID });
-                    }
-                    // Insere endereço
-                    new EnderecoDAL().Create(motoristaDBE.Endereco);
-                    //vm.Motorista.Endereco.Create();
-
-                    // Verifica se existe CNH
-                    //switch (vm.Motorista.CNH.VerificaSeEstaCadastrado(ref idMotorista))
-                    switch (new CNHDAL().VerificaSeEstaCadastrado(ref idMotorista, motoristaDBE.CNH))
-                    {
-                        // Não existe CNH com os mesmos dados
-                        case false:
-                            //vm.Motorista.CNH.Create();
-                            new CNHDAL().Create(motoristaDBE.CNH);
-
-                            //vm.Motorista.Create();
-                            new MotoristaDAL().Create(motoristaDBE);
-
-                            TempData["MensagemSucesso"] = "Motorista cadastrado com sucesso!";
-                            return RedirectToAction("PainelDeMotoristas");
-
-                        // Existe CNH associada a um motorista
-                        case true:
-                            TempData["MensagemAviso"] = "Um ou mais dados da CNH inseridos estão associados a este motorista!";
-                            return RedirectToAction("VisualizarMotorista", new { id = idMotorista });
-
-                        // Existe CNH cadastrada mas não está vinculada a nenhum motorista (houve uma tentativa de cadastro do motorista mas ocorreu um erro)
-                        case null:
-                            //vm.Motorista.Create();
-                            new MotoristaDAL().Create(motoristaDBE);
-
-                            TempData["MensagemSucesso"] = "Motorista cadastrado com sucesso!";
+                        case EnumStatusResposta.Erro:
+                        case EnumStatusResposta.ErroValidacao:
+                            TempData["MensagemErro"] = Resposta.Mensagem;
+                            return View(vm);
+                        case EnumStatusResposta.Aviso:
+                            TempData["MensagemAviso"] = Resposta.Mensagem;
+                            if(Resposta.Retorno.ID > 0)
+                                return RedirectToAction("VisualizarMotorista", new { id = Resposta.Retorno.ID });
+                            return View(vm);
+                        default:
+                            TempData["MensagemSucesso"] = Resposta.Mensagem;
                             return RedirectToAction("PainelDeMotoristas");
                     }
                 }
-                // Verificar inner exception
-                catch (CadastroEnderecoException e)
+                catch (Exception ex)
                 {
-                    TempData["MensagemErro"] = e.Message;
-                    return View(vm);
-                }
-                catch (CadastroCNHException e)
-                {
-                    TempData["MensagemErro"] = e.Message;
-
-                    if (!this.ExcluirEndereco(vm.Motorista.Endereco.ID))
-                    {
-                        TempData["MensagemErro"] = e.Message + " / Erro ao excluir endereço com ID: " + vm.Motorista.Endereco.ID;
-                        return View(vm);
-                    }
-
-                    return View(vm);
-                }
-                catch (CadastroMotoristaException e)
-                {
-                    TempData["MensagemErro"] = e.Message + " " + e.InnerException.Message;
-
-                    if (!this.ExcluirEndereco(vm.Motorista.Endereco.ID))
-                    {
-                        TempData["MensagemErro"] = e.Message + " / Erro ao excluir endereço com ID: " + vm.Motorista.Endereco.ID;
-                        return View(vm);
-                    }
-
+                    TempData["MensagemErro"] = ex.Message;
                     return View(vm);
                 }
             }
@@ -435,18 +384,5 @@ namespace GestaoDeFrotas.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
         #endregion
-
-        private bool ExcluirEndereco(int id)
-        {
-            try
-            {
-                new EnderecoDAL().Delete(id);
-                return true;
-            }
-            catch (CadastroEnderecoException)
-            {
-                return false;
-            }
-        }
     }       
 }

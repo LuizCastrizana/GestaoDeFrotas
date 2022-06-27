@@ -18,5 +18,8 @@ namespace GestaoDeFrotas.Business
 
         [EnumMember]
         ErroValidacao = 3,
+
+        [EnumMember]
+        Aviso = 4
     }
 }
