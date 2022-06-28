@@ -15,6 +15,9 @@ namespace GestaoDeFrotas.Shared.Enums
         MENOR_OU_IGUAL = 3,
 
         [EnumMember]
-        DIFERENTE = 4,
+        DIFERENTE = 4, 
+        
+        [EnumMember]
+        CONTEM = 5,
     }
 }

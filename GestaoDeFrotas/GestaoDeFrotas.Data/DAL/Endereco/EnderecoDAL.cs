@@ -154,7 +154,7 @@ namespace GestaoDeFrotas.Data.DAL
             return retorno;
         }
 
-        public IEnumerable<EnderecoDBE> Read(FiltroBusca filtro)
+        public IEnumerable<EnderecoDBE> Read(EnderecoDBE obj)
         {
             throw new NotImplementedException();
         }

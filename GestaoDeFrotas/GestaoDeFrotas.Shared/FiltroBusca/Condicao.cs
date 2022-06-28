@@ -27,6 +27,21 @@ namespace GestaoDeFrotas.Shared.FiltroBusca
             TipoCondicao = tipoCondicao;
         }
 
+        public Condicao(string nome, bool valor, EnumTipoCondicao tipoCondicao)
+        {
+            NomeCampo = nome;
+            Valor = valor ? "1" : "0";
+            TipoCampo = EnumTipoCampo.BOOLEANO;
+            TipoCondicao = tipoCondicao;
+        }
+        public Condicao(string nome, string valor, EnumTipoCampo tipoCampo, EnumTipoCondicao tipoCondicao)
+        {
+            NomeCampo = nome;
+            Valor = valor;
+            TipoCampo = tipoCampo;
+            TipoCondicao = tipoCondicao;
+        }
+
         /// <summary>
         /// Converte uma variavel DateTime em uma string de data no formato do Oracle pt-BR
         /// </summary>

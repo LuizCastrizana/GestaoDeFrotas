@@ -15,34 +15,49 @@
 @using (Html.BeginForm("BuscarMotoristasPainel", "Motorista", FormMethod.Get))
 {
     <div class="container-fluid container-menu">
-        <div class="row">
-            <div class="campos-painel campos-painel-sm">
+        <div class="row row-menu">
+            <div class="campos-painel campos-painel-md">
                 <l class="legenda-campo">Ordenar por:</l>
-                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.OpcaoCampoOrdenacao, null, new { @class = "form-control" })
             </div>
             <div class="campos-painel campos-painel-md">
                 <l class="legenda-campo">Ordem:</l>
                 @Html.DropDownListFor(model => model.OpcaoOrdenacao, null, new { @class = "form-control" })
             </div>
-            @*<div class="campos-painel campos-painel-md">
-            <l class="legenda-campo">Data inicial:</l>
-            @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-        </div>
-        <div class="campos-painel campos-painel-md">
-            <l class="legenda-campo">Data final:</l>
-            @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-        </div>*@
-        <div class="campos-painel campos-painel-lg">
-            <l class="legenda-campo">Buscar por:</l>
-            <div class="input-group">
-                @Html.EditorFor(model => model.BuscaMotorista, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nome/CPF", @id = "BuscaMotorista" } })
-                <span class="input-group-btn">
+            <div class="campos-painel campos-painel-md">
+                <l class="legenda-campo">Buscar por:</l>
+                @Html.DropDownListFor(model => model.OpcoesFiltragem, null, new { @class = "form-control", onchange = "OpcaoBuscaMotorista(this.value)" })
+            </div>
+            <div class="campos-painel campos-painel-md" id="DataInicial" >
+                <l class="legenda-campo">Data inicial:</l>
+                @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", type = "date"} })
+            </div>
+            <div id="DataFinal">
+                <div class="campos-painel campos-painel-md" >
+                    <l class="legenda-campo">Data final:</l>
+                    @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                </div>
+                <div class="campos-painel campos-painel-sm">
+                    <br />
                     <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
-                </span>
+                </div>
             </div>
-        </div>
+            <div class="campos-painel campos-painel-lg" id="CampoBusca">
+                <l class="legenda-campo" id="BuscaNome">Buscar por nome:</l>
+                <l class="legenda-campo" id="BuscaCPF">Buscar por CPF:</l>
+                <l class="legenda-campo" id="BuscaCNH">Buscar por CNH:</l>
+                <l class="legenda-campo" id="BuscaMunicipio">Buscar por municipio:</l>
+                <div class="input-group">
+                    @Html.EditorFor(model => model.BuscaMotorista, new { htmlAttributes = new { @class = "form-control", @id = "BuscaMotorista" } })
+                    <span class="input-group-btn">
+                        <button title="Buscar" id="btnBuscar" type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
             <div class="botao-novo alinhar-direita">
                 <a title="Novo" id="btnNovo" class="btn btn-info" href="@Url.Action("IncluirMotorista", "Motorista")">
                     <span class="glyphicon glyphicon-plus"></span>
@@ -137,7 +152,7 @@
 
 <div>
     <div class="paginas display-inline-block">
-        @Html.PagedListPager((IPagedList)Model.Motoristas, pagina => Url.Action("BuscarMotoristasPainel", new { Model.BuscaMotorista, Model.OpcoesFiltragem, Model.OpcaoOrdenacao, Model.Todos, pagina }))
+        @Html.PagedListPager((IPagedList)Model.Motoristas, pagina => Url.Action("BuscarMotoristasPainel", new { Model.BuscaMotorista, Model.OpcoesFiltragem, Model.OpcaoOrdenacao, Model.OpcaoCampoOrdenacao, Model.Todos, Model.DataInicio, Model.DataFim, pagina }))
     </div>
     <div class="alinhar-direita">
         <div class="legenda-painel">
@@ -152,7 +167,74 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
-            $("#BuscaMotorista").inputmask({ regex: "[A-Za-z0-9-. ]+", casing: "upper", placeholder: " " });
+            $("#BuscaMotorista").inputmask({ casing: "upper" });
+
+            OpcaoBuscaMotorista(document.getElementById("OpcoesFiltragem").value)
         });
+
+        function OpcaoBuscaMotorista(opcaoBusca) {
+            if (opcaoBusca == "1") {
+                $("#CampoBusca").show();
+                $("#BuscaNome").show();
+                $("#BuscaCPF").hide();
+                $("#BuscaCNH").hide();
+                $("#BuscaMunicipio").hide();
+                $("#DataInicial").hide()
+                $("#DataFinal").hide()
+
+                $("#BuscaMotorista").inputmask({ mask: "", regex: "[A-Za-z0-9-. ]+", casing: "upper", placeholder: " " });
+
+                $("#BuscaMotorista").show();
+            }
+            if (opcaoBusca == "2") {
+                $("#CampoBusca").show();
+                $("#BuscaNome").hide();
+                $("#BuscaCPF").show();
+                $("#BuscaCNH").hide();
+                $("#BuscaMunicipio").hide();
+                $("#DataInicial").hide()
+                $("#DataFinal").hide()
+
+                $("#BuscaMotorista").inputmask({ mask: "", regex: "[A-Za-z0-9-. ]+", casing: "upper", placeholder: " " });
+
+                $("#BuscaMotorista").show();
+            }
+            if (opcaoBusca == "3") {
+                $("#CampoBusca").show();
+                $("#BuscaNome").hide();
+                $("#BuscaCPF").hide();
+                $("#BuscaCNH").show();
+                $("#BuscaMunicipio").hide();
+                $("#DataInicial").hide()
+                $("#DataFinal").hide()
+
+                $("#BuscaMotorista").inputmask({ mask: "99999999999" });
+
+                $("#BuscaMotorista").show();
+            }
+            if (opcaoBusca == "4") {
+                $("#CampoBusca").show();
+                $("#BuscaNome").hide();
+                $("#BuscaCPF").hide();
+                $("#BuscaCNH").hide();
+                $("#BuscaMunicipio").show();
+                $("#DataInicial").hide()
+                $("#DataFinal").hide()
+
+                $("#BuscaMotorista").inputmask({ mask: "", casing: "upper", placeholder: " " });
+
+                $("#BuscaMotorista").show();
+            }
+            if (opcaoBusca == "5") {
+                $("#CampoBusca").hide()
+                $("#DataInicial").show()
+                $("#DataFinal").show()
+            }
+            if (opcaoBusca == "6") {
+                $("#CampoBusca").hide()
+                $("#DataInicial").show()
+                $("#DataFinal").show()
+            }
+        }
     </script>
 }

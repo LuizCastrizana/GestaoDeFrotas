@@ -184,6 +184,7 @@
     <Compile Include="Controllers\MotoristaController.cs" />
     <Compile Include="Controllers\VeiculoController.cs" />
     <Compile Include="Controllers\ViagemController.cs" />
+    <Compile Include="Enums\ENUMCAMPOSPAIELMOTORISTAS.cs" />
     <Compile Include="Enums\ENUMCAMPOSPAINELVEICULOS.cs" />
     <Compile Include="Enums\ENUMOPCOESORDENACAO.cs" />
     <Compile Include="Exceptions\CadastroCNHException.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Util\Motorista\AutoCompleteMotorista.cs" />
     <Compile Include="Util\Motorista\MotoristaTools.cs" />
     <Compile Include="Enums\ENUMCAMPOSPAIELVIAGEM.cs" />
+    <Compile Include="Util\Motorista\OpcoesPainelMotorista.cs" />
     <Compile Include="Util\Veiculo\VeiculoTools.cs" />
     <Compile Include="Util\Viagem\GeradorCodigoViagem.cs" />
     <Compile Include="Util\Comum\StringTools.cs" />
@@ -208,7 +210,7 @@
     <Compile Include="Util\Validadores\CPF.cs" />
     <Compile Include="Util\Validadores\RetornoValidacao.cs" />
     <Compile Include="Util\Validadores\ViagemValidador.cs" />
-    <Compile Include="Util\Viagem\FiltrosPainelViagem.cs" />
+    <Compile Include="Util\Viagem\OpcoesPainelViagem.cs" />
     <Compile Include="Util\Viagem\ViagemTools.cs" />
     <Compile Include="ViewModels\CadastroMotoristaVM.cs" />
     <Compile Include="ViewModels\CadastroVeiculoVM.cs" />
@@ -374,9 +376,6 @@
       <Project>{10df30b5-44d7-4f81-97cb-e618207313ad}</Project>
       <Name>GestaoDeFrotas.Shared</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

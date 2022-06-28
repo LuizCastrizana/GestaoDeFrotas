@@ -94,9 +94,9 @@ namespace GestaoDeFrotas
             return lista;
         }
 
-        public static FiltrosPainelViagem MontarListasOpcoesPainel()
+        public static OpcoesPainelViagem MontarListasOpcoesPainel()
         {
-            var retorno = new FiltrosPainelViagem
+            var retorno = new OpcoesPainelViagem
             {
                 Ordenacao = new List<DropDownItem>
                 {

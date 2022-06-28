@@ -106,9 +106,9 @@
     <Compile Include="DBENTITIES\Viagem\MotivoViagemDBE.cs" />
     <Compile Include="DBENTITIES\Viagem\StatusViagemDBE.cs" />
     <Compile Include="DBENTITIES\Viagem\ViagemDBE.cs" />
-    <Compile Include="Enums\ENUMMOTIVOVIAGEM.cs" />
+    <Compile Include="Enums\Viagem\ENUMMOTIVOVIAGEM.cs" />
     <Compile Include="Enums\ENUMSTATUS.cs" />
-    <Compile Include="Enums\ENUMSTATUSVIAGEM.cs" />
+    <Compile Include="Enums\Viagem\ENUMSTATUSVIAGEM.cs" />
     <Compile Include="Exceptions\CadastroCNHException.cs" />
     <Compile Include="Exceptions\CadastroEnderecoException.cs" />
     <Compile Include="Exceptions\CadastroMotoristaException.cs" />

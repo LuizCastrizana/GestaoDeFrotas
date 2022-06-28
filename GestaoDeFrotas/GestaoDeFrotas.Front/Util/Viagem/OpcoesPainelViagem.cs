@@ -5,7 +5,7 @@ using System.Web;
 
 namespace GestaoDeFrotas
 {
-    public class FiltrosPainelViagem
+    public class OpcoesPainelViagem
     {
         public List<DropDownItem> Ordenacao { get; set; }
         public List<DropDownItem> Filtros { get; set; }

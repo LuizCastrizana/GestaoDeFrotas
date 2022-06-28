@@ -482,17 +482,26 @@ namespace GestaoDeFrotas.Data.DAL
         {
             var retorno = new List<MotoristaDBE>();
 
-            var query = new StringBuilder($@"SELECT
-                                ID,
-                                PRIMEIRONOME,
-                                SOBRENOME,
-                                CPF,
-                                CNHID,
-                                DATAINCLUSAO,
-                                DATAALTERACAO,
-                                STATUS,
-                                ENDERECOID
-                            FROM MOTORISTA
+            var query = new StringBuilder($@" SELECT * FROM (
+                            SELECT
+                                MO.ID                       AS ID,
+                                MO.PRIMEIRONOME             AS PRIMEIRONOME,
+                                MO.SOBRENOME                AS SOBRENOME,
+                                MO.PRIMEIRONOME || ' ' ||         
+                                MO.SOBRENOME                AS NOMECOMPLETO,
+                                MO.CPF                      AS CPF,
+                                MO.CNHID                    AS CNHID,
+                                MO.DATAINCLUSAO             AS DATAINCLUSAO,
+                                MO.DATAALTERACAO            AS DATAALTERACAO,
+                                MO.STATUS                   AS STATUS,
+                                MO.ENDERECOID               AS ENDERECOID,
+                                CN.NUMERO                   AS NUMEROCNH,
+                                MN.NOME                     AS MUNICIPIO
+                            FROM MOTORISTA MO
+                            INNER JOIN CNH CN ON MO.CNHID = CN.ID
+                            INNER JOIN ENDERECO EN ON MO.ENDERECOID = EN.ID
+                            INNER JOIN MUNICIPIO MN ON EN.MUNICIPIOID = MN.ID
+                            )
                             WHERE (1 = 1)");
 
             query.Append(MontarFiltros(filtro));
@@ -518,6 +527,8 @@ namespace GestaoDeFrotas.Data.DAL
                                 motorista.DataAlteracao = Convert.ToDateTime(DataReader["DATAALTERACAO"]);
                             motorista.Status = Convert.ToBoolean(DataReader["STATUS"]);
                             motorista.Endereco = new EnderecoDAL().Read(Convert.ToInt32(DataReader["ENDERECOID"]));
+                            motorista.CNH.Numero = Convert.ToString(DataReader["NUMEROCNH"]);
+                            motorista.Endereco.Municipio.NomeMunicipio = Convert.ToString(DataReader["MUNICIPIO"]);
                             retorno.Add(motorista);
                         }
                     }

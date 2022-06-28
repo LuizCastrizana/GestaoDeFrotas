@@ -19,16 +19,20 @@ namespace GestaoDeFrotas.Data.DAL
 
         public string MontarFiltros(FiltroBusca filtro)
         {
+            if (filtro.ListaExpressao == null)
+                return string.Empty;
+
             StringBuilder retorno = new StringBuilder(" AND ");
+            retorno.Append("(");
 
             for (int i = 0; i < filtro.ListaExpressao.Count; i++)
             {
                 if (i > 0)
                 {
                     if (filtro.ListaExpressao[i].OperadorLogico == EnumOperadorLogico.E)
-                        retorno.Append("AND");
+                        retorno.Append(" AND ");
                     else
-                        retorno.Append("OR");
+                        retorno.Append(" OR ");
                 }
 
                 retorno.Append("(");
@@ -37,7 +41,10 @@ namespace GestaoDeFrotas.Data.DAL
                 {
                     if (j > 0)
                     {
-                        retorno.Append("AND");
+                        if (filtro.ListaExpressao[i].OperadorLogico == EnumOperadorLogico.E)
+                            retorno.Append(" AND ");
+                        else
+                            retorno.Append(" OR ");
                     }
                     
                     retorno.Append("(");
@@ -57,6 +64,9 @@ namespace GestaoDeFrotas.Data.DAL
                         case EnumTipoCondicao.MENOR_OU_IGUAL:
                             retorno.Append(" <= ");
                             break;
+                        case EnumTipoCondicao.CONTEM:
+                            retorno.Append(" LIKE ");
+                            break;
                     }
 
                     switch (filtro.ListaExpressao[i].ListaCondicao[j].TipoCampo)
@@ -66,7 +76,10 @@ namespace GestaoDeFrotas.Data.DAL
                             retorno.Append(filtro.ListaExpressao[i].ListaCondicao[j].Valor);
                             break;
                         case EnumTipoCampo.TEXTO:
-                            retorno.Append(" \'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "\' ");
+                            if (filtro.ListaExpressao[i].ListaCondicao[j].TipoCondicao == EnumTipoCondicao.CONTEM)
+                                retorno.Append(" \'%" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "%\' ");
+                            else
+                                retorno.Append(" \'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "\' ");
                             break;
                         case EnumTipoCampo.DATA:
                             retorno.Append(" TO_DATE(\'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "\', \'DD/MM/YYYY\')");
@@ -76,6 +89,7 @@ namespace GestaoDeFrotas.Data.DAL
                 }
                 retorno.Append(") ");
             }
+            retorno.Append(") ");
 
             return retorno.ToString();
         }

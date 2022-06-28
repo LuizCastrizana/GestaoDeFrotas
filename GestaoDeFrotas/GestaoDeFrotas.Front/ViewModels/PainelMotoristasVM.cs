@@ -3,26 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Enums;
 
 namespace GestaoDeFrotas.Front.ViewModels
 {
     public class PainelMotoristasVM
     {
         public string BuscaMotorista{ get; set; }
-        public string OpcoesFiltragem { get; set; }
-        public string OpcaoOrdenacao { get; set; }
+        public int OpcoesFiltragem { get; set; }
+        public int OpcaoOrdenacao { get; set; }
+        public int OpcaoCampoOrdenacao { get; set; }
         public bool Todos { get; set; }
-        public DateTime DataInicio { get; set; }
-        public DateTime DataFim { get; set; }
+        public string DataInicio { get; set; }
+        public string DataFim { get; set; }
         public IEnumerable<MotoristaVM> Motoristas { get; set; }
 
         public PainelMotoristasVM()
         {
-            this.OpcaoOrdenacao = "1";
-            this.OpcoesFiltragem = "1";
+            this.OpcaoOrdenacao = (int)ENUMOPCOESORDENACAO.CRESCENTE;
+            this.OpcoesFiltragem = (int)ENUMCAMPOSPAIELMOTORISTAS.NOME;
             this.Todos = false;
         }
-        public PainelMotoristasVM(string ordenacao, string filtragem, bool todos)
+        public PainelMotoristasVM(int ordenacao, int filtragem, bool todos)
         {
             this.OpcaoOrdenacao = ordenacao;
             this.OpcoesFiltragem = filtragem;
