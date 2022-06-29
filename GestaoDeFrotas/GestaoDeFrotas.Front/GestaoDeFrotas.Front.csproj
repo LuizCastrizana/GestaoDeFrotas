@@ -184,9 +184,6 @@
     <Compile Include="Controllers\MotoristaController.cs" />
     <Compile Include="Controllers\VeiculoController.cs" />
     <Compile Include="Controllers\ViagemController.cs" />
-    <Compile Include="Enums\ENUMCAMPOSPAIELMOTORISTAS.cs" />
-    <Compile Include="Enums\ENUMCAMPOSPAINELVEICULOS.cs" />
-    <Compile Include="Enums\ENUMOPCOESORDENACAO.cs" />
     <Compile Include="Exceptions\CadastroCNHException.cs" />
     <Compile Include="Exceptions\CadastroEnderecoException.cs" />
     <Compile Include="Exceptions\CadastroMotoristaException.cs" />
@@ -199,7 +196,6 @@
     <Compile Include="Models\OracleModel.cs" />
     <Compile Include="Util\Motorista\AutoCompleteMotorista.cs" />
     <Compile Include="Util\Motorista\MotoristaTools.cs" />
-    <Compile Include="Enums\ENUMCAMPOSPAIELVIAGEM.cs" />
     <Compile Include="Util\Motorista\OpcoesPainelMotorista.cs" />
     <Compile Include="Util\Veiculo\VeiculoTools.cs" />
     <Compile Include="Util\Viagem\GeradorCodigoViagem.cs" />

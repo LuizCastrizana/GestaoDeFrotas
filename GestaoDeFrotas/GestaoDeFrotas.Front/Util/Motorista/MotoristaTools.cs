@@ -1,6 +1,6 @@
 ﻿using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
-using GestaoDeFrotas.Enums;
+using GestaoDeFrotas.Data.Enums;
 using GestaoDeFrotas.Shared.Enums;
 using System;
 using System.Collections.Generic;
@@ -34,21 +34,21 @@ namespace GestaoDeFrotas
                 },
                 Filtros = new List<DropDownItem>
                 {
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.NOME, "Nome"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.CPF, "CPF"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.CNH, "CNH"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.DATAALTERACAO, "Data Alteração"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.MUNICIPIO, "Municipio"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.NOME, "Nome"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.CPF, "CPF"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.CNH, "CNH"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.MUNICIPIO, "Município"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.DATAINCLUSAO, "Data inclusão"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.DATAALTERACAO, "Data alteração"),
                 },
                 CampoOrdenacao = new List<DropDownItem>
                 {
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.NOME, "Nome"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.CPF, "CPF"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.CNH, "CNH"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.DATAALTERACAO, "Data Alteração"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELMOTORISTAS.MUNICIPIO, "Municipio"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.NOME, "Nome"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.CPF, "CPF"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.CNH, "CNH"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.MUNICIPIO, "Município"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.DATAINCLUSAO, "Data inclusão"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELMOTORISTAS.DATAALTERACAO, "Data alteração"),
                 },
             };
 

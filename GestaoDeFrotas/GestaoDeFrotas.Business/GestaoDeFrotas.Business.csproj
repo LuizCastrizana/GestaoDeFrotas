@@ -52,6 +52,10 @@
       <Project>{B88EE252-B475-489E-90A4-72DDBED81B14}</Project>
       <Name>GestaoDeFrotas.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GestaoDeFrotas.Shared\GestaoDeFrotas.Shared.csproj">
+      <Project>{10DF30B5-44D7-4F81-97CB-E618207313AD}</Project>
+      <Name>GestaoDeFrotas.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

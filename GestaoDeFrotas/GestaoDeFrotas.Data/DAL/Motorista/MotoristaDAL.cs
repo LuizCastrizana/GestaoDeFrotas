@@ -484,19 +484,19 @@ namespace GestaoDeFrotas.Data.DAL
 
             var query = new StringBuilder($@" SELECT * FROM (
                             SELECT
-                                MO.ID                       AS ID,
-                                MO.PRIMEIRONOME             AS PRIMEIRONOME,
-                                MO.SOBRENOME                AS SOBRENOME,
-                                MO.PRIMEIRONOME || ' ' ||         
-                                MO.SOBRENOME                AS NOMECOMPLETO,
-                                MO.CPF                      AS CPF,
-                                MO.CNHID                    AS CNHID,
-                                MO.DATAINCLUSAO             AS DATAINCLUSAO,
-                                MO.DATAALTERACAO            AS DATAALTERACAO,
-                                MO.STATUS                   AS STATUS,
-                                MO.ENDERECOID               AS ENDERECOID,
-                                CN.NUMERO                   AS NUMEROCNH,
-                                MN.NOME                     AS MUNICIPIO
+                                MO.ID                           AS ID,
+                                UPPER(MO.PRIMEIRONOME)          AS PRIMEIRONOME,
+                                UPPER(MO.SOBRENOME)             AS SOBRENOME,
+                                UPPER(MO.PRIMEIRONOME || ' ' ||         
+                                MO.SOBRENOME)                   AS NOMECOMPLETO,
+                                MO.CPF                          AS CPF,
+                                MO.CNHID                        AS CNHID,
+                                MO.DATAINCLUSAO                 AS DATAINCLUSAO,
+                                MO.DATAALTERACAO                AS DATAALTERACAO,
+                                MO.STATUS                       AS STATUS,
+                                MO.ENDERECOID                   AS ENDERECOID,
+                                CN.NUMERO                       AS NUMEROCNH,
+                                UPPER(MN.NOME)                  AS MUNICIPIO
                             FROM MOTORISTA MO
                             INNER JOIN CNH CN ON MO.CNHID = CN.ID
                             INNER JOIN ENDERECO EN ON MO.ENDERECOID = EN.ID

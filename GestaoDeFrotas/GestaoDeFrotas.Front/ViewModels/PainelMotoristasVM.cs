@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using GestaoDeFrotas.Data.DBENTITIES;
-using GestaoDeFrotas.Enums;
+using GestaoDeFrotas.Data.Enums;
 
 namespace GestaoDeFrotas.Front.ViewModels
 {
@@ -20,12 +20,14 @@ namespace GestaoDeFrotas.Front.ViewModels
 
         public PainelMotoristasVM()
         {
+            Motoristas = new List<MotoristaVM>();
             this.OpcaoOrdenacao = (int)ENUMOPCOESORDENACAO.CRESCENTE;
-            this.OpcoesFiltragem = (int)ENUMCAMPOSPAIELMOTORISTAS.NOME;
+            this.OpcoesFiltragem = (int)ENUMCAMPOSPAINELMOTORISTAS.NOME;
             this.Todos = false;
         }
         public PainelMotoristasVM(int ordenacao, int filtragem, bool todos)
         {
+            Motoristas = new List<MotoristaVM>();
             this.OpcaoOrdenacao = ordenacao;
             this.OpcoesFiltragem = filtragem;
             this.Todos = todos;

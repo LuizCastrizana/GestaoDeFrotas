@@ -1,5 +1,4 @@
-﻿using GestaoDeFrotas.Enums;
-using GestaoDeFrotas.Data.Enums;
+﻿using GestaoDeFrotas.Data.Enums;
 using GestaoDeFrotas.Front.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -26,8 +25,8 @@ namespace GestaoDeFrotas.Controllers
             ViewData["OpcoesFiltragem"] = new SelectList(opcoesPainel.Filtros, "Id", "Text");
             ViewData["StatusViagem"] = new SelectList(opcoesPainel.StatusViagem, "Id", "Text");
 
-            vm.OpcoesFiltragem = (int)ENUMCAMPOSPAIELVIAGEM.CODIGO;
-            vm.OpcaoCampoOrdenacao = (int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO;
+            vm.OpcoesFiltragem = (int)ENUMCAMPOSPAINELVIAGEM.CODIGO;
+            vm.OpcaoCampoOrdenacao = (int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO;
             vm.OpcaoOrdenacao = (int)ENUMOPCOESORDENACAO.DECRESCENTE;
 
             vm.Viagens.ToPagedList(1, 15);

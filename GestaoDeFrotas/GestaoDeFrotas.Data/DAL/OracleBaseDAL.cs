@@ -77,19 +77,19 @@ namespace GestaoDeFrotas.Data.DAL
                             break;
                         case EnumTipoCampo.TEXTO:
                             if (filtro.ListaExpressao[i].ListaCondicao[j].TipoCondicao == EnumTipoCondicao.CONTEM)
-                                retorno.Append(" \'%" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "%\' ");
+                                retorno.Append(" \'%" + filtro.ListaExpressao[i].ListaCondicao[j].Valor.ToUpper() + "%\' ");
                             else
-                                retorno.Append(" \'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "\' ");
+                                retorno.Append(" \'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor.ToUpper() + "\' ");
                             break;
                         case EnumTipoCampo.DATA:
-                            retorno.Append(" TO_DATE(\'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "\', \'DD/MM/YYYY\')");
+                            retorno.Append(" TO_DATE(\'" + filtro.ListaExpressao[i].ListaCondicao[j].Valor + "\', \'DD/MM/YYYY\') ");
                             break;
                     }
-                    retorno.Append(") ");
+                    retorno.Append(")");
                 }
-                retorno.Append(") ");
+                retorno.Append(")");
             }
-            retorno.Append(") ");
+            retorno.Append(")");
 
             return retorno.ToString();
         }

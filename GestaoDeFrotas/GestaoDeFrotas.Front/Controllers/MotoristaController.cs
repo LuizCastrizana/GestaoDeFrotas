@@ -14,7 +14,6 @@ using GestaoDeFrotas.Business;
 using GestaoDeFrotas.Shared.FiltroBusca;
 using GestaoDeFrotas.Shared.Enums;
 using GestaoDeFrotas.Data.Enums;
-using GestaoDeFrotas.Enums;
 
 namespace GestaoDeFrotas.Controllers
 {
@@ -52,6 +51,7 @@ namespace GestaoDeFrotas.Controllers
         public ActionResult BuscarMotoristasPainel(PainelMotoristasVM vm, int? pagina)
         {
             var numPagina = pagina ?? 1;
+
             if (vm.BuscaMotorista == null)
                 vm.BuscaMotorista = string.Empty;
 
@@ -59,84 +59,17 @@ namespace GestaoDeFrotas.Controllers
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesPainel.Ordenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesPainel.Filtros, "Id", "Text");
             ViewData["OpcaoCampoOrdenacao"] = new SelectList(OpcoesPainel.CampoOrdenacao, "Id", "Text");
+
             try
             {
                 // remove caracteres da string de busca
                 vm.BuscaMotorista = StringTools.RemoverCaracteres(vm.BuscaMotorista, "-.");
 
-                //// busca por nome ou cpf
-                //var FiltroBusca = new FiltroBusca
-                //{
-                //    ListaExpressao = new List<Expressao>
-                //    {
-                //        new Expressao()
-                //        {
-                //            OperadorLogico = EnumOperadorLogico.OU,
-                //            ListaCondicao = new List<Condicao>
-                //            {
-                //                new Condicao("NOMECOMPLETO",  vm.BuscaMotorista, EnumTipoCampo.TEXTO, EnumTipoCondicao.CONTEM),
-                //                new Condicao("CPF",  vm.BuscaMotorista, EnumTipoCampo.TEXTO, EnumTipoCondicao.CONTEM)
-                //            }
-                //        },
-                //    }
-                //};
-
-                //// exibir inativos
-                //if (vm.Todos == false)
-                //{
-                //    var expressao = new Expressao()
-                //    {
-                //        OperadorLogico = EnumOperadorLogico.E,
-                //        ListaCondicao = new List<Condicao>
-                //        {
-                //            new Condicao("STATUS", true, EnumTipoCondicao.IGUAL)
-                //        }
-                //    };
-                //    FiltroBusca.ListaExpressao.Add(expressao);
-                //}
-
-                var listaMotoristasDBE = new MotoristaDAL().Read(MontarFiltrosDeBusca(vm));
-
-                var listaMotoristasVM = new List<MotoristaVM>();
+                var listaMotoristasDBE = new MotoristaBLL().BuscarDadosPainel(MontarFiltrosDeBusca(vm),
+                    (ENUMCAMPOSPAINELMOTORISTAS)vm.OpcaoCampoOrdenacao,
+                    (ENUMOPCOESORDENACAO)vm.OpcaoOrdenacao);
 
                 vm.CastListaMotoristasParaVM(listaMotoristasDBE);
-
-                if (vm.OpcaoOrdenacao == (int)ENUMOPCOESORDENACAO.CRESCENTE)
-                {
-                    switch (vm.OpcaoCampoOrdenacao)
-                    {
-                        case (int)ENUMCAMPOSPAIELMOTORISTAS.NOME:
-                            vm.Motoristas = vm.Motoristas.OrderBy(m => m.PrimeiroNome);
-                            break;
-                        case (int)ENUMCAMPOSPAIELMOTORISTAS.DATAINCLUSAO:
-                            vm.Motoristas = vm.Motoristas.OrderBy(m => m.DataInclusao);
-                            break;
-                        case (int)ENUMCAMPOSPAIELMOTORISTAS.STATUS:
-                            vm.Motoristas = vm.Motoristas.OrderBy(m => m.Status);
-                            break;
-                        default:
-                            vm.Motoristas = vm.Motoristas.OrderBy(m => m.PrimeiroNome);
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (vm.OpcaoCampoOrdenacao)
-                    {
-                        case (int)ENUMCAMPOSPAIELMOTORISTAS.NOME:
-                            vm.Motoristas = vm.Motoristas.OrderByDescending(m => m.PrimeiroNome);
-                            break;
-                        case (int)ENUMCAMPOSPAIELMOTORISTAS.DATAINCLUSAO:
-                            vm.Motoristas = vm.Motoristas.OrderByDescending(m => m.DataInclusao);
-                            break;
-                        case (int)ENUMCAMPOSPAIELMOTORISTAS.STATUS:
-                            vm.Motoristas = vm.Motoristas.OrderByDescending(m => m.Status);
-                            break;
-                        default:
-                            vm.Motoristas = vm.Motoristas.OrderByDescending(m => m.PrimeiroNome);
-                            break;
-                    }
-                }
 
                 vm.Motoristas = vm.Motoristas.ToPagedList(numPagina, 15);
                 return View("PainelDeMotoristas", vm);
@@ -155,7 +88,7 @@ namespace GestaoDeFrotas.Controllers
 
             switch (vm.OpcoesFiltragem)
             {
-                case (int)ENUMCAMPOSPAIELMOTORISTAS.NOME:
+                case (int)ENUMCAMPOSPAINELMOTORISTAS.NOME:
                     FiltroBusca.ListaExpressao = new List<Expressao>
                     {
                         new Expressao()
@@ -168,7 +101,7 @@ namespace GestaoDeFrotas.Controllers
                         },
                     };
                     break;
-                case (int)ENUMCAMPOSPAIELMOTORISTAS.CPF:
+                case (int)ENUMCAMPOSPAINELMOTORISTAS.CPF:
                     FiltroBusca.ListaExpressao = new List<Expressao>
                     {
                         new Expressao()
@@ -181,7 +114,7 @@ namespace GestaoDeFrotas.Controllers
                         },
                     };
                     break;
-                case (int)ENUMCAMPOSPAIELMOTORISTAS.CNH:
+                case (int)ENUMCAMPOSPAINELMOTORISTAS.CNH:
                     FiltroBusca.ListaExpressao = new List<Expressao>
                     {
                         new Expressao()
@@ -194,7 +127,7 @@ namespace GestaoDeFrotas.Controllers
                         },
                     };
                     break;
-                case (int)ENUMCAMPOSPAIELMOTORISTAS.MUNICIPIO:
+                case (int)ENUMCAMPOSPAINELMOTORISTAS.MUNICIPIO:
                     FiltroBusca.ListaExpressao = new List<Expressao>
                     {
                         new Expressao()
@@ -207,7 +140,7 @@ namespace GestaoDeFrotas.Controllers
                         },
                     };
                     break;
-                case (int)ENUMCAMPOSPAIELMOTORISTAS.DATAINCLUSAO:
+                case (int)ENUMCAMPOSPAINELMOTORISTAS.DATAINCLUSAO:
                     FiltroBusca.ListaExpressao = new List<Expressao>
                     {
                         new Expressao()
@@ -221,7 +154,7 @@ namespace GestaoDeFrotas.Controllers
                         },
                     };
                     break;
-                case (int)ENUMCAMPOSPAIELMOTORISTAS.DATAALTERACAO:
+                case (int)ENUMCAMPOSPAINELMOTORISTAS.DATAALTERACAO:
                     FiltroBusca.ListaExpressao = new List<Expressao>
                     {
                         new Expressao()

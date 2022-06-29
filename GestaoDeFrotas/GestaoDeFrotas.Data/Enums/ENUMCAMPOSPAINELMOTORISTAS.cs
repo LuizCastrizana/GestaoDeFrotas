@@ -4,10 +4,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace GestaoDeFrotas.Enums
+namespace GestaoDeFrotas.Data.Enums
 {
     [DataContract]
-    public enum ENUMCAMPOSPAIELMOTORISTAS
+    public enum ENUMCAMPOSPAINELMOTORISTAS
     {
         [EnumMember]
         NOME = 1,

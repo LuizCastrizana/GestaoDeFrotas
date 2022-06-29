@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using GestaoDeFrotas.Enums;
+using GestaoDeFrotas.Data.Enums;
 using GestaoDeFrotas.Front.ViewModels;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
@@ -25,9 +25,9 @@ namespace GestaoDeFrotas.Controllers
                 };
             var OpcoesFiltragem= new List<DropDownItem>
                 {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVEICULOS.PLACA, "Placa"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVEICULOS.DATAINCLUSAO, "Data"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVEICULOS.STATUS, "Status")
+                    new DropDownItem((int)ENUMCAMPOSPAINELVEICULOS.PLACA, "Placa"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVEICULOS.DATAINCLUSAO, "Data"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVEICULOS.STATUS, "Status")
                 };
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");
@@ -63,9 +63,9 @@ namespace GestaoDeFrotas.Controllers
                 };
             var OpcoesFiltragem = new List<DropDownItem>
                 {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVEICULOS.PLACA, "Placa"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVEICULOS.DATAINCLUSAO, "Data"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVEICULOS.STATUS, "Status")
+                    new DropDownItem((int)ENUMCAMPOSPAINELVEICULOS.PLACA, "Placa"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVEICULOS.DATAINCLUSAO, "Data"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVEICULOS.STATUS, "Status")
                 };
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesOrdenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesFiltragem, "Id", "Text");

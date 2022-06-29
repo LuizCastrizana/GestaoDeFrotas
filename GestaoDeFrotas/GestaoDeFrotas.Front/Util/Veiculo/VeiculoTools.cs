@@ -1,4 +1,4 @@
-﻿using GestaoDeFrotas.Enums;
+﻿using GestaoDeFrotas.Data.Enums;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using System;
@@ -20,13 +20,13 @@ namespace GestaoDeFrotas
             {
                 switch (opcaoFiltragem)
                 {
-                    case (int)ENUMCAMPOSPAIELVEICULOS.PLACA:
+                    case (int)ENUMCAMPOSPAINELVEICULOS.PLACA:
                         lista = lista.OrderBy(m => m.Placa);
                         break;
-                    case (int)ENUMCAMPOSPAIELVEICULOS.DATAINCLUSAO:
+                    case (int)ENUMCAMPOSPAINELVEICULOS.DATAINCLUSAO:
                         lista = lista.OrderBy(m => m.DataInclusao);
                         break;
-                    case (int)ENUMCAMPOSPAIELVEICULOS.STATUS:
+                    case (int)ENUMCAMPOSPAINELVEICULOS.STATUS:
                         lista = lista.OrderBy(m => m.Status);
                         break;
                     default:
@@ -38,13 +38,13 @@ namespace GestaoDeFrotas
             {
                 switch (opcaoFiltragem)
                 {
-                    case (int)ENUMCAMPOSPAIELVEICULOS.PLACA:
+                    case (int)ENUMCAMPOSPAINELVEICULOS.PLACA:
                         lista = lista.OrderByDescending(m => m.Placa);
                         break;
-                    case (int)ENUMCAMPOSPAIELVEICULOS.DATAINCLUSAO:
+                    case (int)ENUMCAMPOSPAINELVEICULOS.DATAINCLUSAO:
                         lista = lista.OrderByDescending(m => m.DataInclusao);
                         break;
-                    case (int)ENUMCAMPOSPAIELVEICULOS.STATUS:
+                    case (int)ENUMCAMPOSPAINELVEICULOS.STATUS:
                         lista = lista.OrderByDescending(m => m.Status);
                         break;
                     default:

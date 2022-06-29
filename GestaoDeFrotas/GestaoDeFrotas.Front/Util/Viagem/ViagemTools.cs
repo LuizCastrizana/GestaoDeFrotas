@@ -1,5 +1,4 @@
-﻿using GestaoDeFrotas.Enums;
-using GestaoDeFrotas.Data.DAL;
+﻿using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.Enums;
 using System;
@@ -20,19 +19,19 @@ namespace GestaoDeFrotas
 
             switch (opcaoFiltragem)
             {
-                case (int)ENUMCAMPOSPAIELVIAGEM.CODIGO:
+                case (int)ENUMCAMPOSPAINELVIAGEM.CODIGO:
                     lista = new ViagemDAL().Read(ViagemBusca).Where(m => m.Codigo.Contains(busca.ToUpper()));
                     break;
-                case (int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO:
+                case (int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO:
                     lista = new ViagemDAL().Read(ViagemBusca).Where(m => m.DataInclusao.ToString("dd/MM/yyyy").Contains(busca));
                     break;
-                case (int)ENUMCAMPOSPAIELVIAGEM.STATUS:
+                case (int)ENUMCAMPOSPAINELVIAGEM.STATUS:
                     lista = new ViagemDAL().Read(ViagemBusca).Where(m => m.ViagemStatus.ID.ToString().Contains(busca.ToUpper()));
                     break;
-                case (int)ENUMCAMPOSPAIELVIAGEM.VEICULO:
+                case (int)ENUMCAMPOSPAINELVIAGEM.VEICULO:
                     lista = new ViagemDAL().Read(ViagemBusca).Where(m => StringTools.RemoverCaracteres(m.VeiculoViagem.Placa.ToUpper(), "-").Contains(StringTools.RemoverCaracteres(busca.ToUpper(), "-")));
                     break;
-                case (int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA:
+                case (int)ENUMCAMPOSPAINELVIAGEM.MOTORISTA:
                     lista = new ViagemDAL().Read(ViagemBusca).
                         Where(m => (m.MotoristaViagem.PrimeiroNome + " " + m.MotoristaViagem.Sobrenome).ToUpper().Contains(busca.ToUpper())
                         ||
@@ -47,19 +46,19 @@ namespace GestaoDeFrotas
             {
                 switch (opcaoCampoOrdenacao)
                 {
-                    case (int)ENUMCAMPOSPAIELVIAGEM.CODIGO:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.CODIGO:
                         lista = lista.OrderBy(m => m.Codigo);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO:
                         lista = lista.OrderBy(m => m.DataInclusao);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.STATUS:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.STATUS:
                         lista = lista.OrderBy(m => m.ViagemStatus.ID);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.VEICULO:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.VEICULO:
                         lista = lista.OrderBy(m => m.VeiculoViagem.Placa);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.MOTORISTA:
                         lista = lista.OrderBy(m => m.MotoristaViagem.PrimeiroNome);
                         break;
                     default:
@@ -71,19 +70,19 @@ namespace GestaoDeFrotas
             {
                 switch (opcaoCampoOrdenacao)
                 {
-                    case (int)ENUMCAMPOSPAIELVIAGEM.CODIGO:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.CODIGO:
                         lista = lista.OrderByDescending(m => m.Codigo);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO:
                         lista = lista.OrderByDescending(m => m.DataInclusao);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.STATUS:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.STATUS:
                         lista = lista.OrderByDescending(m => m.ViagemStatus.ID);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.VEICULO:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.VEICULO:
                         lista = lista.OrderByDescending(m => m.VeiculoViagem.Placa);
                         break;
-                    case (int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA:
+                    case (int)ENUMCAMPOSPAINELVIAGEM.MOTORISTA:
                         lista = lista.OrderByDescending(m => m.MotoristaViagem.PrimeiroNome);
                         break;
                     default:
@@ -105,18 +104,18 @@ namespace GestaoDeFrotas
                 },
                 Filtros = new List<DropDownItem>
                 {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.CODIGO, "Codigo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.VEICULO, "Veiculo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA, "Motorista")
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.CODIGO, "Codigo"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.VEICULO, "Veiculo"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.MOTORISTA, "Motorista")
                 },
                 CampoOrdenacao = new List<DropDownItem>
                 {
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.CODIGO, "Codigo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.STATUS, "Status"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.VEICULO, "Veiculo"),
-                    new DropDownItem((int)ENUMCAMPOSPAIELVIAGEM.MOTORISTA, "Motorista")
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.CODIGO, "Codigo"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO, "Data Inclusão"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.STATUS, "Status"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.VEICULO, "Veiculo"),
+                    new DropDownItem((int)ENUMCAMPOSPAINELVIAGEM.MOTORISTA, "Motorista")
                 },
                 StatusViagem = new List<DropDownItem>
                 {

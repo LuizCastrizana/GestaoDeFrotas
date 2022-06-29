@@ -4,13 +4,13 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace GestaoDeFrotas.Enums
+namespace GestaoDeFrotas.Data.Enums
 {
     [DataContract]
-    public enum ENUMCAMPOSPAIELVIAGEM
+    public enum ENUMCAMPOSPAINELVEICULOS
     {
         [EnumMember]
-        CODIGO = 1,
+        PLACA = 1,
 
         [EnumMember]
         DATAINCLUSAO = 2,
@@ -18,10 +18,5 @@ namespace GestaoDeFrotas.Enums
         [EnumMember]
         STATUS = 3,
 
-        [EnumMember]
-        VEICULO = 4,
-
-        [EnumMember]
-        MOTORISTA = 5,
     }
 }
