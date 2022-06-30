@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestaoDeFrotas.Shared.FiltroBusca;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,6 @@ namespace GestaoDeFrotas.Data.DAL
         T Read(int id);
         void Update(T obj);
         void Delete(int id);
-        IEnumerable<T> Read(T obj);
+        IEnumerable<T> List(FiltroBusca Filtro);
     }
 }

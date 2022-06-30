@@ -23,15 +23,11 @@ namespace GestaoDeFrotas.Front.ViewModels
             Motoristas = new List<MotoristaVM>();
             this.OpcaoOrdenacao = (int)ENUMOPCOESORDENACAO.CRESCENTE;
             this.OpcoesFiltragem = (int)ENUMCAMPOSPAINELMOTORISTAS.NOME;
+            this.OpcaoCampoOrdenacao = (int)ENUMCAMPOSPAINELMOTORISTAS.NOME;
+            this.BuscaMotorista = String.Empty;
             this.Todos = false;
         }
-        public PainelMotoristasVM(int ordenacao, int filtragem, bool todos)
-        {
-            Motoristas = new List<MotoristaVM>();
-            this.OpcaoOrdenacao = ordenacao;
-            this.OpcoesFiltragem = filtragem;
-            this.Todos = todos;
-        }
+        
         public void CastListaMotoristasParaVM(IEnumerable<MotoristaDBE> obj)
         {
             var lista = new List<MotoristaVM>();

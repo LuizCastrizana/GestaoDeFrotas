@@ -16,7 +16,7 @@ namespace GestaoDeFrotas.Shared.FiltroBusca
 
         public Condicao()
         {
-
+            Valor = String.Empty;
         }
 
         public Condicao(string nome, DateTime valor, EnumTipoCondicao tipoCondicao)

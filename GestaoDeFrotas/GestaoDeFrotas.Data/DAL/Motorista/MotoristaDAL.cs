@@ -442,6 +442,7 @@ namespace GestaoDeFrotas.Data.DAL
                         retorno.Endereco = new EnderecoDAL().Read(Convert.ToInt32(DataReader["ENDERECOID"]));
                         retorno.CNH = new CNHDAL().Read(Convert.ToInt32(DataReader["CNHID"]));
                     }
+                    retorno.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(retorno.ID, true);
                 }
             }
 
@@ -478,7 +479,7 @@ namespace GestaoDeFrotas.Data.DAL
         /// </summary>
         /// <param name="obj">Dados a serem buscados</param>
         /// <returns></returns>
-        public IEnumerable<MotoristaDBE> Read(FiltroBusca filtro)
+        public IEnumerable<MotoristaDBE> List(FiltroBusca filtro)
         {
             var retorno = new List<MotoristaDBE>();
 
@@ -535,11 +536,6 @@ namespace GestaoDeFrotas.Data.DAL
                 }
             }
         return retorno;
-        }
-
-        public IEnumerable<MotoristaDBE> Read(MotoristaDBE obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="BLL\MotoristaBLL.cs" />
     <Compile Include="EnumStatusResposta.cs" />
-    <Compile Include="Resposta.cs" />
+    <Compile Include="RespostaNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

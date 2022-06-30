@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace GestaoDeFrotas.Business
 {
-    public class Resposta<T>
+    public class RespostaNegocio<T>
     {
         public string Mensagem { get; set; }
         public EnumStatusResposta Status { get; set; }
         public T Retorno { get; set; } = default(T);
 
-        public Resposta()
+        public RespostaNegocio()
         {
             Status = EnumStatusResposta.Sucesso;
             Mensagem = string.Empty;

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using GestaoDeFrotas.Front.ViewModels;
 using GestaoDeFrotas.Models;
+using GestaoDeFrotas.Shared.Tools;
 
 namespace GestaoDeFrotas.Controllers
 {

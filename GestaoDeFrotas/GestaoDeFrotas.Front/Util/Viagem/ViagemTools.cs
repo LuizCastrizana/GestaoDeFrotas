@@ -1,6 +1,7 @@
 ﻿using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.Enums;
+using GestaoDeFrotas.Shared.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;

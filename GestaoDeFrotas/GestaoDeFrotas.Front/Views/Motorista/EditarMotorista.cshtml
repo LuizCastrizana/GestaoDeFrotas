@@ -38,7 +38,7 @@
                 @*Salvar*@
                 @if (Model.Motorista.Status == true)
                 {
-                    <button type="submit" title="Salvar" id="btnSalvar" class="btn btn-success">
+                    <button type="submit" title="Salvar" id="btnSalvar" class="btn btn-success" form="form-editar">
                         <span class="glyphicon glyphicon-ok"></span>
                         <strong>Salvar</strong>
                     </button>
@@ -47,7 +47,7 @@
                 @if (Model.Motorista.Status == true)
                 {
                     <a title="Desativar" id="btnDesativar" class="btn btn-warning" onclick="return confirm('Deseja desativar o motorista ?');"
-                       href="@Url.Action("AlterarStatusMotorista", "Motorista", new { id = Model.Motorista.ID, status = Model.Motorista.Status } )">
+                       href="@Url.Action("AlterarStatusMotorista", "Motorista", new { ID = Model.Motorista.ID, StatusAtual = Model.Motorista.Status } )">
                         <span class="glyphicon glyphicon-eye-close"></span>
                         <strong>Desativar</strong>
                     </a>
@@ -56,7 +56,7 @@
                 else
                 {
                     <a title="Reativar" id="btnReativar" class="btn btn-info" onclick="return confirm('Deseja reativar o motorista ?');"
-                       href="@Url.Action("AlterarStatusMotorista", "Motorista", new { id = Model.Motorista.ID, status = Model.Motorista.Status} )">
+                       href="@Url.Action("AlterarStatusMotorista", "Motorista", new { ID = Model.Motorista.ID, StatusAtual = Model.Motorista.Status} )">
                         <span class="glyphicon glyphicon-eye-open"></span>
                         <strong>Reativar</strong>
                     </a>
@@ -147,14 +147,14 @@
                         @Html.ValidationMessageFor(model => model.Motorista.Endereco.Bairro, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3">
-                        @Html.LabelFor(model => model.MunicipioSelecionado, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.DropDownListFor(model => model.MunicipioSelecionado, null, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.MunicipioSelecionado, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="col-md-3">
                         @Html.LabelFor(model => model.EstadoSelecionado, htmlAttributes: new { @class = "control-label legenda-campo" })
                         @Html.DropDownListFor(model => model.EstadoSelecionado, null, "Selecione", new { @class = "form-control", onchange = "BuscaMunicipio(this.value)" })
                         @Html.ValidationMessageFor(model => model.EstadoSelecionado, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.MunicipioSelecionado, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.DropDownListFor(model => model.MunicipioSelecionado, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MunicipioSelecionado, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
@@ -181,14 +181,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        @Html.LabelFor(model => model.DataEmissao, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(model => model.DataEmissao, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                        @Html.ValidationMessageFor(model => model.DataEmissao, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.DataEmissaoCNH, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(model => model.DataEmissaoCNH, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                        @Html.ValidationMessageFor(model => model.DataEmissaoCNH, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3">
-                        @Html.LabelFor(model => model.DataValidade, htmlAttributes: new { @class = "control-label legenda-campo" })
-                        @Html.EditorFor(model => model.DataValidade, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                        @Html.ValidationMessageFor(model => model.DataValidade, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.DataValidadeCNH, htmlAttributes: new { @class = "control-label legenda-campo" })
+                        @Html.EditorFor(model => model.DataValidadeCNH, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                        @Html.ValidationMessageFor(model => model.DataValidadeCNH, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3">
                         @Html.LabelFor(model => model.Motorista.CNH.Categoria, htmlAttributes: new { @class = "control-label legenda-campo" })

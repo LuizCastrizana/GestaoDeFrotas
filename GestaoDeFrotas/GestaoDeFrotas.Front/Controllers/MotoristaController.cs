@@ -14,6 +14,7 @@ using GestaoDeFrotas.Business;
 using GestaoDeFrotas.Shared.FiltroBusca;
 using GestaoDeFrotas.Shared.Enums;
 using GestaoDeFrotas.Data.Enums;
+using GestaoDeFrotas.Shared.Tools;
 
 namespace GestaoDeFrotas.Controllers
 {
@@ -22,17 +23,21 @@ namespace GestaoDeFrotas.Controllers
         #region Painel
         public ActionResult PainelDeMotoristas()
         {
+            var BLL = new MotoristaBLL();
             PainelMotoristasVM vm = new PainelMotoristasVM();
 
-            var OpcoesPainel = MotoristaTools.MontarListasOpcoesPainel();
-            ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesPainel.Ordenacao, "Id", "Text");
-            ViewData["OpcoesFiltragem"] = new SelectList(OpcoesPainel.Filtros, "Id", "Text");
-            ViewData["OpcaoCampoOrdenacao"] = new SelectList(OpcoesPainel.CampoOrdenacao, "Id", "Text");
+            var OpcoesPainel = BLL.MontarMenusPainel();
+            ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesPainel.Ordenacao, "Id", "Text", vm.OpcaoOrdenacao);
+            ViewData["OpcoesFiltragem"] = new SelectList(OpcoesPainel.Filtros, "Id", "Text", vm.OpcoesFiltragem);
+            ViewData["OpcaoCampoOrdenacao"] = new SelectList(OpcoesPainel.CampoOrdenacao, "Id", "Text", vm.OpcaoCampoOrdenacao);
             vm.Motoristas = Enumerable.Empty<MotoristaVM>().ToPagedList(1, 15);
 
             try
             {
-                var listaMotoristasDBE = new MotoristaDAL().Read(new FiltroBusca()).OrderBy(x => x.PrimeiroNome);
+                var listaMotoristasDBE = BLL.BuscarDadosPainel(MontarFiltrosDeBusca(vm), 
+                    (ENUMCAMPOSPAINELMOTORISTAS)vm.OpcaoCampoOrdenacao, 
+                    (ENUMOPCOESORDENACAO)vm.OpcaoOrdenacao);
+
                 var listaMotoristasVM = new List<MotoristaVM>();
 
                 vm.CastListaMotoristasParaVM(listaMotoristasDBE);
@@ -51,21 +56,21 @@ namespace GestaoDeFrotas.Controllers
         public ActionResult BuscarMotoristasPainel(PainelMotoristasVM vm, int? pagina)
         {
             var numPagina = pagina ?? 1;
+            var BLL = new MotoristaBLL();
 
             if (vm.BuscaMotorista == null)
                 vm.BuscaMotorista = string.Empty;
 
-            var OpcoesPainel = MotoristaTools.MontarListasOpcoesPainel();
+            var OpcoesPainel = BLL.MontarMenusPainel();
             ViewData["OpcaoOrdenacao"] = new SelectList(OpcoesPainel.Ordenacao, "Id", "Text");
             ViewData["OpcoesFiltragem"] = new SelectList(OpcoesPainel.Filtros, "Id", "Text");
             ViewData["OpcaoCampoOrdenacao"] = new SelectList(OpcoesPainel.CampoOrdenacao, "Id", "Text");
 
             try
             {
-                // remove caracteres da string de busca
                 vm.BuscaMotorista = StringTools.RemoverCaracteres(vm.BuscaMotorista, "-.");
 
-                var listaMotoristasDBE = new MotoristaBLL().BuscarDadosPainel(MontarFiltrosDeBusca(vm),
+                var listaMotoristasDBE = BLL.BuscarDadosPainel(MontarFiltrosDeBusca(vm),
                     (ENUMCAMPOSPAINELMOTORISTAS)vm.OpcaoCampoOrdenacao,
                     (ENUMOPCOESORDENACAO)vm.OpcaoOrdenacao);
 
@@ -195,9 +200,10 @@ namespace GestaoDeFrotas.Controllers
 
             try
             {
-                ViewData["MunicipioSelecionado"] = new SelectList(Enumerable.Empty<MunicipioDBE>(), "ID", "NomeMunicipio");
-                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado");
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria");
+                var DadosDropdown = new MotoristaBLL().MontarMenusCadastro(false);
+                ViewData["MunicipioSelecionado"] = new SelectList(DadosDropdown.Municipios, "ID", "NomeMunicipio");
+                ViewData["EstadoSelecionado"] = new SelectList(DadosDropdown.Estados, "ID", "NomeEstado");
+                ViewData["CategoriaSelecionada"] = new SelectList(DadosDropdown.CategoriasCNH, "ID", "Categoria");
 
                 return View(vm);
             }
@@ -212,14 +218,15 @@ namespace GestaoDeFrotas.Controllers
         [HttpPost]
         public ActionResult IncluirMotorista(CadastroMotoristaVM vm)
         {
-            var Resposta = new Resposta<MotoristaDBE>();
+            var Resposta = new RespostaNegocio<MotoristaDBE>();
             vm.CastToMotoristaVM();
 
             try
             {
-                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado", vm.EstadoSelecionado);
-                ViewData["MunicipioSelecionado"] = new SelectList(new MunicipioDAL().ListarMunicipios(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria", vm.CategoriaSelecionada);
+                var DadosDropdown = new MotoristaBLL().MontarMenusCadastro(true);
+                ViewData["EstadoSelecionado"] = new SelectList(DadosDropdown.Estados, "ID", "NomeEstado", vm.EstadoSelecionado);
+                ViewData["MunicipioSelecionado"] = new SelectList(DadosDropdown.Municipios, "ID", "NomeMunicipio", vm.MunicipioSelecionado);
+                ViewData["CategoriaSelecionada"] = new SelectList(DadosDropdown.CategoriasCNH, "ID", "Categoria", vm.CategoriaSelecionada);
             }
             catch (Oracle.ManagedDataAccess.Client.OracleException)
             {
@@ -266,10 +273,7 @@ namespace GestaoDeFrotas.Controllers
             MotoristaVM vm = new MotoristaVM();
             try
             {
-                //vm.GetByID(id, true);
-                vm.CastFromDBE(new MotoristaDAL().Read(id));
-                vm.Endereco.Municipio = new MunicipioDAL().ListarMunicipios().Where(m => m.ID == vm.Endereco.Municipio.ID).First();
-                vm.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(id, true);
+                vm.CastFromDBE(new MotoristaBLL().BuscarPorID(id));
             }
             catch (Exception e)
             {
@@ -284,14 +288,14 @@ namespace GestaoDeFrotas.Controllers
             CadastroMotoristaVM vm = new CadastroMotoristaVM();
             try
             {
-                vm.Motorista.CastFromDBE(new MotoristaDAL().Read(id));
-                vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(id, true);
+                vm.Motorista.CastFromDBE(new MotoristaBLL().BuscarPorID(id));
                 vm.DataNascimento = vm.Motorista.DataNascimento.ToString("yyyy-MM-dd");
-                vm.DataEmissao = vm.Motorista.CNH.DataEmissao.ToString("yyyy-MM-dd");
-                vm.DataValidade = vm.Motorista.CNH.DataValidade.ToString("yyyy-MM-dd");
-                ViewData["MunicipioSelecionado"] = new SelectList(new MunicipioDAL().ListarMunicipios(), "ID", "NomeMunicipio", vm.Motorista.Endereco.Municipio.ID.ToString());
-                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado", vm.Motorista.Endereco.Municipio.Estado.ID.ToString());
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria", vm.Motorista.CNH.Categoria.ID.ToString());
+                vm.DataEmissaoCNH = vm.Motorista.CNH.DataEmissao.ToString("yyyy-MM-dd");
+                vm.DataValidadeCNH = vm.Motorista.CNH.DataValidade.ToString("yyyy-MM-dd");
+                var DadosDropDown = new MotoristaBLL().MontarMenusCadastro(true);
+                ViewData["MunicipioSelecionado"] = new SelectList(DadosDropDown.Municipios, "ID", "NomeMunicipio", vm.Motorista.Endereco.Municipio.ID.ToString());
+                ViewData["EstadoSelecionado"] = new SelectList(DadosDropDown.Estados, "ID", "NomeEstado", vm.Motorista.Endereco.Municipio.Estado.ID.ToString());
+                ViewData["CategoriaSelecionada"] = new SelectList(DadosDropDown.CategoriasCNH, "ID", "Categoria", vm.Motorista.CNH.Categoria.ID.ToString());
                 return View(vm);
             }
             catch (Exception e)
@@ -304,14 +308,17 @@ namespace GestaoDeFrotas.Controllers
         [HttpPost]
         public ActionResult EditarMotorista(CadastroMotoristaVM vm)
         {
+            var BLL = new MotoristaBLL();
+            var Resposta = new RespostaNegocio<MotoristaDBE>();
+            
             vm.CastToMotoristaVM();
             var motoristaDBE = vm.Motorista.CastToDBE();
             try
             {
-                vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
-                ViewData["MunicipioSelecionado"] = new SelectList(new MunicipioDAL().ListarMunicipios(), "ID", "NomeMunicipio", vm.MunicipioSelecionado);
-                ViewData["EstadoSelecionado"] = new SelectList(new EstadoDAL().List(), "ID", "NomeEstado", vm.EstadoSelecionado);
-                ViewData["CategoriaSelecionada"] = new SelectList(new CategoriaCNHDAL().List(), "ID", "Categoria", vm.CategoriaSelecionada.ToString());
+                var DadosDropDown = BLL.MontarMenusCadastro(true);
+                ViewData["MunicipioSelecionado"] = new SelectList(DadosDropDown.Municipios, "ID", "NomeMunicipio", vm.MunicipioSelecionado);
+                ViewData["EstadoSelecionado"] = new SelectList(DadosDropDown.Estados, "ID", "NomeEstado", vm.EstadoSelecionado);
+                ViewData["CategoriaSelecionada"] = new SelectList(DadosDropDown.CategoriasCNH, "ID", "Categoria", vm.CategoriaSelecionada.ToString());
             }
             catch (Oracle.ManagedDataAccess.Client.OracleException)
             {
@@ -321,39 +328,34 @@ namespace GestaoDeFrotas.Controllers
             }
             if (ModelState.IsValid)
             {
-                try
-                {
-                    new EnderecoDAL().Update(motoristaDBE.Endereco);
-                    new CNHDAL().Update(motoristaDBE.CNH);
-                    new MotoristaDAL().Update(motoristaDBE);
+                BLL.EditarMotorista(motoristaDBE, ref Resposta);
 
-                    TempData["MensagemSucesso"] = "Cadastro editado com sucesso!";
-                    return RedirectToAction("PainelDeMotoristas");
-                }
-                // Verificar inner exception
-                catch (Exception e)
+                if (Resposta.Status != EnumStatusResposta.Sucesso)
                 {
-                    TempData["MensagemErro"] = e.Message + " " + e.InnerException.Message;
+                    TempData["MensagemErro"] = Resposta.Mensagem;
                     return View(vm);
                 }
 
+                TempData["MensagemSucesso"] = Resposta.Mensagem;
+                return RedirectToAction("PainelDeMotoristas");
             }
+
             return View(vm);
         }
 
-        public ActionResult AlterarStatusMotorista(int id, bool status)
+        public ActionResult AlterarStatusMotorista(int ID, bool StatusAtual)
         {
-            try
+            var Resposta = new RespostaNegocio<MotoristaDBE>();
+            new MotoristaBLL().AlterarStatusMotorista(ID, StatusAtual, ref Resposta);
+
+            if (Resposta.Status != EnumStatusResposta.Sucesso)
             {
-                new MotoristaDAL().AtualizarStatus(id, !status);
-                TempData["MensagemSucesso"] = "Cadastro atualizado com sucesso!";
-                return RedirectToAction("EditarMotorista", new { id });
+                TempData["MensagemErro"] = Resposta.Mensagem;
+                return RedirectToAction("EditarMotorista", new { ID });
             }
-            catch (Exception e)
-            {
-                TempData["MensagemErro"] = e.Message;
-                return RedirectToAction("EditarMotorista", new { id });
-            }
+
+            TempData["MensagemSucesso"] = Resposta.Mensagem;
+            return RedirectToAction("EditarMotorista", new { ID });
         }
         #endregion
 
@@ -361,55 +363,35 @@ namespace GestaoDeFrotas.Controllers
         [HttpPost]
         public ActionResult VincularVeiculo(CadastroMotoristaVM vm)
         {
-            VeiculoDBE veiculo;
+            var Resposta = new RespostaNegocio<MotoristaDBE>();
+
             if (vm.BuscaPlaca == null)
                 vm.BuscaPlaca = string.Empty;
-            try
+
+            new MotoristaBLL().VincularVeiculo(vm.Motorista.ID, vm.BuscaPlaca, ref Resposta);
+
+            if (Resposta.Status != EnumStatusResposta.Sucesso)
             {
-                vm.Motorista.CastFromDBE(new MotoristaDAL().Read(vm.Motorista.ID));
-                vm.Motorista.ListaVeiculos = new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.Motorista.ID, true);
-                veiculo = new VeiculoDAL().BuscarPorPlaca(vm.BuscaPlaca.ToUpper(), true);
-            }
-            catch (Exception e)
-            {
-                TempData["MensagemErro"] = "Erro ao buscar dados de motorista e veículo - " + e.Message;
+                TempData["MensagemErro"] = Resposta.Mensagem;
                 return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
             }
-            if (veiculo.ID == 0)
-            {
-                TempData["MensagemErro"] = "Veículo não encontrado ou inativo! Placa: " + vm.BuscaPlaca;
-                return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
-            }
-            if (vm.Motorista.ListaVeiculos.Any(x => x.Placa == vm.BuscaPlaca.ToUpper()))
-            {
-                TempData["MensagemErro"] = "O Veículo informado já está vinculado ao motorista!";
-                return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
-            }
-            try
-            {
-                new MotoristaDAL().VincularVeiculoMotorista(veiculo.ID, vm.Motorista.ID);
-                TempData["MensagemSucesso"] = "Veículo vinculado com sucesso!";
-                return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
-            }
-            catch (Exception e)
-            {
-                TempData["MensagemErro"] = "Erro ao vincular veículo - " + e.Message;
-                return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
-            }
+
+            TempData["MensagemSucesso"] = Resposta.Mensagem;
+            return RedirectToAction("EditarMotorista", new { id = vm.Motorista.ID });
         }
+
         public ActionResult DesvincularVeiculoMotorista(int veiculoid, int motoristaid)
         {
-            try
+            var Resposta = new RespostaNegocio<MotoristaDBE>();
+            new MotoristaBLL().DesvincularVeiculoMotorista(veiculoid, motoristaid, ref Resposta);
+
+            if (Resposta.Status != EnumStatusResposta.Sucesso)
             {
-                new MotoristaDAL().DesvincularVeiculoMotorista(veiculoid, motoristaid);
-                TempData["MensagemSucesso"] = "Veículo desvinculado com sucesso!";
+                TempData["MensagemErro"] = Resposta.Mensagem;
                 return RedirectToAction("EditarMotorista", new { id = motoristaid });
             }
-            catch (Exception e)
-            {
-                TempData["MensagemErro"] = "Erro ao desvincular veículo - " + e.Message;
-                return RedirectToAction("EditarMotorista", new { id = motoristaid });
-            }
+            TempData["MensagemSucesso"] = Resposta.Mensagem;
+            return RedirectToAction("EditarMotorista", new { id = motoristaid });
         }
         #endregion
 
@@ -417,20 +399,20 @@ namespace GestaoDeFrotas.Controllers
         [WebMethod]
         public JsonResult BuscaMunicipio(int idEstado)
         {
-            IEnumerable<MunicipioDBE> ListaMunicipios = new MunicipioDAL().ListarMunicipios();
-            return Json(new SelectList(ListaMunicipios
-                .Where(x => x.Estado.ID == idEstado)
-                .OrderBy(x => x.NomeMunicipio)
-                , "ID", "NomeMunicipio"));
+            var ListaMunicipios = new MotoristaBLL().BuscarMunicipiosPorEstado(idEstado);
+            return Json(new SelectList(ListaMunicipios, "ID", "NomeMunicipio"));
         }
         public ActionResult ValidaCpf(MotoristaDBE motorista)
         {
-            var motoristaBusca = new MotoristaDAL().GetByCPF(motorista.CPF, false);
-
-            if (motoristaBusca.ID > 0 && motoristaBusca.ID != motorista.ID)
-                return Json("CPF já cadastrado", JsonRequestBehavior.AllowGet);
-
-            if (!CPF.ValidaCpf(motorista.CPF))
+            MotoristaDBE motoristaBusca;
+            var ResultadoBusca = new MotoristaBLL().BuscarPorNomeOuCPF(motorista.CPF, false);
+            if (ResultadoBusca.Any())
+            {
+                motoristaBusca = ResultadoBusca.First();
+                if (motoristaBusca.ID > 0 && motoristaBusca.ID != motorista.ID)
+                    return Json("CPF já cadastrado", JsonRequestBehavior.AllowGet);
+            }
+            if (!CPFTools.ValidaCpf(motorista.CPF))
             {
                 return Json("CPF inválido", JsonRequestBehavior.AllowGet);
             }

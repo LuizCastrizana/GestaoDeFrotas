@@ -1,4 +1,5 @@
 ﻿using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Shared.FiltroBusca;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -386,7 +387,7 @@ namespace GestaoDeFrotas.Data.DAL
             }
         }
 
-        public IEnumerable<VeiculoDBE> Read(VeiculoDBE obj)
+        public IEnumerable<VeiculoDBE> List(FiltroBusca Filtro)
         {
             throw new NotImplementedException();
         }

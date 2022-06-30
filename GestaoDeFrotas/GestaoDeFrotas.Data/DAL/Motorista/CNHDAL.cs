@@ -1,4 +1,5 @@
 ﻿using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Shared.FiltroBusca;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -194,7 +195,7 @@ namespace GestaoDeFrotas.Data.DAL
             }
         }
 
-        public IEnumerable<CNHDBE> Read(CNHDBE obj)
+        public IEnumerable<CNHDBE> List(FiltroBusca Filtro)
         {
             throw new NotImplementedException();
         }

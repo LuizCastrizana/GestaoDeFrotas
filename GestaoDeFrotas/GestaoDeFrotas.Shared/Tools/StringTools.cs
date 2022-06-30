@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 
-namespace GestaoDeFrotas
+namespace GestaoDeFrotas.Shared.Tools
 {
     public static class StringTools
     {

@@ -7,31 +7,40 @@ using System.Web;
 using System.Web.Mvc;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Shared.Tools;
 
 namespace GestaoDeFrotas.Front.ViewModels
 {
     public class CadastroMotoristaVM
     {
         public MotoristaVM Motorista { get; set; }
+
         [Required(ErrorMessage = "Campo obrigatório")]
         [DisplayName("Estado")]
         public string EstadoSelecionado { get; set; }
+
         [Required(ErrorMessage = "Campo obrigatório")]
         [DisplayName("Município")]
         public string MunicipioSelecionado { get; set; }
+
         [Required(ErrorMessage = "Campo obrigatório")]
         [DisplayName("Categoria")]
         public string CategoriaSelecionada { get; set; }
+
         public string BuscaPlaca { get; set; }
+
         [Required(ErrorMessage = "Campo obrigatório")]
         [DisplayName("Data de nascimento")]
         public string DataNascimento { get; set; }
+
         [Required(ErrorMessage = "Campo obrigatório")]
         [DisplayName("Data de emissão")]
-        public string DataEmissao { get; set; }
+        public string DataEmissaoCNH { get; set; }
+
         [Required(ErrorMessage = "Campo obrigatório")]
         [DisplayName("Data de validade")]
-        public string DataValidade { get; set; }
+        public string DataValidadeCNH { get; set; }
+
 
         public CadastroMotoristaVM()
         {
@@ -39,7 +48,7 @@ namespace GestaoDeFrotas.Front.ViewModels
         }
 
         /// <summary>
-        /// Insere o valor dos parametros <see cref="MunicipioSelecionado"/>, <see cref="CategoriaSelecionada"/>, <see cref="DataNascimento"/>, <see cref="DataEmissao"/>, <see cref="DataValidade"/>
+        /// Insere o valor dos parametros <see cref="MunicipioSelecionado"/>, <see cref="CategoriaSelecionada"/>, <see cref="DataNascimento"/>, <see cref="DataEmissaoCNH"/>, <see cref="DataValidadeCNH"/>
         /// nos campos equivalentes dentro do objeto <see cref="Motorista"/>. 
         /// </summary>
         public void CastToMotoristaVM()
@@ -47,8 +56,8 @@ namespace GestaoDeFrotas.Front.ViewModels
             Motorista.Endereco.Municipio.ID = Convert.ToInt32(MunicipioSelecionado);
             Motorista.CNH.Categoria.ID = Convert.ToInt32(CategoriaSelecionada);
             Motorista.DataNascimento = StringTools.ConverterEmData(DataNascimento, "en-US");
-            Motorista.CNH.DataEmissao = StringTools.ConverterEmData(DataEmissao, "en-US");
-            Motorista.CNH.DataValidade = StringTools.ConverterEmData(DataValidade, "en-US");
+            Motorista.CNH.DataEmissao = StringTools.ConverterEmData(DataEmissaoCNH, "en-US");
+            Motorista.CNH.DataValidade = StringTools.ConverterEmData(DataValidadeCNH, "en-US");
         }
     }
 
@@ -85,7 +94,7 @@ namespace GestaoDeFrotas.Front.ViewModels
 
         public CNHVM CNH { get; set; }
 
-        public IEnumerable<VeiculoDBE> ListaVeiculos { get; set; }
+        public IEnumerable<VeiculoVM> ListaVeiculos { get; set; }
 
         public EnderecoVM Endereco { get; set; }
 
@@ -105,7 +114,7 @@ namespace GestaoDeFrotas.Front.ViewModels
         {
             Endereco = new EnderecoVM();
             CNH = new CNHVM();
-            ListaVeiculos = Enumerable.Empty<VeiculoDBE>();
+            ListaVeiculos = Enumerable.Empty<VeiculoVM>();
         }
 
         public MotoristaDBE CastToDBE()
@@ -175,6 +184,20 @@ namespace GestaoDeFrotas.Front.ViewModels
             Endereco.Municipio.Estado.NomeEstado = dbe.Endereco.Municipio.Estado.NomeEstado;
             Endereco.Municipio.Estado.UF = dbe.Endereco.Municipio.Estado.UF;
 
+            ListaVeiculos = CastListaVeiculosFromDBE(dbe.ListaVeiculos);
+        }
+
+        public List<VeiculoVM> CastListaVeiculosFromDBE(IEnumerable<VeiculoDBE> lista)
+        {
+            var retorno = new List<VeiculoVM>();
+
+            foreach (var item in lista)
+            {
+                var itemRetorno = new VeiculoVM();
+                itemRetorno.CastFromDBE(item);
+                retorno.Add(itemRetorno);
+            }
+            return retorno;
         }
     }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.DAL;
+using GestaoDeFrotas.Shared.Tools;
 
 namespace GestaoDeFrotas.Front.ViewModels
 {

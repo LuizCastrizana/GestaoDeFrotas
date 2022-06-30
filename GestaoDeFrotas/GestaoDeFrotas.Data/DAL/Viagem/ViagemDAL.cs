@@ -1,5 +1,6 @@
 ﻿using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Data.Enums;
+using GestaoDeFrotas.Shared.FiltroBusca;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -253,6 +254,11 @@ namespace GestaoDeFrotas.Data.DAL
             }
 
             return lista;
+        }
+
+        public IEnumerable<ViagemDBE> List(FiltroBusca Filtro)
+        {
+            throw new NotImplementedException();
         }
     }
 }

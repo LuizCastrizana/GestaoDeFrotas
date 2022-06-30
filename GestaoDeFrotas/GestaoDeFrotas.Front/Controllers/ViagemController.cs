@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using X.PagedList;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
+using GestaoDeFrotas.Business.BLL;
 
 namespace GestaoDeFrotas.Controllers
 {
@@ -223,7 +224,7 @@ namespace GestaoDeFrotas.Controllers
         #region Buscas Json
         public JsonResult BuscaMotorista(string busca)
         {
-            var lista = MotoristaTools.BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID);
+            var lista = new MotoristaBLL().BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID);
 
             return Json(lista.First());
         }
@@ -244,7 +245,7 @@ namespace GestaoDeFrotas.Controllers
         public JsonResult AutoCompleteMotorista(string busca)
         {
             var lista = new List<AutoCompleteMotorista>();
-            foreach (var item in MotoristaTools.BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID))
+            foreach (var item in new MotoristaBLL().BuscarPorNomeOuCPF(busca, false).OrderByDescending(m => m.ID))
             {
                 lista.Add(new AutoCompleteMotorista(item));
             }

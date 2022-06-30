@@ -8,6 +8,7 @@ using GestaoDeFrotas.Front.ViewModels;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using X.PagedList;
+using GestaoDeFrotas.Shared.Tools;
 
 namespace GestaoDeFrotas.Controllers
 {

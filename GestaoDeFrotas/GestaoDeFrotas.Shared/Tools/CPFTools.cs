@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GestaoDeFrotas
+namespace GestaoDeFrotas.Shared.Tools
 {
-    public static class CPF
+    public static class CPFTools
     {
         public static bool ValidaCpf(string cpf)
         {
