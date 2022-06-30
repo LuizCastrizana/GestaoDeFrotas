@@ -196,13 +196,10 @@
     <Compile Include="Models\OracleModel.cs" />
     <Compile Include="Util\AutoComplete\AutoCompleteMotorista.cs" />
     <Compile Include="Util\Veiculo\VeiculoTools.cs" />
-    <Compile Include="Util\Viagem\GeradorCodigoViagem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\PopularBD\LeitorCSV.cs" />
     <Compile Include="Util\Validadores\RetornoValidacao.cs" />
     <Compile Include="Util\Validadores\ViagemValidador.cs" />
-    <Compile Include="Util\Viagem\OpcoesPainelViagem.cs" />
-    <Compile Include="Util\Viagem\ViagemTools.cs" />
     <Compile Include="ViewModels\CadastroMotoristaVM.cs" />
     <Compile Include="ViewModels\CadastroVeiculoVM.cs" />
     <Compile Include="ViewModels\CadastroViagemVM.cs" />

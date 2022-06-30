@@ -14,12 +14,14 @@ namespace GestaoDeFrotas.Controllers
 {
     public class ViagemController : Controller
     {
+        private static ViagemBLL _BLL = new ViagemBLL();
+
         #region Painel
         public ActionResult PainelDeViagens()
         {
             PainelViagensVM vm = new PainelViagensVM();
 
-            var opcoesPainel = ViagemTools.MontarListasOpcoesPainel();
+            var opcoesPainel = _BLL.MontarListasOpcoesPainel();
 
             ViewData["OpcaoOrdenacao"] = new SelectList(opcoesPainel.Ordenacao, "Id", "Text");
             ViewData["OpcaoCampoOrdenacao"] = new SelectList(opcoesPainel.CampoOrdenacao, "Id", "Text");
@@ -34,7 +36,7 @@ namespace GestaoDeFrotas.Controllers
 
             try
             {
-                vm.Viagens = ViagemTools.BuscarViagensPainel(new ViagemDBE(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 15);
+                vm.Viagens = _BLL.BuscarViagensPainel(new ViagemDBE(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 15);
             }
             catch(Exception e)
             {
@@ -48,7 +50,7 @@ namespace GestaoDeFrotas.Controllers
         {
             var numPagina = pagina ?? 1;
 
-            var opcoesPainel = ViagemTools.MontarListasOpcoesPainel();
+            var opcoesPainel = _BLL.MontarListasOpcoesPainel();
 
             ViewData["OpcaoOrdenacao"] = new SelectList(opcoesPainel.Ordenacao, "Id", "Text");
             ViewData["OpcaoCampoOrdenacao"] = new SelectList(opcoesPainel.CampoOrdenacao, "Id", "Text");
@@ -63,7 +65,7 @@ namespace GestaoDeFrotas.Controllers
 
                 ViagemBusca.ViagemStatus.ID = vm.StatusViagem;
 
-                vm.Viagens = ViagemTools.BuscarViagensPainel(ViagemBusca, vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao);
+                vm.Viagens = _BLL.BuscarViagensPainel(ViagemBusca, vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao);
 
                 vm.Viagens = vm.Viagens.ToPagedList(numPagina, 15);
 
@@ -123,7 +125,7 @@ namespace GestaoDeFrotas.Controllers
 
                 vm.VmToDBE();
 
-                ViagemTools.GerarCodigoViagem(vm.Viagem);
+                _BLL.GerarCodigoViagem(vm.Viagem);
 
                 vm.Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.PROGRAMADA;
 
