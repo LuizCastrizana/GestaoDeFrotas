@@ -198,8 +198,6 @@
     <Compile Include="Util\Veiculo\VeiculoTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\PopularBD\LeitorCSV.cs" />
-    <Compile Include="Util\Validadores\RetornoValidacao.cs" />
-    <Compile Include="Util\Validadores\ViagemValidador.cs" />
     <Compile Include="ViewModels\CadastroMotoristaVM.cs" />
     <Compile Include="ViewModels\CadastroVeiculoVM.cs" />
     <Compile Include="ViewModels\CadastroViagemVM.cs" />
