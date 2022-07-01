@@ -9,12 +9,14 @@ using X.PagedList;
 using GestaoDeFrotas.Data.DAL;
 using GestaoDeFrotas.Data.DBENTITIES;
 using GestaoDeFrotas.Business.BLL;
+using GestaoDeFrotas.Business;
 
 namespace GestaoDeFrotas.Controllers
 {
     public class ViagemController : Controller
     {
-        private static ViagemBLL _BLL = new ViagemBLL();
+        private readonly ViagemBLL _BLL = new ViagemBLL();
+        private readonly VeiculoBLL _VeiculoBLL = new VeiculoBLL();
 
         #region Painel
         public ActionResult PainelDeViagens()
@@ -32,11 +34,12 @@ namespace GestaoDeFrotas.Controllers
             vm.OpcaoCampoOrdenacao = (int)ENUMCAMPOSPAINELVIAGEM.DATAINCLUSAO;
             vm.OpcaoOrdenacao = (int)ENUMOPCOESORDENACAO.DECRESCENTE;
 
-            vm.Viagens.ToPagedList(1, 15);
+            vm.Viagens = Enumerable.Empty<ViagemDBE>().ToPagedList(1, 15);
 
             try
             {
                 vm.Viagens = _BLL.BuscarViagensPainel(new ViagemDBE(), vm.BuscaViagem, vm.OpcoesFiltragem, vm.OpcaoCampoOrdenacao, vm.OpcaoOrdenacao).ToPagedList(1, 15);
+                vm.Viagens.ToPagedList(1, 15);
             }
             catch(Exception e)
             {
@@ -83,26 +86,28 @@ namespace GestaoDeFrotas.Controllers
         #region Cadastro
         public ActionResult VisualizarViagem(int id)
         {
-            ViagemDBE viagem;
+            var Resposta = new RespostaNegocio<ViagemDBE>();
             try
             {
-                viagem = new ViagemDAL().Read(id);
+                _BLL.BuscarViagemPorID(id, ref Resposta);
             }
             catch (Exception e)
             {
                 TempData["MensagemErro"] = "Erro ao buscar dados da viagem: " + e.Message;
                 return RedirectToAction("PainelDeViagens");
             }
-            return View(viagem);
+            return View(Resposta.Retorno);
         }
 
         public ActionResult IncluirViagem()
         {
+            var Resposta = new RespostaNegocio<IEnumerable<MotivoViagemDBE>>();
             CadastroViagemVM vm = new CadastroViagemVM();
             ViewData["VeiculoID"] = new SelectList(Enumerable.Empty<VeiculoDBE>(), "ID", "Placa");
             try
             {
-                ViewData["MotivoID"] = new SelectList(new MotivoViagemDAL().List(), "ID", "Descricao");
+                _BLL.ListarMotivos(ref Resposta);
+                ViewData["MotivoID"] = new SelectList(Resposta.Retorno, "ID", "Descricao");
             }
             catch (Exception e)
             {
@@ -115,36 +120,33 @@ namespace GestaoDeFrotas.Controllers
         [HttpPost]
         public ActionResult IncluirViagem(CadastroViagemVM vm)
         {
+            var RespostaInclusao = new RespostaNegocio<ViagemDBE>();
+            var RespostaMotivos = new RespostaNegocio<IEnumerable<MotivoViagemDBE>>();
+            var RespostaVeiculos = new RespostaNegocio<IEnumerable<VeiculoDBE>>();
             ViewData["MotivoID"] = new SelectList(Enumerable.Empty<MotivoViagemDBE>(), "ID", "Descricao");
             ViewData["VeiculoID"] = new SelectList(Enumerable.Empty<VeiculoDBE>(), "ID", "Placa");
 
-            try
+            _BLL.ListarMotivos(ref RespostaMotivos);
+            _VeiculoBLL.ListarVeiculosPorIDMotorista(vm.MotoristaID, true, ref RespostaVeiculos);
+            ViewData["MotivoID"] = new SelectList(RespostaMotivos.Retorno, "ID", "Descricao");
+            ViewData["VeiculoID"] = new SelectList(RespostaVeiculos.Retorno, "ID", "Placa", vm.VeiculoID);
+            
+            vm.VmToDBE();
+
+            _BLL.IncluirViagem(vm.Viagem, ref RespostaInclusao);
+
+            if (RespostaInclusao.Status == EnumStatusResposta.ErroValidacao || RespostaInclusao.Status == EnumStatusResposta.Aviso)
             {
-                ViewData["MotivoID"] = new SelectList(new MotivoViagemDAL().List(), "ID", "Descricao");
-                ViewData["VeiculoID"] = new SelectList(new VeiculoDAL().ListarVeiculosPorIDMotorista(vm.MotoristaID, true), "ID", "Placa", vm.VeiculoID);
-
-                vm.VmToDBE();
-
-                _BLL.GerarCodigoViagem(vm.Viagem);
-
-                vm.Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.PROGRAMADA;
-
-                var retorno = ViagemValidador.ValidaInclusao(vm.Viagem);
-                if (retorno.Sucesso)
-                {
-                    new ViagemDAL().Create(vm.Viagem);
-                    TempData["MensagemSucesso"] = "Viagem cadastrada com sucesso!";
-                    return RedirectToAction("PainelDeViagens");
-                }
-
-                TempData["MensagemAviso"] = retorno.Mensagem;
+                TempData["MensagemAviso"] = RespostaInclusao.Mensagem;
                 return View(vm);
             }
-            catch (Exception e)
+            if (RespostaInclusao.Status == EnumStatusResposta.Erro)
             {
-                TempData["MensagemErro"] = "Erro ao cadastrar viagem!" + e.Message;
+                TempData["MensagemErro"] = RespostaInclusao.Mensagem;
                 return View(vm);
             }
+            TempData["MensagemSucesso"] = RespostaInclusao.Mensagem;
+            return RedirectToAction("PainelDeViagens");
         }
 
         public ActionResult AdministrarViagem(int id)

@@ -17,7 +17,7 @@ namespace GestaoDeFrotas.Front.ViewModels
         public bool Todos { get; set; }
         public PainelViagensVM()
         {
-            Viagens = Enumerable.Empty<ViagemDBE>();
+            Viagens = new List<ViagemDBE>();
             BuscaViagem = string.Empty;
             Todos = false;
         }

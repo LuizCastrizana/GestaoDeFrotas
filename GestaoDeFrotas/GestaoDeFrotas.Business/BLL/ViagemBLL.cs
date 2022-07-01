@@ -24,7 +24,36 @@ namespace GestaoDeFrotas.Business.BLL
             _motivoViagemDAL = new MotivoViagemDAL();
         }
 
-        public void GerarCodigoViagem(ViagemDBE viagem)
+        #region Cadastro
+
+        public void ListarMotivos(ref RespostaNegocio<IEnumerable<MotivoViagemDBE>> Resposta)
+        {
+            Resposta.Retorno = _motivoViagemDAL.List();
+        }
+
+        public void IncluirViagem(ViagemDBE Viagem, ref RespostaNegocio<ViagemDBE> Resposta)
+        {
+            try
+            {
+                GerarCodigoViagem(Viagem);
+
+                Viagem.ViagemStatus.ID = (int)ENUMSTATUSVIAGEM.PROGRAMADA;
+
+                ValidarInclusaoViagem(Viagem, ref Resposta);
+                if (Resposta.Status == EnumStatusResposta.Sucesso)
+                {
+                    new ViagemDAL().Create(Viagem);
+                    Resposta.Mensagem = "Viagem cadastrada com sucesso!";
+                }
+            }
+            catch (Exception e)
+            {
+                Resposta.Status = EnumStatusResposta.Erro;
+                Resposta.Mensagem = "Erro ao cadastrar viagem: " + e.Message;
+            }
+        }
+
+        private void GerarCodigoViagem(ViagemDBE viagem)
         {
             const int CONTADORINICIAL = 1;
             const int CONTADORMAXIMO = 99999;
@@ -60,6 +89,10 @@ namespace GestaoDeFrotas.Business.BLL
             else
                 viagem.Codigo += CONTADORINICIAL.ToString("D5");
         }
+
+        #endregion
+
+        #region Busca
 
         public IEnumerable<ViagemDBE> BuscarViagensPainel(ViagemDBE ViagemBusca, string busca, int opcaoFiltragem, int opcaoCampoOrdenacao, int opcaoOrdenacao)
         {
@@ -143,6 +176,18 @@ namespace GestaoDeFrotas.Business.BLL
             return lista;
         }
 
+        public void BuscarViagemPorID(int id, ref RespostaNegocio<ViagemDBE> Resposta)
+        {
+            try
+            {
+                Resposta.Retorno = _viagemDAL.Read(id);
+            }
+            catch (Exception e)
+            {
+                Resposta.Mensagem = e.Message;
+                Resposta.Status = EnumStatusResposta.Erro;
+            }
+        }
         public DropDownMenuPainelViagens MontarListasOpcoesPainel()
         {
             var retorno = new DropDownMenuPainelViagens
@@ -179,6 +224,112 @@ namespace GestaoDeFrotas.Business.BLL
 
             return retorno;
         }
+
+        #endregion
+
+        #region Validações
+
+        public static void ValidarInclusaoViagem(ViagemDBE viagem, ref RespostaNegocio<ViagemDBE> Resposta)
+        {
+            Resposta.Status = EnumStatusResposta.Sucesso;
+            Resposta.Mensagem = "";
+
+            ValidaVinculo(viagem.MotoristaViagem.ID, viagem.VeiculoViagem.ID, ref Resposta);
+            if (Resposta.Status != EnumStatusResposta.Sucesso)
+                return;
+
+            ValidaMotorista(viagem.MotoristaViagem.ID, ref Resposta);
+            ValidaVeiculo(viagem.VeiculoViagem.ID, ref Resposta);
+        }
+        private static void ValidaVinculo(int idMotorista, int idVeiculo, ref RespostaNegocio<ViagemDBE> Resposta)
+        {
+            if (idMotorista == 0)
+            {
+                Resposta.Status = EnumStatusResposta.ErroValidacao;
+                Resposta.Mensagem += "Motorista não informado. \n";
+            }
+            if (idVeiculo == 0)
+            {
+                Resposta.Status = EnumStatusResposta.ErroValidacao;
+                Resposta.Mensagem += "Veículo não informado. \n";
+            }
+            if (Resposta.Status == EnumStatusResposta.Sucesso && !new VeiculoDAL().ListarVeiculosPorIDMotorista(idMotorista, true).Where(v => v.ID == idVeiculo).Any())
+            {
+                Resposta.Status = EnumStatusResposta.ErroValidacao;
+                Resposta.Mensagem += "O motorista não está vinculado ao veículo" + "\n";
+            }
+        }
+
+        private static void ValidaMotorista(int idMotorista, ref RespostaNegocio<ViagemDBE> Resposta)
+        {
+            if (idMotorista == 0)
+            {
+                Resposta.Status = EnumStatusResposta.ErroValidacao;
+                Resposta.Mensagem += "Motorista não informado. \n";
+                return;
+            }
+            int[] statusViagem =
+            {
+                (int)ENUMSTATUSVIAGEM.EMANDAMENTO,
+                (int)ENUMSTATUSVIAGEM.PROGRAMADA
+            };
+            var buscaMotorista = new ViagemDBE()
+            {
+                MotoristaViagem = new MotoristaDBE()
+                {
+                    ID = idMotorista
+                },
+            };
+            foreach (var statusID in statusViagem)
+            {
+                buscaMotorista.ViagemStatus = new StatusViagemDBE()
+                {
+                    ID = statusID
+                };
+                var viagens = new ViagemDAL().Read(buscaMotorista);
+                if (viagens.Any())
+                {
+                    Resposta.Status = EnumStatusResposta.ErroValidacao;
+                    Resposta.Mensagem += "Motorista está vinculado a uma viagem em andamento: " + viagens.First().Codigo + "\n";
+                }
+            }
+        }
+        private static void ValidaVeiculo(int idVeiculo, ref RespostaNegocio<ViagemDBE> Resposta)
+        {
+            if (idVeiculo == 0)
+            {
+                Resposta.Status = EnumStatusResposta.ErroValidacao;
+                Resposta.Mensagem += "Veículo não informado. \n";
+                return;
+            }
+            int[] statusViagem =
+            {
+                (int)ENUMSTATUSVIAGEM.EMANDAMENTO,
+                (int)ENUMSTATUSVIAGEM.PROGRAMADA
+            };
+            var buscaVeiculo = new ViagemDBE()
+            {
+                VeiculoViagem = new VeiculoDBE()
+                {
+                    ID = idVeiculo
+                }
+            };
+            foreach (var statusID in statusViagem)
+            {
+                buscaVeiculo.ViagemStatus = new StatusViagemDBE()
+                {
+                    ID = statusID
+                };
+                var viagens = new ViagemDAL().Read(buscaVeiculo);
+                if (viagens.Any())
+                {
+                    Resposta.Status = EnumStatusResposta.ErroValidacao;
+                    Resposta.Mensagem += "Veículo está vinculado a uma viagem em andamento: " + viagens.First().Codigo + "\n";
+                }
+            }
+        }
+
+        #endregion
     }
 
     public class DropDownMenuPainelViagens
